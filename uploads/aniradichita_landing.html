@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Aniradichita Theatre & Films Association</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#CC3333;--blk:#141414;--dark:#0d0d0d;--card:#1f1f1f;--card2:#252525;--wht:#fff;--gray:#808080;--border:#2a2a2a;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blk);color:var(--wht);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;width:100%;z-index:300;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent);padding:0 4%;transition:background .3s;}
+nav.solid{background:rgba(0,0,0,.97);}
+.nav-inner{display:flex;align-items:center;height:60px;gap:24px;}
+.nav-logo{font-size:1.25rem;font-weight:900;color:var(--red);letter-spacing:2px;cursor:pointer;flex-shrink:0;}
+.nav-links{display:flex;gap:18px;flex:1;}
+.nav-links a{color:#ccc;font-size:.82rem;letter-spacing:.3px;transition:color .2s;white-space:nowrap;}
+.nav-links a:hover,.nav-links a.active{color:var(--wht);font-weight:700;}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
+.nav-search{background:rgba(30,30,30,.8);border:1px solid #444;color:var(--wht);padding:6px 12px;border-radius:4px;font-size:.78rem;width:130px;outline:none;transition:border-color .2s;}
+.nav-search:focus{border-color:var(--wht);}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hbg span{width:22px;height:2px;background:var(--wht);border-radius:2px;}
+.mob-menu{display:none;position:fixed;top:60px;left:0;width:100%;background:#000;z-index:299;padding:12px 20px;flex-direction:column;gap:0;border-top:1px solid #222;}
+.mob-menu a{color:#ddd;font-size:.95rem;padding:12px 0;border-bottom:1px solid #1a1a1a;display:block;}
+.mob-menu.open{display:flex;}
+
+/* ══ PAGES ══ */
+.pg{display:none;min-height:100vh;padding-top:60px;}
+.pg.active{display:block;}
+
+/* ══ HERO ══ */
+.hero{position:relative;height:88vh;min-height:520px;display:flex;align-items:flex-end;padding:0 4% 8%;}
+.hero-bg{position:absolute;inset:0;overflow:hidden;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.35;filter:brightness(.6);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.92) 45%,rgba(0,0,0,.3) 100%),linear-gradient(to top,rgba(0,0,0,.95) 0%,transparent 55%);}
+.hero-content{position:relative;z-index:2;max-width:580px;}
+.badge{background:var(--red);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:2px;display:inline-block;margin-bottom:14px;}
+.hero h1{font-size:clamp(2rem,5.5vw,4rem);font-weight:900;line-height:1.05;margin-bottom:10px;}
+.hero h1 span{color:var(--red);}
+.tagline{font-size:clamp(.9rem,2vw,1.25rem);color:#bbb;font-style:italic;margin-bottom:14px;}
+.hero-desc{color:#ccc;font-size:clamp(.8rem,1.5vw,.92rem);line-height:1.75;margin-bottom:26px;max-width:460px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-w{background:#fff;color:#000;padding:10px 26px;border:none;border-radius:4px;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;}
+.btn-w:hover{background:#e0e0e0;}
+.btn-g{background:rgba(100,100,100,.6);color:#fff;padding:10px 26px;border:none;border-radius:4px;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;}
+.btn-g:hover{background:rgba(100,100,100,.9);}
+.btn-r{background:var(--red);color:#fff;padding:10px 26px;border:none;border-radius:4px;font-size:.88rem;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-r:hover{background:#a82828;}
+
+/* ══ NEWS TICKER ══ */
+.news-bar{background:#080808;border-top:2px solid var(--red);display:flex;align-items:stretch;overflow:hidden;}
+.news-label{background:var(--red);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:2px;padding:10px 14px;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.ticker-wrap{overflow:hidden;flex:1;padding:10px 0;}
+.ticker-track{display:flex;gap:48px;animation:tick 60s linear infinite;white-space:nowrap;width:max-content;}
+.ticker-track:hover{animation-play-state:paused;}
+.t-item{font-size:.78rem;color:#ccc;cursor:pointer;transition:color .2s;display:inline-flex;align-items:center;gap:6px;}
+.t-item:hover{color:var(--red);}
+.t-dot{color:var(--red);font-size:.6rem;}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.news-btn{background:none;border:1px solid #333;color:#777;font-size:.68rem;padding:5px 9px;border-radius:3px;cursor:pointer;margin:auto 10px;flex-shrink:0;transition:.2s;white-space:nowrap;}
+.news-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* ══ GENERIC ══ */
+.sec{padding:44px 4%;}
+.sec-sm{padding:28px 4%;}
+.row-hd{font-size:1.05rem;font-weight:700;color:#e5e5e5;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.row-hd::after{content:'';flex:1;height:1px;background:linear-gradient(to right,#333,transparent);}
+.page-hero{padding:40px 4% 32px;background:linear-gradient(to bottom,#0d0000 0%,var(--blk) 100%);}
+.page-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:10px;}
+.page-hero p{color:#aaa;max-width:640px;line-height:1.8;font-size:.9rem;}
+
+/* ══ GRID CARDS ══ */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+.g2t{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+
+/* ══ SERVICE CARDS ══ */
+.svc-card{background:var(--card);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s;border:1px solid transparent;}
+.svc-card:hover{transform:scale(1.04);z-index:10;box-shadow:0 16px 40px rgba(0,0,0,.7);border-color:var(--red);}
+.svc-thumb{height:155px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.svc-thumb img{width:100%;height:100%;object-fit:cover;opacity:.7;transition:opacity .3s;}
+.svc-card:hover .svc-thumb img{opacity:.9;}
+.svc-thumb .s-icon{position:absolute;font-size:2.8rem;z-index:2;text-shadow:0 2px 8px rgba(0,0,0,.6);}
+.s-tag{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:1px;z-index:3;}
+.svc-info{padding:12px 14px;}
+.svc-info h3{font-size:.92rem;font-weight:700;margin-bottom:4px;}
+.svc-info p{font-size:.73rem;color:#888;line-height:1.5;margin-bottom:10px;}
+.quote-mini{background:transparent;border:1px solid var(--red);color:var(--red);font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:3px;cursor:pointer;letter-spacing:.5px;transition:.2s;}
+.quote-mini:hover{background:var(--red);color:#fff;}
+
+/* ══ STATS ══ */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#222;margin:0 4%;border-radius:8px;overflow:hidden;}
+.stat-b{background:var(--card);padding:24px 16px;text-align:center;}
+.stat-n{font-size:2rem;font-weight:900;color:var(--red);}
+.stat-l{font-size:.68rem;color:#666;letter-spacing:1px;margin-top:4px;}
+
+/* ══ IMAGE GALLERY ══ */
+.gallery-strip{padding:0 4% 40px;}
+.gal-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+.gal-item{border-radius:4px;overflow:hidden;aspect-ratio:1;cursor:pointer;position:relative;}
+.gal-item.tall{grid-row:span 2;}
+.gal-item.wide{grid-column:span 2;}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s,opacity .3s;opacity:.75;}
+.gal-item:hover img{transform:scale(1.08);opacity:1;}
+
+/* ══ WORK CARDS ══ */
+.work-card{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:.3s;border:1px solid var(--border);}
+.work-card:hover{transform:translateY(-5px);box-shadow:0 16px 32px rgba(0,0,0,.6);border-color:#444;}
+.work-thumb{height:175px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.work-thumb img{width:100%;height:100%;object-fit:cover;opacity:.7;}
+.work-thumb .wt-ico{position:absolute;font-size:3rem;z-index:2;}
+.work-info{padding:14px;}
+.wcat{font-size:.62rem;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:6px;}
+.work-info h3{font-size:.9rem;font-weight:700;margin-bottom:5px;line-height:1.35;}
+.work-info p{font-size:.74rem;color:#888;}
+
+/* ══ BLOG CARDS ══ */
+.blog-card{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:.3s;}
+.blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.5);}
+.blog-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;position:relative;overflow:hidden;}
+.blog-thumb img{width:100%;height:100%;object-fit:cover;opacity:.6;}
+.blog-thumb .bt-ico{position:absolute;font-size:2.5rem;}
+.blog-info{padding:12px;}
+.bcat{font-size:.62rem;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:6px;}
+.blog-info h3{font-size:.85rem;font-weight:700;line-height:1.35;margin-bottom:4px;}
+.blog-info p{font-size:.72rem;color:#888;}
+
+/* ══ SPOTLIGHT ══ */
+.spotlight{margin:0 4% 40px;border-radius:10px;background:linear-gradient(120deg,#1a0000,#0d0d0d);border:1px solid #2a0a0a;padding:40px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;}
+.sp-tag{color:var(--red);font-size:.7rem;font-weight:700;letter-spacing:2px;margin-bottom:10px;}
+.spotlight h2{font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:800;margin-bottom:10px;}
+.spotlight p{color:#aaa;font-size:.88rem;line-height:1.7;margin-bottom:18px;}
+.sp-visual{background:#0d0d0d;border-radius:8px;padding:28px;text-align:center;border:1px solid #2a2a2a;min-width:200px;}
+.sp-visual .sp-ico{font-size:4rem;margin-bottom:10px;}
+.sp-visual p{color:#888;font-size:.8rem;}
+
+/* ══ ABOUT PAGE ══ */
+.about-block h2{font-size:1.35rem;font-weight:800;margin-bottom:14px;color:var(--red);}
+.about-block p{color:#aaa;line-height:1.8;font-size:.9rem;margin-bottom:12px;}
+
+/* ══ SERVICES DETAIL ══ */
+.svc-detail{background:var(--card);border-radius:8px;margin-bottom:20px;overflow:hidden;border:1px solid var(--border);}
+.svc-detail-hd{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;padding:24px;cursor:pointer;}
+.svc-detail-hd .sd-ico{font-size:2.2rem;}
+.sd-title h3{font-size:1.1rem;font-weight:800;}
+.sd-title .sub{color:var(--red);font-size:.75rem;font-style:italic;margin-top:2px;}
+.svc-detail-body{padding:0 24px 24px;color:#aaa;line-height:1.8;font-size:.88rem;border-top:1px solid var(--border);}
+.quote-btn{background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:4px;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.5px;white-space:nowrap;transition:.2s;}
+.quote-btn:hover{background:#a82828;}
+
+/* ══ QUOTE MODAL ══ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.modal-bg.open{display:flex;}
+.modal{background:#1a1a1a;border-radius:10px;border:1px solid var(--border);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;padding:32px;}
+.modal h3{font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+.modal .modal-sub{color:var(--red);font-size:.78rem;margin-bottom:24px;}
+.modal-close{float:right;background:none;border:none;color:#888;font-size:1.4rem;cursor:pointer;line-height:1;}
+.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.mf-field{margin-bottom:16px;}
+.mf-field label{display:block;font-size:.72rem;color:#aaa;margin-bottom:6px;letter-spacing:.5px;}
+.mf-field input,.mf-field textarea,.mf-field select{width:100%;background:#111;border:1px solid #333;color:#fff;padding:10px 14px;border-radius:5px;font-size:.88rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.mf-field input:focus,.mf-field textarea:focus,.mf-field select:focus{border-color:var(--red);}
+.mf-field textarea{min-height:80px;resize:vertical;}
+.mf-submit{width:100%;background:var(--red);color:#fff;border:none;padding:13px;border-radius:5px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:8px;}
+.mf-submit:hover{background:#a82828;}
+
+/* ══ AI GEN ══ */
+.gen-sec{margin:0 4% 40px;background:linear-gradient(135deg,#0d0000,#1a0505);border-radius:12px;padding:44px;border:1px solid #2a0000;}
+.gen-hd{text-align:center;margin-bottom:32px;}
+.gen-hd h2{font-size:1.7rem;font-weight:800;margin-bottom:8px;}
+.gen-hd p{color:#888;max-width:540px;margin:0 auto;font-size:.88rem;line-height:1.7;}
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.gen-field label{display:block;font-size:.72rem;color:#aaa;margin-bottom:7px;letter-spacing:.5px;}
+.gen-field input,.gen-field textarea,.gen-field select{width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;padding:11px 14px;border-radius:5px;font-size:.88rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.gen-field input:focus,.gen-field textarea:focus,.gen-field select:focus{border-color:var(--red);}
+.gen-field textarea{min-height:90px;resize:vertical;}
+.gen-full{grid-column:1/-1;}
+.gen-btn{width:100%;background:var(--red);color:#fff;border:none;padding:14px;border-radius:5px;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:.2s;margin-top:4px;}
+.gen-btn:hover{background:#a82828;}
+.gen-btn:disabled{background:#444;cursor:not-allowed;}
+.out-box{margin-top:24px;background:#0d0d0d;border:1px solid var(--red);border-radius:8px;padding:24px;display:none;}
+.out-box h4{color:var(--red);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.out-txt{color:#ddd;line-height:1.9;font-size:.9rem;white-space:pre-wrap;}
+
+/* ══ EVENTS PAGE ══ */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:32px 4%;}
+.ev-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--border);transition:.3s;}
+.ev-card:hover{border-color:var(--red);box-shadow:0 12px 28px rgba(0,0,0,.5);}
+.ev-banner{height:190px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.ev-banner img{width:100%;height:100%;object-fit:cover;opacity:.6;}
+.ev-banner .ev-ico{position:absolute;font-size:3.5rem;z-index:2;}
+.ev-date-badge{position:absolute;top:12px;right:12px;background:var(--red);color:#fff;padding:6px 12px;border-radius:4px;text-align:center;z-index:3;}
+.ev-date-badge .day{font-size:1.4rem;font-weight:900;line-height:1;}
+.ev-date-badge .mon{font-size:.6rem;letter-spacing:1px;}
+.ev-body{padding:18px;}
+.ev-cat{font-size:.6rem;color:var(--red);font-weight:700;letter-spacing:1.5px;margin-bottom:8px;}
+.ev-body h3{font-size:1rem;font-weight:800;margin-bottom:6px;line-height:1.35;}
+.ev-body p{font-size:.78rem;color:#aaa;margin-bottom:14px;line-height:1.6;}
+.ev-meta{display:flex;flex-direction:column;gap:4px;margin-bottom:16px;}
+.ev-meta span{font-size:.73rem;color:#777;display:flex;align-items:center;gap:6px;}
+.ev-meta span b{color:#ccc;}
+.ev-actions{display:flex;gap:10px;}
+.ev-ticket{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:4px;font-size:.78rem;font-weight:700;cursor:pointer;flex:1;transition:.2s;}
+.ev-ticket:hover{background:#a82828;}
+.ev-rsvp{background:transparent;border:1px solid #555;color:#ccc;padding:9px 18px;border-radius:4px;font-size:.78rem;font-weight:600;cursor:pointer;flex:1;transition:.2s;}
+.ev-rsvp:hover{border-color:var(--wht);color:var(--wht);}
+
+/* ══ STUDIO PAGE ══ */
+.studio-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:32px 4%;}
+.studio-info{background:var(--card);border-radius:10px;padding:28px;border:1px solid var(--border);}
+.studio-info h3{font-size:1.2rem;font-weight:800;margin-bottom:16px;color:var(--red);}
+.studio-feature{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.sf-ico{font-size:1.5rem;flex-shrink:0;}
+.sf-text h4{font-size:.85rem;font-weight:700;margin-bottom:2px;}
+.sf-text p{font-size:.75rem;color:#888;}
+.studio-book{background:var(--card);border-radius:10px;padding:28px;border:1px solid var(--border);}
+.studio-book h3{font-size:1.2rem;font-weight:800;margin-bottom:20px;}
+.cal-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
+.cal-day-hd{text-align:center;font-size:.65rem;color:#666;padding:4px;font-weight:700;letter-spacing:.5px;}
+.cal-day{text-align:center;padding:8px 4px;border-radius:4px;cursor:pointer;font-size:.82rem;transition:.2s;border:1px solid transparent;}
+.cal-day:hover:not(.disabled){background:#2a2a2a;border-color:#444;}
+.cal-day.selected{background:var(--red);color:#fff;border-color:var(--red);}
+.cal-day.disabled{color:#333;cursor:default;}
+.cal-day.today{border-color:#555;font-weight:700;}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.cal-nav button{background:none;border:1px solid #333;color:#888;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.8rem;transition:.2s;}
+.cal-nav button:hover{border-color:var(--wht);color:var(--wht);}
+.cal-nav span{font-size:.9rem;font-weight:700;}
+.time-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.ts{background:#111;border:1px solid #2a2a2a;border-radius:4px;padding:8px;text-align:center;cursor:pointer;font-size:.75rem;transition:.2s;}
+.ts:hover:not(.booked){background:#2a2a2a;border-color:#555;}
+.ts.selected{background:rgba(204,51,51,.2);border-color:var(--red);color:var(--red);font-weight:700;}
+.ts.booked{background:#111;color:#333;cursor:not-allowed;border-color:#1a1a1a;}
+.book-form{display:grid;gap:12px;}
+.book-field label{display:block;font-size:.68rem;color:#aaa;margin-bottom:5px;letter-spacing:.5px;}
+.book-field input,.book-field select{width:100%;background:#111;border:1px solid #333;color:#fff;padding:9px 12px;border-radius:4px;font-size:.85rem;outline:none;font-family:inherit;transition:border-color .2s;}
+.book-field input:focus{border-color:var(--red);}
+.book-submit{width:100%;background:var(--red);color:#fff;border:none;padding:12px;border-radius:5px;font-size:.9rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px;}
+.book-submit:hover{background:#a82828;}
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.pkg{background:#111;border:1px solid #2a2a2a;border-radius:6px;padding:12px;text-align:center;cursor:pointer;transition:.2s;border:1px solid transparent;}
+.pkg:hover{border-color:#555;}
+.pkg.selected{border-color:var(--red);background:rgba(204,51,51,.08);}
+.pkg h4{font-size:.82rem;font-weight:700;margin-bottom:4px;}
+.pkg .price{font-size:1rem;font-weight:900;color:var(--red);margin-bottom:2px;}
+.pkg p{font-size:.65rem;color:#666;}
+
+/* ══ CONTACT ══ */
+.ci-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px;}
+.ci-b{background:var(--card);border-radius:8px;padding:18px;border:1px solid var(--border);}
+.ci-b .ico{font-size:1.6rem;margin-bottom:7px;}
+.ci-b h4{font-size:.72rem;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:3px;}
+.ci-b p{font-size:.78rem;color:#aaa;}
+
+/* ══ FOOTER ══ */
+footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:32px;}
+.ft-brand .logo{font-size:1.3rem;font-weight:900;color:var(--red);margin-bottom:10px;}
+.ft-brand p{color:#444;font-size:.78rem;line-height:1.7;}
+.ft-col h4{font-size:.7rem;font-weight:700;letter-spacing:2px;color:#444;margin-bottom:13px;}
+.ft-col a{display:block;color:#444;font-size:.78rem;margin-bottom:7px;transition:color .2s;cursor:pointer;}
+.ft-col a:hover{color:var(--wht);}
+.ft-bot{border-top:1px solid #1a1a1a;padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ft-bot p{color:#333;font-size:.72rem;}
+.ft-bot span{color:var(--red);}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1024px){
+  .g4{grid-template-columns:repeat(2,1fr);}
+  .g5{grid-template-columns:repeat(3,1fr);}
+  .gal-grid{grid-template-columns:repeat(4,1fr);}
+  .studio-layout{grid-template-columns:1fr;}
+  .ft-grid{grid-template-columns:1fr 1fr;}
+  .stats-strip{grid-template-columns:repeat(2,1fr);}
+  .spotlight{grid-template-columns:1fr;}
+  .sp-visual{display:none;}
+}
+@media(max-width:640px){
+  nav{padding:0 14px;}
+  .nav-links,.nav-search{display:none;}
+  .hbg{display:flex;}
+  .g4,.g3,.g5{grid-template-columns:repeat(2,1fr);}
+  .g2,.g2t{grid-template-columns:1fr;}
+  .gal-grid{grid-template-columns:repeat(3,1fr);}
+  .hero-btns{flex-direction:column;gap:8px;}
+  .gen-grid{grid-template-columns:1fr;}
+  .mf-row{grid-template-columns:1fr;}
+  .ci-grid{grid-template-columns:1fr;}
+  .ft-grid{grid-template-columns:1fr;}
+  .time-slots{grid-template-columns:repeat(2,1fr);}
+  .pkg-grid{grid-template-columns:1fr;}
+  .ev-actions{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="gp('home')">ANIRADICHITA</div>
+    <div class="nav-links">
+      <a id="nl-home" class="active" onclick="gp('home')">Home</a>
+      <a id="nl-about" onclick="gp('about')">About</a>
+      <a id="nl-services" onclick="gp('services')">Services</a>
+      <a id="nl-works" onclick="gp('works')">Our Works</a>
+      <a id="nl-events" onclick="gp('events')">Events</a>
+      <a id="nl-studio" onclick="gp('studio')">Book Studio</a>
+      <a id="nl-blogs" onclick="gp('blogs')">Blogs</a>
+      <a id="nl-contact" onclick="gp('contact')">Contact</a>
+    </div>
+    <div class="nav-right">
+      <input class="nav-search" placeholder="🔍 Search..."/>
+    </div>
+    <div class="hbg" onclick="toggleMob()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a onclick="gp('home');toggleMob()">🏠 Home</a>
+  <a onclick="gp('about');toggleMob()">ℹ️ About</a>
+  <a onclick="gp('services');toggleMob()">🎭 Services</a>
+  <a onclick="gp('works');toggleMob()">🎬 Our Works</a>
+  <a onclick="gp('events');toggleMob()">🗓️ Events</a>
+  <a onclick="gp('studio');toggleMob()">🎙️ Book Studio</a>
+  <a onclick="gp('blogs');toggleMob()">📝 Blogs</a>
+  <a onclick="gp('contact');toggleMob()">📞 Contact</a>
+</div>
+
+<!-- ══ QUOTE MODAL ══ -->
+<div class="modal-bg" id="quoteModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">Request a Quote</h3>
+    <div class="modal-sub" id="modalSub">Tell us about your project</div>
+    <div id="modalForm"></div>
+  </div>
+</div>
+
+<!-- ══ TICKET MODAL ══ -->
+<div class="modal-bg" id="ticketModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal2()">✕</button>
+    <h3 id="tmTitle">Book Tickets</h3>
+    <div class="modal-sub" id="tmSub">Secure your seat</div>
+    <div class="mf-row">
+      <div class="mf-field"><label>FULL NAME</label><input type="text" placeholder="Your Name"/></div>
+      <div class="mf-field"><label>EMAIL</label><input type="email" placeholder="email@example.com"/></div>
+    </div>
+    <div class="mf-row">
+      <div class="mf-field"><label>PHONE</label><input type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="mf-field"><label>NO. OF TICKETS</label><select><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+    </div>
+    <div class="mf-field"><label>TICKET TYPE</label><select><option>General — ₹299</option><option>Premium — ₹599</option><option>VIP — ₹999</option></select></div>
+    <button class="mf-submit" onclick="alert('🎭 Booking confirmed! Check your email for details. Hum Aap ke PAaaS Hai!');closeModal2()">Confirm Booking →</button>
+  </div>
+</div>
+<div class="modal-bg" id="rsvpModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal3()">✕</button>
+    <h3>RSVP for Event</h3>
+    <div class="modal-sub">Reserve your free spot</div>
+    <div class="mf-row">
+      <div class="mf-field"><label>NAME</label><input placeholder="Your Name"/></div>
+      <div class="mf-field"><label>EMAIL</label><input type="email" placeholder="email@example.com"/></div>
+    </div>
+    <div class="mf-field"><label>ORGANISATION (Optional)</label><input placeholder="Company / College / NGO"/></div>
+    <div class="mf-field"><label>MESSAGE (Optional)</label><textarea style="min-height:60px;" placeholder="Anything you'd like us to know..."></textarea></div>
+    <button class="mf-submit" onclick="alert('✅ RSVP confirmed! We look forward to seeing you. Hum Aap ke PAaaS Hai!');closeModal3()">Confirm RSVP →</button>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="pg active" id="pg-home">
+  <div class="hero">
+    <div class="hero-bg">
+      <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Aniradichita Performance" onerror="this.style.display='none'"/>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="badge">🏆 TOP 50 STARTUP · 3M-CII YOUNG INNOVATORS 2021</div>
+      <h1>Where <span>Art</span> Meets<br/>Business</h1>
+      <div class="tagline">"Hum Aap ke PAaaS Hai"</div>
+      <p class="hero-desc">India's first Performing Arts As A Service startup — blending drama, music, dance & film into marketing, CSR, training & education for all businesses.</p>
+      <div class="hero-btns">
+        <button class="btn-w" onclick="gp('services')">▶ Our Services</button>
+        <button class="btn-g" onclick="gp('about')">ℹ More Info</button>
+        <button class="btn-r" onclick="gp('studio')">🎙️ Book Studio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS TICKER -->
+  <div class="news-bar">
+    <div class="news-label">🔴 LIVE NEWS</div>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="tickerTrack">
+        <span class="t-item"><span class="t-dot">●</span>Fetching latest performing arts news...</span>
+        <span class="t-item"><span class="t-dot">●</span>Aniradichita · Section 8 Not-for-Profit · Vadodara, India</span>
+        <span class="t-item"><span class="t-dot">●</span>India's first PAaaS startup · Hum Aap ke PAaaS Hai</span>
+        <span class="t-item"><span class="t-dot">●</span>Fetching latest performing arts news...</span>
+        <span class="t-item"><span class="t-dot">●</span>Aniradichita · Section 8 Not-for-Profit · Vadodara, India</span>
+        <span class="t-item"><span class="t-dot">●</span>India's first PAaaS startup · Hum Aap ke PAaaS Hai</span>
+      </div>
+    </div>
+    <button class="news-btn" onclick="fetchNews()">⟳ Refresh</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip" style="margin-top:36px;">
+    <div class="stat-b"><div class="stat-n">35K+</div><div class="stat-l">Website Visitors</div></div>
+    <div class="stat-b"><div class="stat-n">150+</div><div class="stat-l">Subscribers</div></div>
+    <div class="stat-b"><div class="stat-n">Top 50</div><div class="stat-l">Startup 2021</div></div>
+    <div class="stat-b"><div class="stat-n">5+</div><div class="stat-l">Service Verticals</div></div>
+  </div>
+
+  <!-- SERVICES ROW -->
+  <div class="sec">
+    <div class="row-hd">Our Services — PAaaS</div>
+    <div class="g4">
+      <div class="svc-card" onclick="gp('services')">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#1a0000,#3d0000);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240711_191733.jpg" alt="Pravartan"/>
+          <span class="s-icon">📣</span><div class="s-tag">BRANDING</div>
+        </div>
+        <div class="svc-info"><h3>Pravartan</h3><p>Theatrical branding, flash mobs & creative marketing campaigns</p>
+        <button class="quote-mini" onclick="event.stopPropagation();openQuote('Pravartan','Theatrical Branding & Marketing')">Get Quote</button></div>
+      </div>
+      <div class="svc-card" onclick="gp('services')">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#000d1a,#00264d);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt="Aakhyan"/>
+          <span class="s-icon">🎓</span><div class="s-tag">TRAINING</div>
+        </div>
+        <div class="svc-info"><h3>Aakhyan</h3><p>Experiential learning & performing arts-based corporate training</p>
+        <button class="quote-mini" onclick="event.stopPropagation();openQuote('Aakhyan','Experiential Learning & Training')">Get Quote</button></div>
+      </div>
+      <div class="svc-card" onclick="gp('services')">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#001a00,#004d00);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240224-wa0056.jpg" alt="Aamarsh"/>
+          <span class="s-icon">🌱</span><div class="s-tag">CSR</div>
+        </div>
+        <div class="svc-info"><h3>Aamarsh</h3><p>Impactful CSR narratives crafted through performing arts</p>
+        <button class="quote-mini" onclick="event.stopPropagation();openQuote('Aamarsh','CSR Through Performing Arts')">Get Quote</button></div>
+      </div>
+      <div class="svc-card" onclick="gp('services')">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#1a1500,#4d3d00);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt="Abhisarg"/>
+          <span class="s-icon">🎪</span><div class="s-tag">EVENTS</div>
+        </div>
+        <div class="svc-info"><h3>Abhisarg</h3><p>Events transformed into unforgettable theatrical experiences</p>
+        <button class="quote-mini" onclick="event.stopPropagation();openQuote('Abhisarg','Event Design & Management')">Get Quote</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY STRIP -->
+  <div class="gallery-strip">
+    <div class="row-hd">From Our Performances</div>
+    <div class="gal-grid">
+      <div class="gal-item tall wide"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Performance 1"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240711_191733.jpg" alt="Performance 2"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0056.jpg" onerror="this.src='https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240224-wa0056.jpg'" alt="Performance 3"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt="Performance 4"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0012.jpg" alt="Performance 5"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240112_132625.jpg" alt="Performance 6"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt="Performance 7"/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/1g9a77061.jpg" alt="Performance 8"/></div>
+    </div>
+  </div>
+
+  <!-- SPOTLIGHT — AI GENERATOR -->
+  <div class="spotlight">
+    <div>
+      <div class="sp-tag">✨ AI-POWERED · EXCLUSIVE TOOL</div>
+      <h2>Generate Your CSR Script with AI</h2>
+      <p>Describe your CSR goal in any Indian language and let our AI craft a complete theatre/drama script concept — in the spirit of Aamarsh & PAaaS.</p>
+      <button class="btn-r" onclick="gp('services')">▶ Try the Generator</button>
+    </div>
+    <div class="sp-visual">
+      <div class="sp-ico">🎭</div>
+      <h3 style="margin-bottom:6px;font-size:.95rem;">AI + Theatre</h3>
+      <p>Performing Arts meets Artificial Intelligence for real social impact</p>
+    </div>
+  </div>
+
+  <!-- FEATURED WORKS -->
+  <div class="sec">
+    <div class="row-hd">Featured Works</div>
+    <div class="g3">
+      <div class="work-card">
+        <div class="work-thumb" style="background:linear-gradient(135deg,#1a0000,#3d0000);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-2.jpg" alt="Work"/>
+          <span class="wt-ico">🎭</span>
+        </div>
+        <div class="work-info"><div class="wcat">THEATRE · EDUCATION</div><h3>Abhivyaktitvam</h3><p>Special Theatre Workshop for special children</p></div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb" style="background:linear-gradient(135deg,#000d1a,#00264d);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240908_123928.jpg" alt="E-Talk"/>
+          <span class="wt-ico">🎬</span>
+        </div>
+        <div class="work-info"><div class="wcat">E-TALK · FILM</div><h3>Sociotainment E-Talk</h3><p>Film making, bureaucracy & social impact</p></div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb" style="background:linear-gradient(135deg,#001a00,#003d00);">
+          <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/cropped-1g9a7670.jpg" alt="CSR"/>
+          <span class="wt-ico">💚</span>
+        </div>
+        <div class="work-info"><div class="wcat">CSR · MENTAL HEALTH</div><h3>I'll Be There For You</h3><p>Mental health initiative during COVID-19</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOG PREVIEW -->
+  <div class="sec">
+    <div class="row-hd">From the Blog</div>
+    <div class="g5">
+      <div class="blog-card"><div class="blog-thumb" style="background:#1a0000;"><span class="bt-ico">🎬</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Chupke Chupke</h3><p>Hrishikesh Mukherjee's timeless classic</p></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:#000d1a;"><span class="bt-ico">🎭</span></div><div class="blog-info"><div class="bcat">THEATRE</div><h3>Folk Theatre Forms</h3><p>Roots of Indian performing arts</p></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:#0d0d0d;"><span class="bt-ico">📺</span></div><div class="blog-info"><div class="bcat">OTT</div><h3>Netflix & Indian OTT</h3><p>Changing the content landscape</p></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:#1a1500;"><span class="bt-ico">🌍</span></div><div class="blog-info"><div class="bcat">GLOBAL CINEMA</div><h3>World Cinema Trends</h3><p>Films that cross borders</p></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:#0d001a;"><span class="bt-ico">🎵</span></div><div class="blog-info"><div class="bcat">MUSIC</div><h3>Music & Emotion</h3><p>The science of raga therapy</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div class="pg" id="pg-about">
+  <div class="page-hero">
+    <div class="badge">ABOUT US</div>
+    <h1>We Are <span style="color:var(--red)">Aniradichita</span></h1>
+    <p>Creative, passionate, flexible, and personable — we deliver what you exactly want and then some. Smile your way through this journey of life!</p>
+  </div>
+  <div class="sec g2t">
+    <div class="about-block">
+      <h2>Who We Are</h2>
+      <p>Welcome to Aniradichita Theatre and Films Association, where innovation meets cultural art forms to deliver unparalleled solutions. As a distinguished not-for-profit Section 8 licensed company, we proudly stand among the top 50 startups of 2021 in the 3M-CII Young Innovators Challenge Awards.</p>
+      <p>As the pioneers of PAaaS — Performing Arts As A Service, we provide holistic services in marketing, training and development, CSR, events, and education, utilizing cultural art forms like drama, music, dance, blended with films and video creation.</p>
+      <p>We extend our services from ants to elephants — catering to businesses of all sizes, from small enterprises to large corporations.</p>
+      <h2 style="margin-top:28px;">Our Vision</h2>
+      <p>Aniradichita aims to integrate cultural arts with business innovation, redefine the performing arts, and promote sustainability. We empower businesses of all sizes to utilize cultural arts, inspiring positive change and community connection.</p>
+    </div>
+    <div class="about-block">
+      <h2>Our Commitment</h2>
+      <p><strong style="color:var(--wht)">Excellence in Innovation:</strong> Continuously pushing creative boundaries, infusing cultural art forms into our services.</p>
+      <p><strong style="color:var(--wht)">Client-Centric Approach:</strong> Your success is our priority — tailoring solutions to your unique business goals.</p>
+      <p><strong style="color:var(--wht)">Affordability & Accessibility:</strong> Transformative power of cultural arts accessible to businesses of every size.</p>
+      <p><strong style="color:var(--wht)">Sustainable Development:</strong> CSR projects and environmentally conscious practices for positive community impact.</p>
+      <h2 style="margin-top:28px;">Founder</h2>
+      <p><strong style="color:var(--wht)">Aniket Parimal Pandya</strong> — Engineer by Education · Artist by Passion · Entrepreneur by Profession. Associate Director of Gujarati film <em>Safalta 0 Km</em> on Amazon Prime. His performing arts modules were launched by the Union Minister of Skill Development Shri Rajeev Chandrashekhar.</p>
+    </div>
+  </div>
+  <div class="gallery-strip">
+    <div class="row-hd">Gallery</div>
+    <div class="gal-grid">
+      <div class="gal-item wide tall"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-2.jpg" alt=""/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240908_123928.jpg" alt=""/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240711_191733.jpg" alt=""/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/1g9a77061.jpg" alt=""/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240112_132625.jpg" alt=""/></div>
+      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0012.jpg" alt=""/></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<div class="pg" id="pg-services">
+  <div class="page-hero">
+    <div class="badge">WHAT WE DO</div>
+    <h1>Services for <span style="color:var(--red)">Corporates & Businesses</span></h1>
+    <p>Four powerful service verticals rooted in Performing Arts As A Service — from branding to CSR, training to events.</p>
+  </div>
+  <div style="padding:0 4%;">
+    <div class="svc-detail">
+      <div class="svc-detail-hd">
+        <div class="sd-ico">📣</div>
+        <div class="sd-title"><h3>Pravartan</h3><div class="sub">Because Branding needs creativity</div></div>
+        <button class="quote-btn" onclick="openQuote('Pravartan','Theatrical Branding & Marketing')">Request a Quote</button>
+      </div>
+      <div class="svc-detail-body">Pravartan: where creativity meets strategy, and ideas take flight. From compelling corporate films to flash mobs and creative marketing campaigns — theatrical branding, on-ground marketing, and live branding experiences designed to elevate your brand presence and leave an indelible mark on your audience's minds.</div>
+    </div>
+    <div class="svc-detail">
+      <div class="svc-detail-hd">
+        <div class="sd-ico">🎓</div>
+        <div class="sd-title"><h3>Aakhyan</h3><div class="sub">Train, Transform, Triumph Experiencing Art</div></div>
+        <button class="quote-btn" onclick="openQuote('Aakhyan','Experiential Learning & Corporate Training')">Request a Quote</button>
+      </div>
+      <div class="svc-detail-body">Aakhyan replaces traditional textbooks with real-world performing arts experiences. From team-building games to immersive business case studies, our experiential learning initiatives empower your teams to navigate daily challenges with confidence — a new era of human development through art.</div>
+    </div>
+    <div class="svc-detail">
+      <div class="svc-detail-hd">
+        <div class="sd-ico">🌱</div>
+        <div class="sd-title"><h3>Aamarsh</h3><div class="sub">Crafting Impactful Narratives for Social Change</div></div>
+        <button class="quote-btn" onclick="openQuote('Aamarsh','CSR Through Performing Arts')">Request a Quote</button>
+      </div>
+      <div class="svc-detail-body">Aamarsh redefines corporate social responsibility through experiential and transformative performing arts projects. We conduct need assessment surveys and execute turnkey CSR projects — ensuring your corporate responsibility aligns with authentic community needs and creates a ripple effect of positive change.</div>
+    </div>
+    <div class="svc-detail">
+      <div class="svc-detail-hd">
+        <div class="sd-ico">🎪</div>
+        <div class="sd-title"><h3>Abhisarg</h3><div class="sub">Transforming Events into Unforgettable Experiences</div></div>
+        <button class="quote-btn" onclick="openQuote('Abhisarg','Event Design & Management')">Request a Quote</button>
+      </div>
+      <div class="svc-detail-body">Abhisarg transforms events into captivating spectacles. From concept to execution — coordinating artists, managing performances, infusing theatrical magic. Whether a corporate gathering, product launch, or cultural extravaganza, Abhisarg delivers precision, creativity, and immersive experiences that make every event truly unforgettable.</div>
+    </div>
+  </div>
+
+  <!-- AI CSR GENERATOR -->
+  <div class="gen-sec" id="genAnchor">
+    <div class="gen-hd">
+      <div class="badge">AI TOOL · EXCLUSIVE</div>
+      <h2>CSR Script Generator</h2>
+      <p>Describe your CSR goal in your preferred Indian language — our AI crafts a full theatre/drama script concept in the spirit of Aamarsh.</p>
+    </div>
+    <div class="gen-grid">
+      <div class="gen-field"><label>COMPANY / BRAND NAME</label><input id="gc" placeholder="e.g. Tata Motors, ABC Foundation"/></div>
+      <div class="gen-field"><label>TARGET AUDIENCE</label>
+        <select id="ga"><option>School Children</option><option>Rural Communities</option><option>Corporate Employees</option><option>Urban Youth</option><option>Women Empowerment Groups</option><option>General Public</option></select>
+      </div>
+      <div class="gen-field gen-full"><label>CSR GOAL / CAUSE</label><textarea id="gg" placeholder="e.g. Water conservation awareness in rural Gujarat, girl child education, mental health among youth..."></textarea></div>
+      <div class="gen-field"><label>ART FORM</label>
+        <select id="gf"><option>Street Theatre (Nukkad Natak)</option><option>Drama with Music</option><option>Flash Mob</option><option>Film / Documentary Concept</option><option>Interactive Workshop Theatre</option></select>
+      </div>
+      <div class="gen-field"><label>OUTPUT LANGUAGE</label>
+        <select id="gl">
+          <option value="English">English</option>
+          <option value="Hindi (हिंदी)">Hindi (हिंदी)</option>
+          <option value="Gujarati (ગુજરાતી)">Gujarati (ગુજરાતી)</option>
+          <option value="Marathi (मराठी)">Marathi (मराठी)</option>
+          <option value="Bengali (বাংলা)">Bengali (বাংলা)</option>
+          <option value="Tamil (தமிழ்)">Tamil (தமிழ்)</option>
+          <option value="Telugu (తెలుగు)">Telugu (తెలుగు)</option>
+          <option value="Kannada (ಕನ್ನಡ)">Kannada (ಕನ್ನಡ)</option>
+          <option value="Malayalam (മലയാളം)">Malayalam (മലയാളം)</option>
+          <option value="Punjabi (ਪੰਜਾਬੀ)">Punjabi (ਪੰਜਾਬੀ)</option>
+          <option value="Odia (ଓଡ଼ିଆ)">Odia (ଓଡ଼ିଆ)</option>
+          <option value="Assamese (অসমীয়া)">Assamese (অসমীয়া)</option>
+          <option value="Urdu (اردو)">Urdu (اردو)</option>
+          <option value="Sanskrit (संस्कृत)">Sanskrit (संस्कृत)</option>
+        </select>
+      </div>
+      <div class="gen-field"><label>DURATION</label>
+        <select id="gd"><option>Short (5–10 min)</option><option>Medium (20–30 min)</option><option>Full Programme (60 min)</option></select>
+      </div>
+      <button class="gen-btn gen-full" id="genBtn" onclick="generateScript()">✨ Generate CSR Script Concept</button>
+    </div>
+    <div class="out-box" id="outBox"><h4>Your CSR Script Concept</h4><div class="out-txt" id="outTxt"></div></div>
+  </div>
+</div>
+
+<!-- ══════════ OUR WORKS ══════════ -->
+<div class="pg" id="pg-works">
+  <div class="page-hero">
+    <div class="badge">PORTFOLIO</div>
+    <h1>Our <span style="color:var(--red)">Works</span></h1>
+    <p>A showcase of performances, workshops, e-talks, and CSR projects that blend art with impact.</p>
+  </div>
+  <div class="ev-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
+    <div class="work-card"><div class="work-thumb" style="background:#1a0000;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt=""/><span class="wt-ico">🎭</span></div><div class="work-info"><div class="wcat">THEATRE · EDUCATION</div><h3>Abhivyaktitvam</h3><p>Special Theatre Workshop for children with special needs — art as expressive therapy.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#000d1a;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt=""/><span class="wt-ico">🎬</span></div><div class="work-info"><div class="wcat">E-TALK · FILM</div><h3>Sociotainment</h3><p>Exploring how filmmaking touches bureaucracy and creates lasting social impact.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#001a00;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt=""/><span class="wt-ico">💚</span></div><div class="work-info"><div class="wcat">CSR · MENTAL HEALTH</div><h3>I'll Be There For You</h3><p>COVID-19 mental health initiative connecting with people during the toughest times.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#1a1500;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0012.jpg" alt=""/><span class="wt-ico">🎤</span></div><div class="work-info"><div class="wcat">E-TALK · THEATRE</div><h3>Avant-Garde Theatre E-Talk</h3><p>Keeping live art alive during lockdown — exploring experimental theatre forms.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#0d001a;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240112_132625.jpg" alt=""/><span class="wt-ico">🌍</span></div><div class="work-info"><div class="wcat">E-TALK · CANADA</div><h3>Livraison du Dialogue</h3><p>International E-Talk on dialogue delivery for Canadian theatre practitioners.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#1a000d;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/1g9a77061.jpg" alt=""/><span class="wt-ico">🎭</span></div><div class="work-info"><div class="wcat">WORKSHOP · THEATRE</div><h3>A Date With Theatre</h3><p>Holi Special session with child artist Mahi Joshi — acting talent vs. hard work.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#001a1a;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240908_123928.jpg" alt=""/><span class="wt-ico">🎵</span></div><div class="work-info"><div class="wcat">E-TALK · MUSIC</div><h3>Raaga, Rhythm & Rhyme</h3><p>Sailing in the ocean of melodies — exploring Indian classical music forms.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#1a1a00;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-2.jpg" alt=""/><span class="wt-ico">💃</span></div><div class="work-info"><div class="wcat">E-TALK · DANCE</div><h3>Swing and Sway</h3><p>Exploring the art of movement — dance as expression and human connection.</p></div></div>
+    <div class="work-card"><div class="work-thumb" style="background:#0d1a00;"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/cropped-1g9a7670.jpg" alt=""/><span class="wt-ico">✍️</span></div><div class="work-info"><div class="wcat">E-TALK · WRITING</div><h3>Scribbling Sentiments</h3><p>Season 2 E-talks in association with M.S. University of Baroda — the art of writing.</p></div></div>
+  </div>
+</div>
+
+<!-- ══════════ EVENTS ══════════ -->
+<div class="pg" id="pg-events">
+  <div class="page-hero">
+    <div class="badge">UPCOMING</div>
+    <h1>Upcoming <span style="color:var(--red)">Events</span></h1>
+    <p>Book tickets or RSVP for our upcoming theatre shows, workshops, CSR activations and corporate events.</p>
+  </div>
+  <div class="ev-grid">
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#1a0000,#4d0000);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt=""/>
+        <span class="ev-ico">🎭</span>
+        <div class="ev-date-badge"><div class="day">28</div><div class="mon">APR 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">THEATRE · LIVE PERFORMANCE</div>
+        <h3>Rang Manch — The Annual Theatre Night</h3>
+        <p>A spectacular evening of original theatrical productions by the Aniradichita ensemble, blending classical and contemporary forms.</p>
+        <div class="ev-meta">
+          <span>📍 <b>Sayajibaug Amphitheatre, Vadodara</b></span>
+          <span>🕕 <b>6:30 PM — 9:00 PM</b></span>
+          <span>🎟️ <b>₹299 / ₹599 / ₹999</b></span>
+          <span>👥 <b>Capacity: 500 seats</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" onclick="openTicket('Rang Manch — Annual Theatre Night')">🎟️ Book Tickets</button>
+          <button class="ev-rsvp" onclick="openRSVP('Rang Manch — Annual Theatre Night')">✉️ RSVP Free</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#000d1a,#00264d);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt=""/>
+        <span class="ev-ico">🎓</span>
+        <div class="ev-date-badge"><div class="day">10</div><div class="mon">MAY 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">WORKSHOP · CORPORATE TRAINING</div>
+        <h3>Aakhyan Masterclass — Experiential Leadership</h3>
+        <p>A full-day immersive workshop using theatre techniques for leadership, communication and team dynamics — open to all professionals.</p>
+        <div class="ev-meta">
+          <span>📍 <b>IIM Udaipur Campus, Udaipur</b></span>
+          <span>🕕 <b>9:00 AM — 5:00 PM</b></span>
+          <span>🎟️ <b>₹1,499 / ₹2,499 (with certificate)</b></span>
+          <span>👥 <b>Limited to 40 participants</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" onclick="openTicket('Aakhyan Masterclass — Experiential Leadership')">🎟️ Book Tickets</button>
+          <button class="ev-rsvp" onclick="openRSVP('Aakhyan Masterclass — Experiential Leadership')">✉️ RSVP Free</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#001a00,#004d00);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0056.jpg" onerror="this.src='https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240224-wa0056.jpg'" alt=""/>
+        <span class="ev-ico">🌱</span>
+        <div class="ev-date-badge"><div class="day">22</div><div class="mon">MAY 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">CSR · COMMUNITY EVENT</div>
+        <h3>Aamarsh — Street Play for Water Conservation</h3>
+        <p>A Nukkad Natak (street play) series across 5 locations in Vadodara raising awareness about water conservation, open and free for all.</p>
+        <div class="ev-meta">
+          <span>📍 <b>Alkapuri, Fatehgunj, Old City & more</b></span>
+          <span>🕕 <b>7:00 AM — 9:00 AM (each location)</b></span>
+          <span>🎟️ <b>FREE EVENT</b></span>
+          <span>👥 <b>Open to all</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" style="background:#555;cursor:default;">Free Entry</button>
+          <button class="ev-rsvp" onclick="openRSVP('Aamarsh Street Play — Water Conservation')">✉️ RSVP Here</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#1a1500,#4d3d00);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt=""/>
+        <span class="ev-ico">🎪</span>
+        <div class="ev-date-badge"><div class="day">14</div><div class="mon">JUN 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">CORPORATE · GALA EVENT</div>
+        <h3>Abhisarg Annual Corporate Culture Fest</h3>
+        <p>A grand evening celebrating corporate creativity — featuring flash mobs, live performances, award ceremonies and theatrical experiences.</p>
+        <div class="ev-meta">
+          <span>📍 <b>The Grand Bhagwati, Ahmedabad</b></span>
+          <span>🕕 <b>5:00 PM — 11:00 PM</b></span>
+          <span>🎟️ <b>₹2,999 (Corporate Table: ₹24,999)</b></span>
+          <span>👥 <b>200 corporate seats available</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" onclick="openTicket('Abhisarg Annual Corporate Culture Fest')">🎟️ Book Tickets</button>
+          <button class="ev-rsvp" onclick="openRSVP('Abhisarg Annual Corporate Culture Fest')">✉️ RSVP Free</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#0d001a,#290033);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-2.jpg" alt=""/>
+        <span class="ev-ico">🎬</span>
+        <div class="ev-date-badge"><div class="day">5</div><div class="mon">JUL 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">E-TALK · FILM & THEATRE</div>
+        <h3>E-Talk Season 5: The Performing Arts Summit</h3>
+        <p>Our biggest E-Talk season yet — bringing together industry practitioners from theatre, film, dance and music for a full day summit online.</p>
+        <div class="ev-meta">
+          <span>📍 <b>Online (Zoom + YouTube Live)</b></span>
+          <span>🕕 <b>10:00 AM — 6:00 PM</b></span>
+          <span>🎟️ <b>Free / ₹199 (Certificate)</b></span>
+          <span>👥 <b>Unlimited online seats</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" onclick="openTicket('E-Talk Season 5: Performing Arts Summit')">🎟️ Register</button>
+          <button class="ev-rsvp" onclick="openRSVP('E-Talk Season 5: Performing Arts Summit')">✉️ RSVP Free</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-banner" style="background:linear-gradient(135deg,#1a000d,#4d0027);">
+        <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240908_123928.jpg" alt=""/>
+        <span class="ev-ico">🎵</span>
+        <div class="ev-date-badge"><div class="day">19</div><div class="mon">JUL 2026</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-cat">PERFORMANCE · MUSIC & DANCE</div>
+        <h3>Raag-e-Zindagi: An Evening of Indian Classical Arts</h3>
+        <p>A curated evening of Indian classical music, Bharatanatyam, and spoken word — a tribute to the timeless beauty of our cultural heritage.</p>
+        <div class="ev-meta">
+          <span>📍 <b>M.S. University Auditorium, Vadodara</b></span>
+          <span>🕕 <b>6:00 PM — 9:30 PM</b></span>
+          <span>🎟️ <b>₹199 / ₹399 / ₹699</b></span>
+          <span>👥 <b>Capacity: 800 seats</b></span>
+        </div>
+        <div class="ev-actions">
+          <button class="ev-ticket" onclick="openTicket('Raag-e-Zindagi: Evening of Indian Classical Arts')">🎟️ Book Tickets</button>
+          <button class="ev-rsvp" onclick="openRSVP('Raag-e-Zindagi: Evening of Indian Classical Arts')">✉️ RSVP Free</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BOOK STUDIO ══════════ -->
+<div class="pg" id="pg-studio">
+  <div class="page-hero">
+    <div class="badge">🎙️ BOOK STUDIO</div>
+    <h1>Aniradichita <span style="color:var(--red)">Studio</span></h1>
+    <p>A professional performing arts & film studio space — available for rehearsals, recordings, shoots, workshops and creative sessions.</p>
+  </div>
+  <div class="studio-layout">
+    <div>
+      <div class="studio-info" style="margin-bottom:20px;">
+        <h3>Studio Features</h3>
+        <div class="studio-feature"><div class="sf-ico">🎙️</div><div class="sf-text"><h4>Professional Audio Recording</h4><p>Soundproof booth, condenser mics, DAW setup for voiceover & music recording</p></div></div>
+        <div class="studio-feature"><div class="sf-ico">🎬</div><div class="sf-text"><h4>Film & Video Production</h4><p>4K camera setup, lighting rigs, green screen, makeup room</p></div></div>
+        <div class="studio-feature"><div class="sf-ico">🎭</div><div class="sf-text"><h4>Rehearsal Hall</h4><p>1000 sq ft open space, sprung wooden floor, mirrors, sound system</p></div></div>
+        <div class="studio-feature"><div class="sf-ico">🖥️</div><div class="sf-text"><h4>Post-Production Suite</h4><p>Editing workstations, color grading monitor, Premiere Pro & DaVinci</p></div></div>
+        <div class="studio-feature"><div class="sf-ico">☕</div><div class="sf-text"><h4>Lounge & Green Room</h4><p>Artist lounge, dressing room, kitchenette for long sessions</p></div></div>
+      </div>
+      <div class="studio-info">
+        <h3>Studio Packages</h3>
+        <div class="pkg-grid" id="pkgGrid">
+          <div class="pkg selected" onclick="selectPkg(this,'half')">
+            <h4>Half Day</h4>
+            <div class="price">₹2,499</div>
+            <p>4 hours · Any facility</p>
+          </div>
+          <div class="pkg" onclick="selectPkg(this,'full')">
+            <h4>Full Day</h4>
+            <div class="price">₹4,499</div>
+            <p>8 hours · Any facility</p>
+          </div>
+          <div class="pkg" onclick="selectPkg(this,'premium')">
+            <h4>Premium</h4>
+            <div class="price">₹7,999</div>
+            <p>Full day + post-prod suite</p>
+          </div>
+        </div>
+        <div style="background:#111;border-radius:6px;padding:14px;border:1px solid #2a2a2a;">
+          <p style="font-size:.75rem;color:#666;margin-bottom:8px;">✓ All packages include: Basic equipment, technical support, Wi-Fi, parking</p>
+          <p style="font-size:.75rem;color:#666;">✓ Additional crew & equipment available on request</p>
+        </div>
+      </div>
+    </div>
+    <div class="studio-book">
+      <h3>📅 Book Your Session</h3>
+      <div class="cal-nav">
+        <button onclick="changeMonth(-1)">‹ Prev</button>
+        <span id="calLabel">April 2026</span>
+        <button onclick="changeMonth(1)">Next ›</button>
+      </div>
+      <div class="cal-strip">
+        <div class="cal-day-hd">SUN</div><div class="cal-day-hd">MON</div><div class="cal-day-hd">TUE</div>
+        <div class="cal-day-hd">WED</div><div class="cal-day-hd">THU</div><div class="cal-day-hd">FRI</div><div class="cal-day-hd">SAT</div>
+        <div id="calDays"></div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <p style="font-size:.72rem;color:#aaa;margin-bottom:10px;letter-spacing:.5px;">SELECT TIME SLOT</p>
+        <div class="time-slots" id="timeSlots">
+          <div class="ts" onclick="selTime(this)">8:00–10:00 AM</div>
+          <div class="ts" onclick="selTime(this)">10:00–12:00 PM</div>
+          <div class="ts booked">12:00–2:00 PM<br/><span style="font-size:.6rem;color:#444">Booked</span></div>
+          <div class="ts" onclick="selTime(this)">2:00–4:00 PM</div>
+          <div class="ts" onclick="selTime(this)">4:00–6:00 PM</div>
+          <div class="ts booked">6:00–8:00 PM<br/><span style="font-size:.6rem;color:#444">Booked</span></div>
+          <div class="ts" onclick="selTime(this)">8:00–10:00 PM</div>
+          <div class="ts" onclick="selTime(this)">10:00 PM–12:00 AM</div>
+          <div class="ts" onclick="selTime(this)">Overnight (12+)</div>
+        </div>
+      </div>
+      <div class="book-form">
+        <div class="book-field"><label>YOUR NAME</label><input placeholder="Full Name"/></div>
+        <div class="book-field"><label>PHONE / WHATSAPP</label><input placeholder="+91 XXXXX XXXXX"/></div>
+        <div class="book-field"><label>EMAIL</label><input type="email" placeholder="you@example.com"/></div>
+        <div class="book-field"><label>PURPOSE OF BOOKING</label>
+          <select><option>Theatre Rehearsal</option><option>Audio Recording</option><option>Video / Film Shoot</option><option>Dance Practice</option><option>Corporate Training Session</option><option>Workshop / Masterclass</option><option>Other</option></select>
+        </div>
+        <div class="book-field"><label>SPECIAL REQUIREMENTS</label><input placeholder="Equipment, crew, props etc."/></div>
+        <button class="book-submit" onclick="confirmStudioBook()">✅ Confirm Studio Booking</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BLOGS ══════════ -->
+<div class="pg" id="pg-blogs">
+  <div class="page-hero">
+    <div class="badge">READ LIST</div>
+    <h1>From the <span style="color:var(--red)">Blog</span></h1>
+    <p>Deep dives into cinema, theatre, culture, literature, music, OTT and everything in between.</p>
+  </div>
+  <div style="padding:0 4% 16px;display:flex;gap:8px;flex-wrap:wrap;">
+    <span style="background:var(--red);color:#fff;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">All</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Bollywood</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Theatre</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">OTT</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Global Cinema</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Music</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Literature</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Gujarati Cinema</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:0 4% 48px;">
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/05/31/chupke-chupke/" target="_blank"><div class="blog-thumb" style="background:#1a0000;"><span class="bt-ico">🎬</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Chupke Chupke</h3><p>Hrishikesh Mukherjee's timeless comedy revisited</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/04/27/satte-pe-satta/" target="_blank"><div class="blog-thumb" style="background:#000d1a;"><span class="bt-ico">🎥</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Satte Pe Satta</h3><p>The 1982 MASALA classic — 100% family watch</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/05/12/angrezi-medium/" target="_blank"><div class="blog-thumb" style="background:#0d0d0d;"><span class="bt-ico">🎞️</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Angrezi Medium</h3><p>Irrfan Khan's final film — a father's love story</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/04/19/mera-naam-joker/" target="_blank"><div class="blog-thumb" style="background:#1a1500;"><span class="bt-ico">🎪</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Mera Naam Joker</h3><p>Raj Kapoor's golden era anthem revisited</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/06/14/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A7%E0%A4%BF%E0%A4%B7%E0%A5%8D%E0%A4%A0%E0%A4%BE%E0%A4%A8svadhisthana/" target="_blank"><div class="blog-thumb" style="background:#0d001a;"><span class="bt-ico">📖</span></div><div class="blog-info"><div class="bcat">LITERATURE</div><h3>Svadhisthana</h3><p>Desire, silence and the deep ocean of truth</p></div></a></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#001a00;"><span class="bt-ico">🎵</span></div><div class="blog-info"><div class="bcat">MUSIC</div><h3>Music & Emotion</h3><p>Indian classical ragas and the human emotional landscape</p></div></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#1a000d;"><span class="bt-ico">📺</span></div><div class="blog-info"><div class="bcat">OTT</div><h3>Netflix & Indian OTT</h3><p>How streaming changed the content landscape forever</p></div></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#001a1a;"><span class="bt-ico">🎭</span></div><div class="blog-info"><div class="bcat">THEATRE</div><h3>Folk Theatre Forms of India</h3><p>The roots and richness of Indian performing arts traditions</p></div></div>
+  </div>
+</div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<div class="pg" id="pg-contact">
+  <div class="page-hero">
+    <div class="badge">GET IN TOUCH</div>
+    <h1>Hum Aap ke <span style="color:var(--red)">PAaaS Hai</span></h1>
+    <p>Startup, large corporation or NGO — we'll craft a performing arts solution that fits your vision and budget perfectly.</p>
+  </div>
+  <div style="padding:0 4% 60px;">
+    <div class="ci-grid">
+      <div class="ci-b"><div class="ico">📍</div><h4>LOCATION</h4><p>Vadodara, Gujarat, India</p></div>
+      <div class="ci-b"><div class="ico">🌐</div><h4>WEBSITE</h4><p><a href="https://aniradichita.wordpress.com" target="_blank" style="color:var(--red);">aniradichita.wordpress.com</a></p></div>
+      <div class="ci-b"><div class="ico">📘</div><h4>SOCIAL</h4><p><a href="https://www.facebook.com/aniradichita/" target="_blank" style="color:var(--red);">facebook.com/aniradichita</a></p></div>
+    </div>
+    <div style="max-width:700px;">
+      <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:6px;">Send Us a Message</h2>
+      <p style="color:var(--red);font-style:italic;margin-bottom:24px;">"Smile your way through this journey of life"</p>
+      <div style="display:grid;gap:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="mf-field"><label>YOUR NAME</label><input placeholder="Full Name"/></div>
+          <div class="mf-field"><label>EMAIL</label><input type="email" placeholder="you@company.com"/></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="mf-field"><label>COMPANY</label><input placeholder="Company Name"/></div>
+          <div class="mf-field"><label>SERVICE INTERESTED IN</label>
+            <select style="width:100%;background:#111;border:1px solid #333;color:#fff;padding:10px 14px;border-radius:5px;font-size:.88rem;outline:none;">
+              <option>Pravartan (Branding)</option><option>Aakhyan (Training)</option><option>Aamarsh (CSR)</option><option>Abhisarg (Events)</option><option>Book Studio</option><option>General Inquiry</option>
+            </select>
+          </div>
+        </div>
+        <div class="mf-field"><label>MESSAGE</label><textarea style="width:100%;background:#111;border:1px solid #333;color:#fff;padding:10px 14px;border-radius:5px;font-size:.88rem;outline:none;font-family:inherit;min-height:110px;resize:vertical;" placeholder="Tell us about your project, event or inquiry..."></textarea></div>
+        <button class="mf-submit" onclick="alert('Thank you! We will get back to you soon.\nHum Aap ke PAaaS Hai! 🎭')">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div class="ft-brand"><div class="logo">ANIRADICHITA</div><p>India's first Performing Arts As A Service startup. Section 8 Not-for-Profit. Top 50 Startup 2021.</p></div>
+    <div class="ft-col"><h4>NAVIGATE</h4>
+      <a onclick="gp('home')">Home</a><a onclick="gp('about')">About</a><a onclick="gp('services')">Services</a><a onclick="gp('works')">Our Works</a><a onclick="gp('events')">Events</a><a onclick="gp('studio')">Book Studio</a><a onclick="gp('blogs')">Blogs</a><a onclick="gp('contact')">Contact</a>
+    </div>
+    <div class="ft-col"><h4>SERVICES</h4>
+      <a onclick="openQuote('Pravartan','Theatrical Branding')">Pravartan</a>
+      <a onclick="openQuote('Aakhyan','Corporate Training')">Aakhyan</a>
+      <a onclick="openQuote('Aamarsh','CSR Projects')">Aamarsh</a>
+      <a onclick="openQuote('Abhisarg','Event Management')">Abhisarg</a>
+    </div>
+    <div class="ft-col"><h4>CONNECT</h4>
+      <a href="https://aniradichita.wordpress.com" target="_blank">Website</a>
+      <a href="https://www.facebook.com/aniradichita/" target="_blank">Facebook</a>
+      <a onclick="gp('studio')">Book Studio</a>
+      <a onclick="gp('contact')">Contact Us</a>
+    </div>
+  </div>
+  <div class="ft-bot"><p>© 2026 <span>Aniradichita</span> Theatre and Films Association · All Rights Reserved · Section 8 Not-for-Profit</p><p style="color:#222;">Made with ❤️ for <span>Performing Arts</span></p></div>
+</footer>
+
+<script>
+// ── PAGE ROUTER ──
+function gp(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  const el=document.getElementById('nl-'+id);
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  return false;
+}
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',window.scrollY>10);});
+function toggleMob(){document.getElementById('mobMenu').classList.toggle('open');}
+
+// ── QUOTE MODAL ──
+const quoteFields={
+  'Pravartan':[{l:'Campaign Objective',p:'e.g. Brand launch, product promotion...',t:'input'},{l:'Target Market / Audience',p:'e.g. Youth, corporate, mass market',t:'input'},{l:'Preferred Art Form',p:'e.g. Flash mob, theatre, video',t:'input'},{l:'Budget Range',p:'e.g. ₹50,000 – ₹2,00,000',t:'input'},{l:'Timeline / Event Date',p:'e.g. June 2026, 3 weeks from now',t:'input'},{l:'Additional Details',p:'Any specific requirements, location, theme...',t:'ta'}],
+  'Aakhyan':[{l:'Organisation / Company Name',p:'e.g. ABC Pvt. Ltd.',t:'input'},{l:'No. of Participants',p:'e.g. 30–50 employees',t:'input'},{l:'Training Objective',p:'e.g. Leadership, communication, team building',t:'input'},{l:'Preferred Duration',p:'e.g. Half day, full day, 2-day residential',t:'input'},{l:'Location Preference',p:'e.g. Our office, offsite venue',t:'input'},{l:'Additional Notes',p:'Special needs, dietary requirements, etc.',t:'ta'}],
+  'Aamarsh':[{l:'Company / Brand / NGO Name',p:'e.g. Tata Motors CSR Division',t:'input'},{l:'CSR Cause / Theme',p:'e.g. Girl child education, water conservation',t:'input'},{l:'Target Community',p:'e.g. Rural Gujarat, urban slums',t:'input'},{l:'Budget Allocated',p:'e.g. ₹5 Lakhs',t:'input'},{l:'Geographic Reach',p:'e.g. Single city, pan-India',t:'input'},{l:'Expected Impact / Output',p:'No. of people reached, events planned...',t:'ta'}],
+  'Abhisarg':[{l:'Event Name / Occasion',p:'e.g. Annual Day, Product Launch',t:'input'},{l:'Expected No. of Attendees',p:'e.g. 500 people',t:'input'},{l:'Venue (if finalised)',p:'e.g. Grand Bhagwati, Ahmedabad',t:'input'},{l:'Date & Time',p:'e.g. 15 June 2026, Evening',t:'input'},{l:'Services Required',p:'e.g. Anchor, performers, light & sound, décor',t:'input'},{l:'Budget Range',p:'e.g. ₹2 Lakhs – ₹5 Lakhs',t:'ta'}]
+};
+function openQuote(svc,sub){
+  document.getElementById('modalTitle').textContent='Request a Quote — '+svc;
+  document.getElementById('modalSub').textContent=sub;
+  const fields=quoteFields[svc]||[];
+  let html='<div style="display:grid;gap:12px;">';
+  fields.forEach(f=>{
+    html+=`<div class="mf-field"><label>${f.l}</label>`;
+    if(f.t==='ta') html+=`<textarea placeholder="${f.p}"></textarea>`;
+    else html+=`<input placeholder="${f.p}"/>`;
+    html+='</div>';
+  });
+  html+=`<div class="mf-row"><div class="mf-field"><label>YOUR NAME</label><input placeholder="Full Name"/></div><div class="mf-field"><label>PHONE / EMAIL</label><input placeholder="Contact details"/></div></div>`;
+  html+=`<button class="mf-submit" onclick="alert('✅ Quote request submitted! Our team will contact you within 24 hours.\\nHum Aap ke PAaaS Hai! 🎭');closeModal()">Submit Quote Request →</button></div>`;
+  document.getElementById('modalForm').innerHTML=html;
+  document.getElementById('quoteModal').classList.add('open');
+}
+function closeModal(){document.getElementById('quoteModal').classList.remove('open');}
+document.getElementById('quoteModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ── TICKET/RSVP MODALS ──
+function openTicket(ev){document.getElementById('tmTitle').textContent='Book Tickets';document.getElementById('tmSub').textContent=ev;document.getElementById('ticketModal').classList.add('open');}
+function closeModal2(){document.getElementById('ticketModal').classList.remove('open');}
+document.getElementById('ticketModal').addEventListener('click',function(e){if(e.target===this)closeModal2();});
+function openRSVP(ev){document.getElementById('rsvpModal').querySelector('h3').textContent='RSVP — '+ev;document.getElementById('rsvpModal').classList.add('open');}
+function closeModal3(){document.getElementById('rsvpModal').classList.remove('open');}
+document.getElementById('rsvpModal').addEventListener('click',function(e){if(e.target===this)closeModal3();});
+
+// ── AI NEWS TICKER ──
+async function fetchNews(){
+  const btn=document.querySelector('.news-btn');
+  btn.textContent='⟳ Loading...'; btn.disabled=true;
+  const prompt=`You are a news curator for Aniradichita Theatre and Films Association — an Indian performing arts startup in Vadodara. Generate exactly 8 REAL-SOUNDING, CURRENT news headlines (max 15 words each) with a short source label about: Indian theatre, performing arts industry, CSR through arts, cultural events in India, Bollywood/OTT trends, Gujarati cinema, experiential learning, and corporate culture in India for April 2026. Return ONLY a JSON array of objects like: [{"headline":"...","source":"The Hindu","url":"https://thehindu.com"}]. No extra text.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const raw=data.content?.map(b=>b.text||'').join('');
+    const items=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    buildTicker(items);
+  }catch(e){
+    buildTicker([
+      {headline:'Indian theatre companies report 40% growth in corporate partnerships in 2026',source:'The Hindu',url:'https://thehindu.com'},
+      {headline:'CSR through performing arts gains momentum across Gujarat corporates this year',source:'TOI',url:'https://timesofindia.com'},
+      {headline:'Experiential learning modules replace traditional training at top Indian firms',source:'ET',url:'https://economictimes.com'},
+      {headline:'Flash mob marketing trend rises sharply across Tier-2 Indian cities',source:'Mint',url:'https://livemint.com'},
+      {headline:'OTT platforms invest heavily in Indian regional content and theatre adaptations',source:'Variety',url:'https://variety.com'},
+      {headline:'Performing arts therapy earns recognition in Indian corporate wellness programs',source:'HBR',url:'https://hbr.org'},
+      {headline:'Section 8 startups lead social impact initiatives across rural India in 2026',source:'Forbes India',url:'https://forbesindia.com'},
+      {headline:'Gujarati cinema celebrates record viewership on streaming platforms this quarter',source:'Indian Express',url:'https://indianexpress.com'}
+    ]);
+  }
+  btn.textContent='⟳ Refresh'; btn.disabled=false;
+}
+function buildTicker(items){
+  const dbl=[...items,...items];
+  const html=dbl.map(i=>`<a class="t-item" href="${i.url||'#'}" target="_blank" rel="noopener"><span class="t-dot">●</span>${i.headline} <span style="color:#666;font-size:.65rem;margin-left:4px;">[${i.source||'News'}]</span></a>`).join('');
+  document.getElementById('tickerTrack').innerHTML=html;
+}
+window.addEventListener('load',fetchNews);
+
+// ── AI SCRIPT GENERATOR ──
+async function generateScript(){
+  const c=document.getElementById('gc').value.trim();
+  const g=document.getElementById('gg').value.trim();
+  const a=document.getElementById('ga').value;
+  const f=document.getElementById('gf').value;
+  const l=document.getElementById('gl').value;
+  const d=document.getElementById('gd').value;
+  if(!g){alert('Please describe your CSR goal.');return;}
+  const btn=document.getElementById('genBtn');
+  const box=document.getElementById('outBox');
+  const out=document.getElementById('outTxt');
+  btn.disabled=true; btn.textContent='⏳ Generating Script Concept...';
+  box.style.display='block';
+  out.innerHTML='<em style="color:#555">Crafting your script concept in '+l+'...</em>';
+  const prompt=`You are a creative director at Aniradichita Theatre and Films Association — India's first Performing Arts As A Service (PAaaS) startup based in Vadodara, Gujarat. You blend drama, music, dance, and film with business and social impact.
+
+Generate a compelling CSR theatre/drama script concept:
+- Company/Brand: ${c||'A corporate partner'}
+- CSR Goal: ${g}
+- Target Audience: ${a}
+- Art Form: ${f}
+- Duration: ${d}
+- OUTPUT LANGUAGE: ${l} — Write the ENTIRE response in ${l}. If ${l} is not English, use the native script of that language throughout.
+
+Structure:
+🎭 INITIATIVE TITLE:
+📖 CONCEPT SYNOPSIS:
+🎬 SCENE BREAKDOWN: (Scene 1, 2, 3)
+🎵 MUSICAL/ARTISTIC ELEMENTS:
+💡 EMOTIONAL CLIMAX:
+🎯 CALL TO ACTION:
+📊 EXPECTED IMPACT:
+
+Be evocative, culturally rooted in Indian context, and impactful. Use authentic cultural references.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    out.textContent=data.content?.map(b=>b.text||'').join('')||'No response.';
+  }catch(e){out.textContent='Something went wrong. Please try again.';}
+  btn.disabled=false; btn.textContent='✨ Generate CSR Script Concept';
+}
+
+// ── STUDIO CALENDAR ──
+let calYear=2026,calMonth=3; // April 2026 (0-indexed)
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const booked={3:[5,12,18,19,25],4:[3,10,17]};
+function renderCal(){
+  document.getElementById('calLabel').textContent=MONTHS[calMonth]+' '+calYear;
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  let html='';
+  for(let i=0;i<first;i++) html+='<div></div>';
+  for(let d=1;d<=days;d++){
+    const isPast=new Date(calYear,calMonth,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isBooked=(booked[calMonth]||[]).includes(d);
+    const isToday=calYear===today.getFullYear()&&calMonth===today.getMonth()&&d===today.getDate();
+    let cls='cal-day';
+    if(isPast||isBooked) cls+=' disabled';
+    if(isToday) cls+=' today';
+    const label=isBooked?`<div style="font-size:.5rem;color:#444">Booked</div>`:'';
+    html+=`<div class="${cls}" onclick="${isPast||isBooked?'':'selDay(this,'+d+')'}">${d}${label}</div>`;
+  }
+  document.getElementById('calDays').innerHTML=html;
+}
+function changeMonth(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+function selDay(el,d){document.querySelectorAll('.cal-day.selected').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');}
+function selTime(el){if(el.classList.contains('booked'))return;document.querySelectorAll('.ts.selected').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');}
+function selectPkg(el,id){document.querySelectorAll('.pkg').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');}
+function confirmStudioBook(){alert('🎙️ Studio Booking Confirmed!\nOur team will WhatsApp you within 2 hours to confirm your slot.\n\nHum Aap ke PAaaS Hai! 🎭');}
+renderCal();
+</script>
+</body>
+</html>
