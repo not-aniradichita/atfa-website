@@ -10,7 +10,7 @@ The function is **deployed**. To switch it on, add one secret:
    Google account → "Create API key"). No billing required for the free tier.
 2. In Supabase → Project `thespians-tribe` → Edge Functions → **Secrets**, add:
    - `GEMINI_API_KEY` = the key from step 1
-   - `GEMINI_MODEL` = `gemini-2.0-flash` (optional; this is the default)
+   - `GEMINI_MODEL` = `gemini-3.6-flash` (optional; this is the default)
 3. That's it — the generator goes live immediately. Test it on the Services page.
 
 **How it works:** the browser builds the creative prompt from the form and POSTs

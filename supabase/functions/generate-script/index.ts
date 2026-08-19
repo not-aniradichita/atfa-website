@@ -10,7 +10,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.0-flash";
+const MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-3.6-flash";
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: safePrompt }] }],
-        generationConfig: { temperature: 0.9, maxOutputTokens: 2048 },
+        generationConfig: { temperature: 0.9, maxOutputTokens: 8192 },
       }),
     });
     const data = await res.json();
