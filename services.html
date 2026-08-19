@@ -782,9 +782,20 @@ Structure:
 
 Match the chosen genre (${genre}) faithfully — tonally, structurally and emotionally. Be evocative, culturally rooted in Indian context where relevant, and impactful. Use authentic cultural references.`;
   try{
-    const text=await window.claude.complete({messages:[{role:'user',content:prompt}]});
-    out.textContent=text||'No response.';
-  }catch(e){out.textContent='Something went wrong. Please try again.';}
+    const res=await fetch('https://qgxgvyoosvbwmnnxggqz.supabase.co/functions/v1/generate-script',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt})
+    });
+    const data=await res.json();
+    if(data && data.text){
+      out.textContent=data.text;
+    }else if(data && data.error==='not_configured'){
+      out.textContent='✨ Our AI script generator is being switched on and will be live very shortly. In the meantime, share your idea with us at office@aniradichita.com and our team will craft a concept for you. Hum Aap ke PAaaS Hai! 🎭';
+    }else{
+      out.textContent='Something went wrong while generating your script. Please try again in a moment — or email office@aniradichita.com and we’ll help.';
+    }
+  }catch(e){out.textContent='Could not reach the script service. Please check your connection and try again.';}
   btn.disabled=false; btn.textContent='✨ Generate Script Concept';
 }
 
