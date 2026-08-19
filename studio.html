@@ -391,7 +391,7 @@ footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
 }
 </style>
 </head>
-<body data-page="home">
+<body data-page="studio">
 
 <!-- NAV -->
 <nav id="nav">
@@ -434,108 +434,131 @@ footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
 
 <!-- ticket / rsvp modals removed; events page removed -->
 
-<div class="pg active" id="pg-home">
-  <div class="hero">
-    <div class="hero-bg">
-      <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Aniradichita Performance" onerror="this.style.display='none'"/>
-    </div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="badge" style="background:linear-gradient(90deg,var(--red),#a8231d);max-width:fit-content;font-size:.62rem;line-height:1.5;padding:6px 14px;letter-spacing:1.5px;">★ FIRST HOLISTIC ART &amp; CULTURE BASED STARTUP · REGISTERED WITH STARTUP INDIA</div>
-      <h1>Where <span>Art</span> Meets<br/>Business</h1>
-      <div class="tagline">"Hum Aap ke PAaaS Hai"</div>
-      <p class="hero-desc">India's first Performing Arts As A Service startup — blending drama, music, dance & film into marketing, CSR, training & education for all businesses.</p>
-      <div class="hero-btns">
-        <button class="btn-w" onclick="gp('services')">▶ Our Services</button>
-        <button class="btn-g" onclick="gp('about')">ℹ More Info</button>
-        <button class="btn-r" onclick="gp('studio')">🎙️ Book Studio</button>
-      </div>
-    </div>
+<div class="pg active" id="pg-studio">
+  <div class="page-hero">
+    <div class="badge">🎙️ BOOK STUDIO</div>
+    <h1>Aniradichita <span style="color:var(--red)">Studio</span></h1>
+    <p>A cozy, professional space for performances, recordings, rehearsals and creative gatherings — built by artists, for artists.</p>
   </div>
+  <div class="studio-wrap">
+    <!-- LEFT: studio info -->
+    <div class="studio-col">
+      <div class="s-card">
+        <h3>✨ Studio Features</h3>
+        <div class="feat-grid">
+          <div class="feat"><div class="fi">🎭</div><div class="ft"><b>Cozy Performance Space</b>For intimate live performances</div></div>
+          <div class="feat"><div class="fi">💡</div><div class="ft"><b>Studio Lights</b>Stage lighting available on site</div></div>
+          <div class="feat"><div class="fi">🪔</div><div class="ft"><b>Indian Sitting</b>Floor seating, baithak-style</div></div>
+          <div class="feat"><div class="fi">🎬</div><div class="ft"><b>Shooting Equipment</b>Camera, tripod &amp; basic kit</div></div>
+          <div class="feat"><div class="fi">🌀</div><div class="ft"><b>Rehearsal Space</b>AC &amp; Non-AC modes available</div></div>
+          <div class="feat"><div class="fi">👥</div><div class="ft"><b>Capacity 25–30</b>Comfortable for small groups</div></div>
+        </div>
+      </div>
 
-  <!-- NEWS TICKER (redesigned) -->
-  <div class="news-bar news-bar-v2">
-    <div class="news-label news-label-v2">
-      <span class="pulse-dot"></span>
-      <span>LIVE</span>
-      <span class="news-label-sub">DISPATCH</span>
-    </div>
-    <div class="ticker-wrap">
-      <div class="ticker-track" id="tickerTrack">
-        <span class="t-item"><span class="t-dot">●</span>Fetching latest performing arts news...</span>
-        <span class="t-item"><span class="t-dot">●</span>Aniradichita · Section 8 Not-for-Profit · Vadodara, India</span>
-        <span class="t-item"><span class="t-dot">●</span>India's first PAaaS startup · Hum Aap ke PAaaS Hai</span>
+      <div class="s-card">
+        <h3>🎙️ Booking Open For (But Not Limited To)</h3>
+        <div class="use-list">
+          <span class="use-pill">🎤 Open Mics</span>
+          <span class="use-pill">🎵 Music Shows</span>
+          <span class="use-pill">🎂 Birthday Celebrations / Parties</span>
+          <span class="use-pill">🎧 Podcasts</span>
+          <span class="use-pill">🗣️ Monologue Performances</span>
+          <span class="use-pill">🧠 Workshops</span>
+          <span class="use-pill">📚 Seminars</span>
+          <span class="use-pill">🤝 Meetups</span>
+          <span class="use-pill">🎭 Rehearsals</span>
+          <span class="use-pill">✨ &amp; more…</span>
+        </div>
       </div>
-    </div>
-    <button class="news-btn news-btn-v2" onclick="fetchNews()">↻ REFRESH</button>
-  </div>
 
-  <!-- IMPACT TILES -->
-  <div class="impact-wrap">
-    <div class="impact-hd">
-      <span class="impact-eyebrow">★ THE IMPACT WE'VE MADE</span>
-      <h2 class="impact-title">Numbers that tell the <span style="color:var(--red);font-style:italic;">story</span></h2>
-    </div>
-    <div class="impact-grid">
-      <div class="impact-card">
-        <div class="impact-glyph">🎭</div>
-        <div class="impact-num"><span class="impact-counter" data-target="1000">0</span><span class="impact-plus">+</span></div>
-        <div class="impact-label">Artists Impacted</div>
-        <div class="impact-sub">Performers, students &amp; creators who've collaborated with us across India.</div>
+      <div class="s-card">
+        <h3>💰 Studio Packages</h3>
+        <table class="pkg-table">
+          <thead>
+            <tr><th style="text-align:left;padding-left:14px;">Package</th><th>1 hr</th><th>2 hrs</th><th>3 hrs</th><th>4 hrs</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tier-tag">Basic <span class="tier-pill tier-wd">MON–THU</span><small>Weekday rate</small></td>
+              <td class="pr">₹800</td><td class="pr">₹1,500</td><td class="pr">₹2,200</td><td class="pr">₹2,800</td>
+            </tr>
+            <tr>
+              <td class="tier-tag">Basic <span class="tier-pill tier-we">FRI–SUN</span><small>Weekend rate</small></td>
+              <td class="pr">₹1,000</td><td class="pr">₹1,900</td><td class="pr">₹2,800</td><td class="pr">₹3,600</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="background:#0d0d0d;border-radius:6px;padding:12px 14px;border:1px solid #1a1a1a;margin-top:14px;">
+          <p style="font-size:.74rem;color:#888;line-height:1.6;">✓ All packages include basic equipment &amp; technical support</p>
+          <p style="font-size:.74rem;color:#888;line-height:1.6;">✓ Additional crew &amp; equipment available on request</p>
+        </div>
       </div>
-      <div class="impact-card">
-        <div class="impact-glyph">🌏</div>
-        <div class="impact-num"><span class="impact-counter" data-target="10">0</span><span class="impact-plus">M+</span></div>
-        <div class="impact-label">Lives Reached</div>
-        <div class="impact-sub">Audiences moved by our performances, campaigns, films &amp; CSR projects.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-glyph">🎨</div>
-        <div class="impact-num"><span class="impact-counter" data-target="12">0</span><span class="impact-plus">+</span></div>
-        <div class="impact-label">Art Forms</div>
-        <div class="impact-sub">From Bhavai &amp; street theatre to film, music, dance &amp; spoken word.</div>
-      </div>
-      <div class="impact-card impact-card-feature">
-        <div class="impact-glyph">🇮🇳</div>
-        <div class="impact-num impact-num-text">Startup India</div>
-        <div class="impact-label">Registered</div>
-        <div class="impact-sub">India's 1st holistic Art &amp; Culture based startup — Section 8 Not-for-Profit.</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- GALLERY STRIP -->
-  <div class="gallery-strip">
-    <div class="row-hd">From Our Performances</div>
-    <div class="gal-grid">
-      <div class="gal-item tall wide"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Performance 1"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240711_191733.jpg" alt="Performance 2"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240224-wa0056.jpg" alt="Performance 3"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt="Performance 4"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0012.jpg" alt="Performance 5"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240112_132625.jpg" alt="Performance 6"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt="Performance 7"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/1g9a77061.jpg" alt="Performance 8"/></div>
+      <div class="s-card">
+        <h3>➕ Add-Ons</h3>
+        <div id="addonList"></div>
+        <p style="font-size:.7rem;color:#666;margin-top:8px;line-height:1.5;">Add-ons are charged per hour of your booking. Multiple add-ons can be combined.</p>
+      </div>
     </div>
-  </div>
 
-  <!-- SPOTLIGHT — AI GENERATOR -->
-  <div class="spotlight">
-    <div>
-      <div class="sp-tag">✨ AI-POWERED · EXCLUSIVE TOOL</div>
-      <h2>Generate Your Script with AI</h2>
-      <p>Describe your idea or goal in any Indian language and let our AI craft a complete theatre/drama/film script concept — across genres, art forms, and durations.</p>
-      <button class="btn-r" onclick="gp('services')">▶ Try the Generator</button>
-    </div>
-    <div class="sp-visual">
-      <div class="sp-ico">🎭</div>
-      <h3 style="margin-bottom:6px;font-size:.95rem;">AI + Theatre</h3>
-      <p>Performing Arts meets Artificial Intelligence for real social impact</p>
+    <!-- RIGHT: booking flow -->
+    <div class="studio-col">
+      <div class="s-card">
+        <h3><span class="num">1</span> Pick a Date</h3>
+        <div class="cal2-nav">
+          <button onclick="sb.changeMonth(-1)">‹ Prev</button>
+          <span class="cal2-label" id="cal2Label">Month YYYY</span>
+          <button onclick="sb.changeMonth(1)">Next ›</button>
+        </div>
+        <div class="cal2" id="cal2"></div>
+        <div class="cal2-legend">
+          <span><i style="background:#0d0d0d;border:1px solid #2a2a2a;"></i>Available</span>
+          <span><i style="background:var(--gold);"></i>Some slots booked</span>
+          <span><i style="background:#888;"></i>Fully booked</span>
+          <span><i style="background:var(--red);"></i>Selected</span>
+        </div>
+      </div>
+
+      <div class="s-card">
+        <h3><span class="num">2</span> Choose Duration <span id="tierDisplay" style="font-size:.7rem;font-weight:600;color:#666;margin-left:auto;letter-spacing:.5px;">— select a date first</span></h3>
+        <div class="dur-grid" id="durGrid"></div>
+      </div>
+
+      <div class="s-card">
+        <h3><span class="num">3</span> Pick Start Time</h3>
+        <div class="slot-grid" id="slotGrid"></div>
+        <p style="font-size:.7rem;color:#666;margin-top:10px;line-height:1.5;" id="slotHint">Select a date and duration above to see available start times.</p>
+      </div>
+
+      <div class="s-card">
+        <h3><span class="num">4</span> Your Details</h3>
+        <div class="summary" id="bookSummary" style="display:none;"></div>
+        <div style="display:grid;gap:10px;">
+          <div class="book-row">
+            <div><label class="book-label">Full Name</label><input class="book-input" id="bk_name" placeholder="Your Name"/></div>
+            <div><label class="book-label">Phone / WhatsApp</label><input class="book-input" id="bk_phone" placeholder="+91 XXXXX XXXXX"/></div>
+          </div>
+          <div class="book-row">
+            <div><label class="book-label">Email</label><input class="book-input" id="bk_email" type="email" placeholder="you@example.com"/></div>
+            <div><label class="book-label">Purpose</label>
+              <select class="book-input" id="bk_purpose">
+                <option>Open Mic</option><option>Music Show</option><option>Birthday / Party</option>
+                <option>Podcast Recording</option><option>Monologue Performance</option><option>Workshop</option>
+                <option>Seminar</option><option>Meetup</option><option>Rehearsal</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div><label class="book-label">Special Requirements / Notes</label><input class="book-input" id="bk_notes" placeholder="Equipment, setup, decor, etc."/></div>
+          <button class="book-cta" id="bookCta" onclick="sb.submit()" disabled>📩 Send Booking Request to office@aniradichita.com</button>
+          <p style="font-size:.68rem;color:#666;text-align:center;line-height:1.5;">We will confirm your slot over email / WhatsApp within 2 hours.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════ ABOUT ══════════ -->
+<!-- ══════════ BLOGS ══════════ -->
 <footer>
   <div class="ft-grid">
     <div class="ft-brand">
@@ -738,5 +761,6 @@ function sendContact(){
 document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
 var el=document.getElementById('nl-'+p);if(el)el.classList.add('active');})();
 </script>
+<script src="studio-booking.js"></script>
 </body>
 </html>

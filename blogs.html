@@ -391,7 +391,7 @@ footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
 }
 </style>
 </head>
-<body data-page="home">
+<body data-page="blogs">
 
 <!-- NAV -->
 <nav id="nav">
@@ -434,108 +434,35 @@ footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
 
 <!-- ticket / rsvp modals removed; events page removed -->
 
-<div class="pg active" id="pg-home">
-  <div class="hero">
-    <div class="hero-bg">
-      <img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Aniradichita Performance" onerror="this.style.display='none'"/>
-    </div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="badge" style="background:linear-gradient(90deg,var(--red),#a8231d);max-width:fit-content;font-size:.62rem;line-height:1.5;padding:6px 14px;letter-spacing:1.5px;">★ FIRST HOLISTIC ART &amp; CULTURE BASED STARTUP · REGISTERED WITH STARTUP INDIA</div>
-      <h1>Where <span>Art</span> Meets<br/>Business</h1>
-      <div class="tagline">"Hum Aap ke PAaaS Hai"</div>
-      <p class="hero-desc">India's first Performing Arts As A Service startup — blending drama, music, dance & film into marketing, CSR, training & education for all businesses.</p>
-      <div class="hero-btns">
-        <button class="btn-w" onclick="gp('services')">▶ Our Services</button>
-        <button class="btn-g" onclick="gp('about')">ℹ More Info</button>
-        <button class="btn-r" onclick="gp('studio')">🎙️ Book Studio</button>
-      </div>
-    </div>
+<div class="pg active" id="pg-blogs">
+  <div class="page-hero">
+    <div class="badge">READ LIST</div>
+    <h1>From the <span style="color:var(--red)">Blog</span></h1>
+    <p>Deep dives into cinema, theatre, culture, literature, music, OTT and everything in between.</p>
   </div>
-
-  <!-- NEWS TICKER (redesigned) -->
-  <div class="news-bar news-bar-v2">
-    <div class="news-label news-label-v2">
-      <span class="pulse-dot"></span>
-      <span>LIVE</span>
-      <span class="news-label-sub">DISPATCH</span>
-    </div>
-    <div class="ticker-wrap">
-      <div class="ticker-track" id="tickerTrack">
-        <span class="t-item"><span class="t-dot">●</span>Fetching latest performing arts news...</span>
-        <span class="t-item"><span class="t-dot">●</span>Aniradichita · Section 8 Not-for-Profit · Vadodara, India</span>
-        <span class="t-item"><span class="t-dot">●</span>India's first PAaaS startup · Hum Aap ke PAaaS Hai</span>
-      </div>
-    </div>
-    <button class="news-btn news-btn-v2" onclick="fetchNews()">↻ REFRESH</button>
+  <div style="padding:0 4% 16px;display:flex;gap:8px;flex-wrap:wrap;">
+    <span style="background:var(--red);color:#fff;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">All</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Bollywood</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Theatre</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">OTT</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Global Cinema</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Music</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Literature</span>
+    <span style="background:#222;color:#aaa;font-size:.65rem;padding:4px 12px;border-radius:20px;cursor:pointer;">Gujarati Cinema</span>
   </div>
-
-  <!-- IMPACT TILES -->
-  <div class="impact-wrap">
-    <div class="impact-hd">
-      <span class="impact-eyebrow">★ THE IMPACT WE'VE MADE</span>
-      <h2 class="impact-title">Numbers that tell the <span style="color:var(--red);font-style:italic;">story</span></h2>
-    </div>
-    <div class="impact-grid">
-      <div class="impact-card">
-        <div class="impact-glyph">🎭</div>
-        <div class="impact-num"><span class="impact-counter" data-target="1000">0</span><span class="impact-plus">+</span></div>
-        <div class="impact-label">Artists Impacted</div>
-        <div class="impact-sub">Performers, students &amp; creators who've collaborated with us across India.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-glyph">🌏</div>
-        <div class="impact-num"><span class="impact-counter" data-target="10">0</span><span class="impact-plus">M+</span></div>
-        <div class="impact-label">Lives Reached</div>
-        <div class="impact-sub">Audiences moved by our performances, campaigns, films &amp; CSR projects.</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-glyph">🎨</div>
-        <div class="impact-num"><span class="impact-counter" data-target="12">0</span><span class="impact-plus">+</span></div>
-        <div class="impact-label">Art Forms</div>
-        <div class="impact-sub">From Bhavai &amp; street theatre to film, music, dance &amp; spoken word.</div>
-      </div>
-      <div class="impact-card impact-card-feature">
-        <div class="impact-glyph">🇮🇳</div>
-        <div class="impact-num impact-num-text">Startup India</div>
-        <div class="impact-label">Registered</div>
-        <div class="impact-sub">India's 1st holistic Art &amp; Culture based startup — Section 8 Not-for-Profit.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- GALLERY STRIP -->
-  <div class="gallery-strip">
-    <div class="row-hd">From Our Performances</div>
-    <div class="gal-grid">
-      <div class="gal-item tall wide"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240712_193542-1.jpg" alt="Performance 1"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240711_191733.jpg" alt="Performance 2"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240224-wa0056.jpg" alt="Performance 3"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0021.jpg" alt="Performance 4"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/img-20240423-wa0012.jpg" alt="Performance 5"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240112_132625.jpg" alt="Performance 6"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/10/20240928_132110.jpg" alt="Performance 7"/></div>
-      <div class="gal-item"><img src="https://aniradichita.wordpress.com/wp-content/uploads/2024/01/1g9a77061.jpg" alt="Performance 8"/></div>
-    </div>
-  </div>
-
-  <!-- SPOTLIGHT — AI GENERATOR -->
-  <div class="spotlight">
-    <div>
-      <div class="sp-tag">✨ AI-POWERED · EXCLUSIVE TOOL</div>
-      <h2>Generate Your Script with AI</h2>
-      <p>Describe your idea or goal in any Indian language and let our AI craft a complete theatre/drama/film script concept — across genres, art forms, and durations.</p>
-      <button class="btn-r" onclick="gp('services')">▶ Try the Generator</button>
-    </div>
-    <div class="sp-visual">
-      <div class="sp-ico">🎭</div>
-      <h3 style="margin-bottom:6px;font-size:.95rem;">AI + Theatre</h3>
-      <p>Performing Arts meets Artificial Intelligence for real social impact</p>
-    </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:0 4% 48px;">
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/05/31/chupke-chupke/" target="_blank"><div class="blog-thumb" style="background:#1a0000;"><span class="bt-ico">🎬</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Chupke Chupke</h3><p>Hrishikesh Mukherjee's timeless comedy revisited</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/04/27/satte-pe-satta/" target="_blank"><div class="blog-thumb" style="background:#000d1a;"><span class="bt-ico">🎥</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Satte Pe Satta</h3><p>The 1982 MASALA classic — 100% family watch</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/05/12/angrezi-medium/" target="_blank"><div class="blog-thumb" style="background:#0d0d0d;"><span class="bt-ico">🎞️</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Angrezi Medium</h3><p>Irrfan Khan's final film — a father's love story</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/04/19/mera-naam-joker/" target="_blank"><div class="blog-thumb" style="background:#1a1500;"><span class="bt-ico">🎪</span></div><div class="blog-info"><div class="bcat">BOLLYWOOD</div><h3>Mera Naam Joker</h3><p>Raj Kapoor's golden era anthem revisited</p></div></a></div>
+    <div class="blog-card"><a href="https://aniradichita.wordpress.com/2020/06/14/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%A7%E0%A4%BF%E0%A4%B7%E0%A5%8D%E0%A4%A0%E0%A4%BE%E0%A4%A8svadhisthana/" target="_blank"><div class="blog-thumb" style="background:#0d001a;"><span class="bt-ico">📖</span></div><div class="blog-info"><div class="bcat">LITERATURE</div><h3>Svadhisthana</h3><p>Desire, silence and the deep ocean of truth</p></div></a></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#001a00;"><span class="bt-ico">🎵</span></div><div class="blog-info"><div class="bcat">MUSIC</div><h3>Music & Emotion</h3><p>Indian classical ragas and the human emotional landscape</p></div></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#1a000d;"><span class="bt-ico">📺</span></div><div class="blog-info"><div class="bcat">OTT</div><h3>Netflix & Indian OTT</h3><p>How streaming changed the content landscape forever</p></div></div>
+    <div class="blog-card"><div class="blog-thumb" style="background:#001a1a;"><span class="bt-ico">🎭</span></div><div class="blog-info"><div class="bcat">THEATRE</div><h3>Folk Theatre Forms of India</h3><p>The roots and richness of Indian performing arts traditions</p></div></div>
   </div>
 </div>
 
-<!-- ══════════ ABOUT ══════════ -->
+<!-- ══════════ CONTACT ══════════ -->
 <footer>
   <div class="ft-grid">
     <div class="ft-brand">
