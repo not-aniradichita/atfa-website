@@ -11,8 +11,11 @@ and sends a confirmation reply back in WhatsApp. No web dashboard needed.
 |-------|-------|--------|
 | `studio_bookings` table + booking RPCs | Supabase `thespians-tribe` | ✅ live |
 | AFTER INSERT trigger → calls `wa-notify` via `pg_net` | Supabase | ✅ live |
-| `wa-notify` edge function (sends the alert) | `supabase/functions/wa-notify` | ⬜ deploy |
-| `wa-webhook` edge function (handles button taps) | `supabase/functions/wa-webhook` | ⬜ deploy |
+| `wa-notify` edge function (sends the alert) | `supabase/functions/wa-notify` | ✅ deployed |
+| `wa-webhook` edge function (handles button taps) | `supabase/functions/wa-webhook` | ✅ deployed |
+
+**Remaining:** create the Meta app + template (steps 1–2), set the secrets
+(step 3), and point the webhook at `wa-webhook` (step 5). Step 4 is done.
 
 ## What you need to do (one-time)
 
@@ -41,8 +44,9 @@ Wait for it to be **Approved** (usually minutes).
 | `WA_INTERNAL_SECRET` | (value shared privately — must match the DB trigger) |
 | `WHATSAPP_TEMPLATE` | `studio_booking_alert` (optional; this is the default) |
 
-### 4. Deploy the two functions
-Either approve the assistant's deploy, or from the repo root:
+### 4. Deploy the two functions — ✅ already done
+`wa-notify` and `wa-webhook` are deployed and ACTIVE (both with
+`--no-verify-jwt`). To redeploy after edits:
 ```
 supabase functions deploy wa-notify --no-verify-jwt
 supabase functions deploy wa-webhook --no-verify-jwt
