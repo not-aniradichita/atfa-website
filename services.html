@@ -515,6 +515,10 @@ footer{background:#000;border-top:1px solid #1a1a1a;padding:36px 4% 20px;}
       <div class="gen-field"><label>DURATION</label>
         <select id="gd"><option>Short (5–10 min)</option><option>Medium (20–30 min)</option><option>Full Programme (60 min)</option></select>
       </div>
+      <div class="gen-field gen-full" style="border-top:1px solid var(--border,#2a2a2a);padding-top:14px;margin-top:4px;"><label style="color:var(--red,#E63946);">YOUR DETAILS — so our team can follow up on your concept *</label></div>
+      <div class="gen-field"><label>YOUR NAME *</label><input id="gname" placeholder="Full name"/></div>
+      <div class="gen-field"><label>PHONE / WHATSAPP *</label><input id="gphone" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="gen-field gen-full"><label>EMAIL *</label><input id="gemail" type="email" placeholder="you@example.com"/></div>
       <button class="gen-btn gen-full" id="genBtn" onclick="generateScript()">✨ Generate Script Concept</button>
     </div>
     <div class="out-box" id="outBox"><h4>Your Script Concept</h4><div class="out-txt" id="outTxt"></div></div>
@@ -753,7 +757,12 @@ async function generateScript(){
   const genre=document.getElementById('ggenre').value;
   const l=document.getElementById('gl').value;
   const d=document.getElementById('gd').value;
+  const uname=document.getElementById('gname').value.trim();
+  const uphone=document.getElementById('gphone').value.trim();
+  const uemail=document.getElementById('gemail').value.trim();
   if(!g){alert('Please describe your story idea or goal.');return;}
+  if(!uname||!uphone||!uemail){alert('Please fill in your name, phone and email so our team can follow up on your concept.');return;}
+  if(!/^\S+@\S+\.\S+$/.test(uemail)){alert('Please enter a valid email address.');return;}
   const btn=document.getElementById('genBtn');
   const box=document.getElementById('outBox');
   const out=document.getElementById('outTxt');
@@ -785,7 +794,11 @@ Match the chosen genre (${genre}) faithfully — tonally, structurally and emoti
     const res=await fetch('https://qgxgvyoosvbwmnnxggqz.supabase.co/functions/v1/generate-script',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt})
+      body:JSON.stringify({
+        prompt,
+        contact:{name:uname,phone:uphone,email:uemail},
+        meta:{company:c,audience:a,art_form:f,genre:genre,language:l,duration:d,idea:g}
+      })
     });
     const data=await res.json();
     if(data && data.text){
