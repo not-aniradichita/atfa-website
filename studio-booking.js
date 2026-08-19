@@ -1,7 +1,21 @@
 // Studio Booking System for Aniradichita Studio
+// Backend: Supabase (project "thespians-tribe") — real availability + bookings.
 (function(){
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+// ── Supabase backend config (anon key is public by design; protected by RLS + SECURITY DEFINER RPCs) ──
+const SUPA_URL='https://qgxgvyoosvbwmnnxggqz.supabase.co';
+const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFneGd2eW9vc3Zid21ubnhnZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5OTQyMDMsImV4cCI6MjA5NDU3MDIwM30.BhMlgHFMaBTldzmGSP-DiJdR-2s4v-7TSR2eU4-fDaA';
+async function rpc(fn,args){
+  const res=await fetch(SUPA_URL+'/rest/v1/rpc/'+fn,{
+    method:'POST',
+    headers:{'apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Type':'application/json'},
+    body:JSON.stringify(args||{})
+  });
+  if(!res.ok) throw new Error('rpc '+fn+' failed: '+res.status);
+  return res.json();
+}
 
 // Pricing tiers
 const RATES={
@@ -14,37 +28,6 @@ const ADDONS=[
   {id:'podcast',name:'Podcast Setup',desc:'2 podcast mics, 3 tripods, rolling office chairs for guests',rate:100}
 ];
 
-// Seeded fake bookings per dateKey (YYYY-MM-DD) -> array of booked hours (24h, e.g. [10,11,15,16,17])
-function seededBookings(){
-  const out={};
-  const today=new Date();
-  for(let m=-1;m<=3;m++){
-    const ref=new Date(today.getFullYear(),today.getMonth()+m,1);
-    const days=new Date(ref.getFullYear(),ref.getMonth()+1,0).getDate();
-    for(let d=1;d<=days;d++){
-      const dt=new Date(ref.getFullYear(),ref.getMonth(),d);
-      const key=fmtKey(dt);
-      // pseudo-random based on date
-      const seed=(dt.getFullYear()*1000+dt.getMonth()*40+d);
-      const rnd=(s)=>((Math.sin(s)+1)/2);
-      const r=rnd(seed);
-      const r2=rnd(seed+7);
-      if(r<0.05){ // fully booked day
-        out[key]=Array.from({length:15},(_,i)=>i+8);
-      } else if(r<0.55){ // some slots booked
-        const blocks=Math.floor(r2*3)+1;
-        const hours=[];
-        for(let b=0;b<blocks;b++){
-          const start=8+Math.floor(rnd(seed+b*3+11)*13);
-          const len=1+Math.floor(rnd(seed+b*5+19)*3);
-          for(let h=0;h<len;h++) if(start+h<=22) hours.push(start+h);
-        }
-        out[key]=Array.from(new Set(hours)).sort((a,b)=>a-b);
-      }
-    }
-  }
-  return out;
-}
 function fmtKey(dt){
   return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
 }
@@ -64,10 +47,31 @@ const state={
   duration:null, // 1..4
   startHour:null,
   addons:{},
-  bookings:seededBookings()
+  bookings:{},        // dateKey (YYYY-MM-DD) -> [booked hours]
+  loaded:false,
+  submitting:false
 };
 // align view to today
 state.view.setDate(1);
+
+// ── Load real availability from the backend (booked hours only, no guest data) ──
+async function loadAvailability(){
+  const from=new Date(); from.setHours(0,0,0,0);
+  const to=new Date(from.getFullYear(),from.getMonth(),from.getDate()+365);
+  try{
+    const rows=await rpc('get_studio_availability',{p_from:fmtKey(from),p_to:fmtKey(to)});
+    const map={};
+    (rows||[]).forEach(r=>{
+      (map[r.booking_date]=map[r.booking_date]||[]).push(r.hour);
+    });
+    Object.keys(map).forEach(k=>map[k].sort((a,b)=>a-b));
+    state.bookings=map;
+    state.loaded=true;
+  }catch(e){
+    console.warn('Could not load studio availability:',e);
+    state.loaded=true; // fail open — server still blocks real conflicts on submit
+  }
+}
 
 function renderCal(){
   const v=state.view;
@@ -205,8 +209,8 @@ function renderSummary(){
     ${addonLines.join('')}
     <div class="total"><span>TOTAL</span><b>₹${total.toLocaleString('en-IN')}</b></div>
   `;
-  cta.disabled=false;
-  cta.textContent='📩 Send Booking Request to office@aniradichita.com';
+  cta.disabled=state.submitting;
+  cta.textContent=state.submitting?'⏳ Confirming your slot...':'✅ Confirm Booking';
 }
 
 function parseKey(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);}
@@ -236,7 +240,8 @@ const sb={
     state.addons[id]=!state.addons[id];
     renderAddons(); renderSummary();
   },
-  submit(){
+  async submit(){
+    if(state.submitting) return;
     if(state.startHour===null||!state.duration||!state.selDate) return;
     const name=document.getElementById('bk_name').value.trim();
     const phone=document.getElementById('bk_phone').value.trim();
@@ -244,52 +249,86 @@ const sb={
     const purpose=document.getElementById('bk_purpose').value;
     const notes=document.getElementById('bk_notes').value.trim();
     if(!name||!phone||!email){alert('Please fill in your name, phone and email.');return;}
+    if(!/^\S+@\S+\.\S+$/.test(email)){alert('Please enter a valid email address.');return;}
+
     const dt=parseKey(state.selDate);
     const we=isWeekendDate(dt);
     const tier=we?'weekend':'weekday';
     const base=RATES[tier][state.duration];
-    let lines=[];
-    let total=base;
+    const addonList=[];
+    let addonTotal=0;
     Object.keys(state.addons).forEach(id=>{
       if(state.addons[id]){
         const a=ADDONS.find(x=>x.id===id);
         const cost=a.rate*state.duration;
-        total+=cost;
-        lines.push(`${a.name} (${state.duration}h × ₹${a.rate}) = ₹${cost}`);
+        addonTotal+=cost;
+        addonList.push({id:a.id,name:a.name,rate:a.rate,hours:state.duration,cost});
       }
     });
-    const body=[
-      'STUDIO BOOKING REQUEST',
-      '----------------------',
-      'Date: '+dt.toDateString(),
-      'Tier: '+(we?'Weekend (Fri–Sun)':'Weekday (Mon–Thu)'),
-      'Time: '+fmtHour(state.startHour)+' to '+fmtHour(state.startHour+state.duration),
-      'Duration: '+state.duration+' hour(s)',
-      'Basic Package: ₹'+base,
-      lines.length?'Add-ons:\n  '+lines.join('\n  '):'Add-ons: none',
-      'TOTAL: ₹'+total,
-      '',
-      'GUEST DETAILS',
-      '-------------',
-      'Name: '+name,
-      'Phone: '+phone,
-      'Email: '+email,
-      'Purpose: '+purpose,
-      'Notes: '+(notes||'-')
-    ].join('\n');
-    const subject='Studio Booking — '+dt.toDateString()+' '+fmtHour(state.startHour);
-    window.location.href='mailto:office@aniradichita.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-    setTimeout(()=>alert('📩 Your email client is opening with your booking request.\nWe will confirm within 2 hours.\n\nHum Aap ke PAaaS Hai! 🎭'),400);
+    const total=base+addonTotal;
+
+    state.submitting=true; renderSummary();
+    let out;
+    try{
+      out=await rpc('create_studio_booking',{
+        p_date:state.selDate,
+        p_start_hour:state.startHour,
+        p_duration:state.duration,
+        p_tier:tier,
+        p_purpose:purpose,
+        p_notes:notes,
+        p_name:name,
+        p_phone:phone,
+        p_email:email,
+        p_addons:addonList,
+        p_base:base,
+        p_addon_total:addonTotal,
+        p_total:total
+      });
+    }catch(e){
+      state.submitting=false; renderSummary();
+      alert('⚠️ Something went wrong reaching our booking server. Please try again, or email office@aniradichita.com.');
+      return;
+    }
+    state.submitting=false;
+
+    if(out&&out.ok){
+      // refresh availability so the just-booked slot shows as taken
+      await loadAvailability();
+      const durLabel=state.duration;
+      const when=fmtHour(state.startHour)+' → '+fmtHour(state.startHour+state.duration);
+      const dstr=dt.toDateString();
+      // reset selection
+      state.selDate=null; state.duration=null; state.startHour=null; state.addons={};
+      document.getElementById('bk_name').value='';
+      document.getElementById('bk_phone').value='';
+      document.getElementById('bk_email').value='';
+      document.getElementById('bk_notes').value='';
+      renderCal(); renderDurations(); renderSlots(); renderAddons(); renderSummary();
+      alert('✅ Booking confirmed!\n\n'+dstr+'\n'+when+' ('+durLabel+' hr)\nTotal: ₹'+total.toLocaleString('en-IN')+
+            '\n\nWe\'ve saved your slot and our team will reach out on '+phone+' / '+email+' to finalise.\n\nHum Aap ke PAaaS Hai! 🎭');
+    }else if(out&&out.error==='slot_taken'){
+      await loadAvailability();
+      renderCal(); renderSlots(); renderSummary();
+      alert('😔 Sorry, that slot was just booked by someone else.\nWe\'ve refreshed availability — please pick another time.');
+    }else if(out&&out.error==='past_date'){
+      alert('That date has already passed. Please pick an upcoming date.');
+    }else{
+      alert('⚠️ We couldn\'t complete your booking. Please check your details and try again.');
+    }
   }
 };
 window.sb=sb;
 
-function init(){
+async function init(){
   renderCal();
   renderDurations();
   renderSlots();
   renderAddons();
   renderSummary();
+  await loadAvailability();
+  renderCal();          // repaint calendar with real booked/partial markers
+  if(state.selDate) renderSlots();
 }
 if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded',init);
 })();
