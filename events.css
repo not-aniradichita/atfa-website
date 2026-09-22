@@ -1,0 +1,247 @@
+/* ══════════════════════════════════════════════════════════
+   Aniradichita Events — page styles (events.html only)
+   (Same split as studio.css: the shared tokens/nav/footer/buttons live in
+   the inline <style> block at the top of events.html, like every other
+   page. This file only has Events-specific rules.)
+   ══════════════════════════════════════════════════════════ */
+
+#pg-events{ --cream:#f6ecd6; --ink:#1a1210; --gold-soft:rgba(242,169,59,.28); --red-soft:rgba(230,57,70,.28); }
+#pg-events .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+#pg-events [hidden]{display:none !important;}
+
+/* ── hero ── */
+.aev-hero{
+  position:relative;padding:44px 4% 56px;overflow:hidden;border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(60% 90% at 82% -10%,var(--red-soft),transparent 62%),
+    radial-gradient(45% 70% at 8% 110%,rgba(242,169,59,.13),transparent 62%),
+    linear-gradient(180deg,#09090a,var(--blk));
+}
+.aev-hero::after{
+  content:'';position:absolute;left:0;right:0;bottom:14px;height:12px;pointer-events:none;
+  background:radial-gradient(circle,#ffd27a 0 3px,rgba(242,169,59,0) 4.5px) 0 50%/30px 12px repeat-x;
+  filter:drop-shadow(0 0 5px rgba(242,169,59,.85));opacity:.9;animation:aev-bulbs 2.6s steps(1) infinite;
+}
+@keyframes aev-bulbs{0%,100%{opacity:.95;}50%{opacity:.6;}}
+.aev-hero-label{color:#ff6b63;font-size:.78rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;margin-bottom:10px;}
+.aev-hero-label::before{content:'';width:28px;height:2px;background:var(--red);box-shadow:0 0 10px var(--red);}
+.aev-hero h1{
+  font-size:clamp(2.4rem,8vw,4.6rem);font-weight:900;line-height:.95;letter-spacing:.01em;text-transform:uppercase;margin-bottom:14px;
+  color:#ffe6df;text-shadow:0 0 6px rgba(255,83,72,.95),0 0 26px rgba(230,57,70,.65),0 0 60px rgba(230,57,70,.35);
+}
+.aev-hero p{color:#c9c9c9;max-width:620px;font-size:1rem;}
+.aev-hero-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;}
+
+/* ── section headers ── */
+.aev-block{max-width:1240px;margin:0 auto;padding:56px 4% 8px;}
+.aev-block-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px;}
+.aev-block-hd h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:900;text-transform:uppercase;letter-spacing:.02em;}
+.aev-block-hd h2 em{font-style:normal;color:var(--red);}
+.aev-block-count{color:#aaa;font-size:.85rem;}
+.aev-block-label{display:block;color:#ff6b63;font-size:.72rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:6px;}
+
+/* ── status pill / type ── */
+.aev-status-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px;}
+.aev-status{display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;border:1px solid;}
+.aev-status-dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block;}
+.aev-status.is-upcoming{color:var(--gold);border-color:rgba(242,169,59,.55);background:rgba(242,169,59,.1);}
+.aev-status.is-live{color:#fff;border-color:#c8202f;background:#c8202f;}
+.aev-status.is-past{color:#b9b9b9;border-color:var(--border);background:rgba(255,255,255,.05);}
+.aev-status.is-upcoming .aev-status-dot,.aev-status.is-live .aev-status-dot{animation:aev-pulse 1.5s infinite;}
+@keyframes aev-pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+.aev-type{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#cfcfcf;}
+
+/* ── featured event (Sunday Decodes) ── */
+.aev-feature-wrap{margin-bottom:26px;}
+.aev-feature{
+  position:relative;display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:clamp(22px,4vw,56px);align-items:start;
+  padding:clamp(18px,3vw,36px);border-radius:20px;border:1px solid rgba(242,169,59,.28);overflow:hidden;
+  background:radial-gradient(70% 90% at 100% 0%,rgba(230,57,70,.22),transparent 60%),linear-gradient(160deg,#1d1314,#141414 62%);
+  box-shadow:0 34px 80px -40px rgba(230,57,70,.55);
+}
+.aev-poster{display:block;position:relative;border-radius:14px;overflow:hidden;aspect-ratio:2/3;background:#000;
+  box-shadow:0 0 0 1px rgba(242,169,59,.4),0 0 0 6px rgba(0,0,0,.35),0 0 40px rgba(230,57,70,.4);}
+.aev-poster img{width:100%;height:100%;object-fit:cover;}
+.aev-feature-title{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;line-height:1;text-transform:uppercase;margin-bottom:8px;}
+.aev-tagline{font-size:clamp(1rem,2vw,1.2rem);color:var(--cream);font-style:italic;margin-bottom:18px;max-width:34ch;}
+.aev-feature-desc{color:#c7c7c7;max-width:60ch;margin:0 0 22px;font-size:.95rem;}
+
+/* ticket-count aware layout: when there are 2 ticket options they must
+   remain readable and thumb-friendly even inside this dense feature card */
+.aev-feature .aev-tickets{margin-bottom:22px;}
+
+/* date "ticket" */
+.aev-datebox{display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.aev-datebox-cal{width:80px;flex-shrink:0;text-align:center;background:var(--cream);color:var(--ink);border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.aev-datebox-cal span:first-child{display:block;background:#b3202d;color:#fff;font-size:.68rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 0;}
+.aev-datebox-cal b{display:block;font-size:2.1rem;line-height:1.05;font-weight:900;padding-top:4px;}
+.aev-datebox-cal span:last-child{display:block;font-size:.68rem;font-weight:700;padding-bottom:6px;color:#5a4a44;}
+.aev-datebox-text{display:flex;flex-direction:column;gap:2px;}
+.aev-datebox-long{font-size:1.05rem;font-weight:700;}
+.aev-datebox-short{font-size:1.6rem;font-weight:900;letter-spacing:.12em;color:var(--gold);}
+.aev-datebox-time{color:#bbb;font-size:.85rem;}
+
+/* countdown */
+.aev-countdown{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.aev-cd-unit{min-width:64px;text-align:center;background:rgba(0,0,0,.45);border:1px solid var(--border);border-radius:9px;padding:8px 10px;}
+.aev-cd-num{display:block;font-size:1.6rem;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.1;}
+.aev-cd-lbl{display:block;font-size:.62rem;letter-spacing:1.1px;text-transform:uppercase;color:#aaa;margin-top:2px;}
+.aev-cd-note{align-self:center;color:#aaa;font-size:.8rem;margin:0 0 0 4px;}
+.aev-countdown[hidden]{display:none;}
+
+/* ══ BOOK YOUR TICKETS — mandatory dual-option requirement ══
+   Each ticket type is its OWN row: a label + optional note on the left,
+   one dedicated button on the right that opens ONLY that option's own
+   Razorpay page. Early Bird and Regular are given distinct accent colours
+   (gold vs red) purely as a visual cue — both still read as "ticket". */
+.aev-tickets-h{font-size:.78rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.aev-ticket-options{list-style:none;display:grid;gap:10px;margin-bottom:14px;}
+.aev-ticket-row{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+}
+.aev-ticket-row-info{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.aev-ticket-row-label{font-weight:800;font-size:.98rem;}
+.aev-ticket-row-note{color:#aaa;font-size:.8rem;}
+.aev-ticket-btn{
+  flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;border:none;
+  font-size:.85rem;font-weight:700;letter-spacing:.2px;color:#fff;background:var(--red);cursor:pointer;transition:transform .15s,background .2s,opacity .2s;
+}
+.aev-ticket-btn:hover{transform:translateY(-2px);}
+.aev-ticket-btn[aria-disabled="true"]{background:transparent;color:var(--gold);border:1px dashed rgba(242,169,59,.7);cursor:not-allowed;}
+.aev-ticket-btn[aria-disabled="true"]:hover{transform:none;background:rgba(242,169,59,.06);}
+/* Early Bird gets the gold "limited time" accent; every other option (Regular,
+   and anything added later) keeps the standard red — this stays correct no
+   matter how many/which options a future event defines, since it keys off
+   the option's own id rather than position. */
+.aev-ticket-btn--early-bird:not([aria-disabled]){background:linear-gradient(135deg,#f2a93b,#dc4a19);}
+.aev-ticket-row--early-bird{border-color:rgba(242,169,59,.4);background:rgba(242,169,59,.06);}
+.aev-tickets-info{margin-top:4px;}
+
+/* CTAs */
+.aev-cta-row{display:flex;flex-wrap:wrap;gap:10px;}
+.aev-cta-row .btn-g,.aev-cta-row button.btn-g{border:none;cursor:pointer;font-family:inherit;}
+.aev-share-status{min-height:1.3em;margin-top:8px;font-size:.82rem;color:var(--gold);}
+.aev-follow{display:inline-block;margin-top:8px;color:#d9d9d9;font-size:.88rem;border-bottom:1px solid var(--gold-soft);}
+.aev-follow:hover{color:var(--gold);border-color:var(--gold);}
+
+/* ── info rows (event details / ticket info) ── */
+.aev-dl{margin:0;}
+.aev-dl-row{display:grid;grid-template-columns:126px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.aev-dl-row:last-child{border-bottom:0;}
+.aev-dl dt{color:#9a9a9a;font-size:.75rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding-top:2px;}
+.aev-dl dd{margin:0;color:#eee;font-size:.92rem;overflow-wrap:anywhere;}
+.aev-tba{color:#bdbdbd;font-style:italic;}
+.aev-dim{color:#9a9a9a;}
+.aev-fine{display:block;margin-top:4px;color:#9a9a9a;font-size:.76rem;line-height:1.4;}
+.aev-people{list-style:none;display:grid;gap:8px;}
+.aev-people span{display:block;color:#a9a9a9;font-size:.82rem;}
+
+/* ── empty state ── */
+.aev-empty{text-align:center;padding:48px 22px;border:1px dashed #3a3a3a;border-radius:16px;background:rgba(255,255,255,.02);}
+.aev-empty h3{font-size:1.3rem;margin-bottom:8px;}
+.aev-empty p{color:#aaa;max-width:520px;margin:0 auto;}
+.aev-empty a{color:var(--gold);border-bottom:1px solid var(--gold-soft);}
+
+/* ── grid + cards (past events) ── */
+.aev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:20px;}
+.aev-grid--modal{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));}
+.aev-card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .25s,border-color .25s;}
+.aev-card:hover{transform:translateY(-4px);border-color:var(--red);}
+.aev-card-media{position:relative;aspect-ratio:16/10;background:#0c0c0c;overflow:hidden;}
+.aev-card-media img{width:100%;height:100%;object-fit:cover;}
+.aev-card-badge{position:absolute;top:10px;left:10px;z-index:2;}
+.aev-card-fallback{display:grid;place-items:center;width:100%;height:100%;min-height:110px;font-size:2.6rem;background:radial-gradient(circle at 50% 40%,rgba(230,57,70,.35),#141414 70%);}
+.aev-card-body{display:flex;flex-direction:column;gap:7px;padding:16px 16px 18px;flex:1;}
+.aev-card-meta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 10px;}
+.aev-card-meta .aev-type{color:#ff6b63;}
+.aev-date{font-size:.78rem;color:#b5b5b5;}
+.aev-card-title{font-size:1.02rem;line-height:1.3;font-weight:800;}
+.aev-card-link{background:none;border:none;padding:0;text-align:left;color:#fff;font:inherit;cursor:pointer;}
+.aev-card-link:hover,.aev-card-link:focus-visible{color:var(--gold);}
+.aev-card-desc{color:#a9a9a9;font-size:.85rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.aev-card-more{margin-top:auto;padding-top:4px;color:var(--gold);font-size:.8rem;font-weight:800;letter-spacing:.3px;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit;}
+.aev-card-more:hover{text-decoration:underline;}
+
+/* ── filter chips ── */
+.aev-filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
+.aev-chip{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 15px;font-size:.8rem;color:#ddd;cursor:pointer;transition:background .2s,border-color .2s;}
+.aev-chip:hover{border-color:#555;}
+.aev-chip[aria-pressed="true"]{background:#c8202f;border-color:#c8202f;color:#fff;}
+.aev-chip-n{opacity:.7;font-size:.72rem;margin-left:3px;}
+.aev-past-status{color:#9a9a9a;font-size:.84rem;margin-bottom:20px;}
+.aev-more-wrap{text-align:center;margin:30px 0 8px;}
+.aev-more-wrap button{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border);padding:10px 22px;border-radius:6px;font-size:.85rem;cursor:pointer;}
+.aev-more-wrap button:hover{background:rgba(255,255,255,.14);}
+
+/* ── event detail modal ── */
+#eventModal{border:0;padding:0;background:transparent;max-width:min(920px,94vw);width:100%;max-height:90vh;color:#fff;border-radius:18px;overflow:hidden;}
+#eventModal::backdrop{background:rgba(0,0,0,.82);}
+#eventModal[open]{display:grid;grid-template-rows:auto 1fr;}
+.aev-modal-inner{background:var(--card2,#252525);max-height:90vh;overflow-y:auto;position:relative;}
+.aev-modal-close{position:sticky;top:10px;left:calc(100% - 46px);width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:1.05rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;}
+.aev-modal-close:hover{background:rgba(0,0,0,.8);}
+.aev-modal-cover{margin:0;background:#0b0b0b;max-height:44vh;display:flex;align-items:center;justify-content:center;}
+.aev-modal-cover img{width:100%;max-height:44vh;object-fit:contain;}
+.aev-modal-body{padding:26px clamp(18px,3vw,34px) 34px;}
+.aev-modal-body h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:900;margin-bottom:6px;}
+
+.aev-section{margin:28px 0;}
+.aev-section h3{font-size:1.1rem;font-weight:800;margin-bottom:12px;}
+.aev-section p{color:#cfcfcf;margin-bottom:12px;max-width:72ch;font-size:.92rem;}
+.aev-source p{color:#aaa;font-size:.85rem;}
+.aev-source a{color:var(--gold);border-bottom:1px solid var(--gold-soft);}
+.aev-source ul{list-style:none;display:grid;gap:6px;}
+
+/* gallery */
+.aev-gallery{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.aev-thumb{display:block;width:100%;aspect-ratio:1/1;border-radius:9px;overflow:hidden;background:#0c0c0c;border:1px solid var(--border);padding:0;cursor:pointer;}
+.aev-thumb img{width:100%;height:100%;object-fit:cover;}
+
+/* video (click-to-load) */
+.aev-videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;}
+.aev-video,.aev-video-frame{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:radial-gradient(circle,#2a1416,#0b0b0b);border:1px solid var(--border);padding:0;cursor:pointer;}
+.aev-video img{width:100%;height:100%;object-fit:cover;opacity:.75;}
+.aev-video-play{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;color:#fff;}
+.aev-video-play::before{content:'';position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(230,57,70,.9);z-index:-1;}
+
+/* photo lightbox (opened from the gallery inside the modal) */
+.aev-lightbox{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#fff;}
+.aev-lightbox[open]{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;padding:56px 12px 20px;}
+.aev-lightbox::backdrop{background:rgba(0,0,0,.94);}
+.aev-lightbox figure{margin:0;text-align:center;min-width:0;}
+.aev-lightbox img{max-width:100%;max-height:78vh;margin:0 auto;object-fit:contain;border-radius:8px;}
+.aev-lightbox figcaption{margin-top:10px;color:#bbb;font-size:.85rem;}
+.aev-lb-close{position:absolute;top:14px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.05rem;cursor:pointer;}
+.aev-lb-nav{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.7rem;line-height:1;cursor:pointer;}
+.aev-lb-close:hover,.aev-lb-nav:hover{background:rgba(255,255,255,.24);}
+
+/* ── responsive ── */
+@media (max-width:900px){
+  .aev-feature{grid-template-columns:1fr;}
+  .aev-poster{max-width:340px;width:100%;margin:0 auto;}
+}
+@media (max-width:640px){
+  .aev-hero{padding:36px 4% 44px;}
+  .aev-block{padding-top:40px;}
+  .aev-dl-row{grid-template-columns:1fr;gap:2px;}
+  .aev-cta-row button,.aev-cta-row a{flex:1 1 100%;justify-content:center;text-align:center;}
+  .aev-cd-unit{min-width:0;flex:1;}
+  .aev-datebox-cal{width:70px;}
+  /* the mandatory requirement: on mobile the two ticket rows stack cleanly,
+     each full-width with its own big tappable button */
+  .aev-ticket-row{flex-direction:column;align-items:stretch;text-align:left;}
+  .aev-ticket-btn{width:100%;justify-content:center;padding:13px 18px;}
+  .aev-lightbox[open]{grid-template-columns:1fr;grid-template-rows:1fr auto;}
+  .aev-lb-prev,.aev-lb-next{position:absolute;bottom:18px;}
+  .aev-lb-prev{left:16px;}
+  .aev-lb-next{right:16px;}
+  .aev-modal-close{left:calc(100% - 40px);width:32px;height:32px;}
+}
+
+/* ── reduced motion ── */
+@media (prefers-reduced-motion:reduce){
+  .aev-hero::after,.aev-status-dot{animation:none;}
+  .aev-card,.aev-ticket-btn{transition:none;}
+  .aev-card:hover{transform:none;}
+}
