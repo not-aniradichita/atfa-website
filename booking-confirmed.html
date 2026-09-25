@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Booking Confirmed | Aniradichita Theatre &amp; Films Association</title>
+<meta name="description" content="Your booking is done. Check your mail for the tickets."/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#0d0d0d"/>
+<link rel="icon" type="image/png" href="assets/atfa-logo.png"/>
+<style>
+/* Standalone confirmation page — no JS, no external requests, no shared state.
+   Tokens mirror the inline :root block used by every other page on the site. */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --red:#E63946;--red-deep:#CC2936;--gold:#F2A93B;--blk:#141414;--dark:#0d0d0d;--border:#2a2a2a;
+  --cream:#f6ecd6;--muted:#cfc7bd;
+  --red-soft:rgba(230,57,70,.28);
+}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Segoe UI',Arial,sans-serif;color:#fff;background:var(--dark);
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden;position:relative;
+}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:4px;}
+
+/* ── atmosphere: red spill from above, warm glow below, projector beam, vignette, grain ── */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 55% at 50% -8%,var(--red-soft),transparent 66%),
+    radial-gradient(55% 45% at 50% 112%,rgba(242,169,59,.14),transparent 65%),
+    linear-gradient(180deg,#09090a,var(--dark) 60%,#070707);}
+.beam{position:fixed;left:50%;top:-6vh;width:min(90vw,1000px);height:110vh;z-index:0;pointer-events:none;
+  transform:translateX(-50%);
+  background:conic-gradient(from 180deg at 50% 0%,transparent 165deg,rgba(255,214,150,.07) 180deg,transparent 195deg);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,transparent 85%);mask-image:linear-gradient(to bottom,#000 0,transparent 85%);
+  animation:flicker 7s ease-in-out infinite;}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.72));}
+.grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ── top bar ── */
+header{position:relative;z-index:3;display:flex;justify-content:center;padding:10px 4% 0;}
+header a{display:inline-flex;border-radius:6px;}
+header img{height:76px;width:auto;display:block;}
+
+/* ── stage ── */
+main{position:relative;z-index:3;flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,36px) 4% clamp(20px,4vw,48px);}
+.stage{width:100%;max-width:760px;text-align:center;}
+
+/* marquee card with chasing bulbs */
+.marquee{
+  position:relative;padding:clamp(34px,6vw,64px) clamp(20px,5vw,56px) clamp(30px,5vw,52px);
+  border-radius:20px;border:1px solid rgba(242,169,59,.3);
+  background:radial-gradient(70% 90% at 100% 0%,rgba(230,57,70,.2),transparent 60%),linear-gradient(160deg,#1d1314,#141414 62%);
+  box-shadow:0 40px 90px -45px rgba(230,57,70,.6),inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.bulbs{position:absolute;left:18px;right:18px;height:12px;pointer-events:none;
+  background:radial-gradient(circle,#ffd27a 0 2.6px,rgba(242,169,59,0) 4px) 0 50%/26px 12px repeat-x;
+  filter:drop-shadow(0 0 4px rgba(242,169,59,.8));}
+.bulbs.top{top:12px;}
+.bulbs.bot{bottom:12px;}
+.bulbs.bot{animation:bulbs 2.6s steps(1) infinite;}
+.bulbs.top{animation:bulbs 2.6s steps(1) infinite reverse;}
+@keyframes bulbs{0%,100%{opacity:1;}50%{opacity:.55;}}
+
+/* check mark */
+.check{width:clamp(64px,11vw,84px);height:clamp(64px,11vw,84px);margin:0 auto clamp(18px,3vw,26px);display:block;overflow:visible;}
+.check circle{fill:rgba(230,57,70,.1);stroke:var(--red);stroke-width:2.5;filter:drop-shadow(0 0 6px rgba(255,83,72,.7));
+  stroke-dasharray:190;stroke-dashoffset:190;animation:draw .9s .15s cubic-bezier(.65,0,.35,1) forwards;}
+.check path{fill:none;stroke:#ffe6df;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(255,83,72,.8));
+  stroke-dasharray:44;stroke-dashoffset:44;animation:draw .5s .85s ease-out forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;color:#ff8a83;font-size:.78rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;}
+.eyebrow::before,.eyebrow::after{content:'';width:26px;height:2px;background:var(--red);box-shadow:0 0 10px var(--red);}
+
+h1{
+  font-size:clamp(2.6rem,13vw,5.6rem);font-weight:900;line-height:.95;letter-spacing:.01em;text-transform:uppercase;
+  color:#ffe6df;text-shadow:0 0 6px rgba(255,83,72,.95),0 0 26px rgba(230,57,70,.65),0 0 60px rgba(230,57,70,.35);
+  animation:neon 1.4s .3s both;
+}
+@keyframes neon{0%{opacity:0;}12%{opacity:.9;}18%{opacity:.25;}26%{opacity:1;}34%{opacity:.6;}44%,100%{opacity:1;}}
+
+.rule{display:flex;align-items:center;gap:14px;margin:clamp(20px,3.5vw,30px) auto;max-width:360px;color:var(--gold);}
+.rule::before,.rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(242,169,59,.55));}
+.rule::after{transform:scaleX(-1);}
+.rule svg{width:16px;height:16px;flex:none;fill:currentColor;}
+
+.lede{
+  font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;
+  font-size:clamp(1.35rem,4.6vw,2.15rem);line-height:1.3;color:var(--cream);
+}
+.sub{color:var(--muted);font-size:clamp(.92rem,2.2vw,1.02rem);line-height:1.7;max-width:460px;margin:14px auto 0;}
+
+/* ticket-stub hint */
+.stub{
+  position:relative;display:flex;align-items:center;gap:14px;text-align:left;
+  max-width:440px;margin:clamp(24px,4vw,34px) auto 0;padding:14px 18px;border-radius:12px;
+  background:rgba(246,236,214,.06);border:1px dashed rgba(242,169,59,.45);
+}
+.stub::before,.stub::after{content:'';position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#171112;border:1px solid rgba(242,169,59,.3);transform:translateY(-50%);}
+.stub::before{left:-8px;}
+.stub::after{right:-8px;}
+.stub svg{width:30px;height:30px;flex:none;color:var(--gold);}
+.stub p{font-size:.9rem;line-height:1.5;color:var(--muted);}
+.stub strong{color:#fff;font-weight:700;}
+
+/* actions */
+.actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 22px;margin-top:clamp(26px,4vw,36px);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 30px;border-radius:6px;
+  background:var(--red-deep);color:#fff;font-weight:700;font-size:.95rem;letter-spacing:.02em;border:1px solid #e0424f;
+  box-shadow:0 10px 30px -12px rgba(230,57,70,.8);transition:background .2s,transform .2s,box-shadow .2s;
+}
+.btn:hover{background:#b12030;transform:translateY(-1px);}
+.btn svg{width:16px;height:16px;transition:transform .2s;}
+.btn:hover svg{transform:translateX(-3px);}
+.link{color:var(--cream);font-size:.9rem;padding:12px 4px;min-height:48px;display:inline-flex;align-items:center;border-bottom:1px solid transparent;}
+.link span{border-bottom:1px solid rgba(246,236,214,.4);transition:border-color .2s;}
+.link:hover span{border-color:var(--gold);color:#fff;}
+
+footer{position:relative;z-index:3;text-align:center;padding:0 4% 22px;color:#9b948b;font-size:.78rem;}
+footer span{color:var(--red);}
+
+/* entrance */
+.rise{opacity:0;transform:translateY(14px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;}
+.d1{animation-delay:.1s;}.d2{animation-delay:.9s;}.d3{animation-delay:1.1s;}.d4{animation-delay:1.3s;}.d5{animation-delay:1.5s;}
+@keyframes rise{to{opacity:1;transform:none;}}
+@keyframes flicker{0%,100%{opacity:.9;}45%{opacity:1;}50%{opacity:.75;}55%{opacity:1;}}
+
+@media (max-width:480px){
+  header img{height:60px;}
+  .bulbs{left:14px;right:14px;}
+  .btn{width:100%;}
+  .stub{padding:12px 14px;}
+}
+@media (max-height:560px) and (orientation:landscape){
+  main{align-items:flex-start;}
+}
+
+/* reduced motion: show everything in its final state, nothing moves or flashes */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;}
+  .rise{opacity:1;transform:none;}
+  .check circle,.check path{stroke-dashoffset:0;}
+  .btn:hover,.btn:hover svg{transform:none;}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="beam" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header>
+  <a href="index.html" aria-label="Aniradichita Theatre &amp; Films Association — home">
+    <img src="assets/atfa-logo.png" alt="Aniradichita Theatre &amp; Films Association" width="76" height="76"/>
+  </a>
+</header>
+
+<main id="main">
+  <div class="stage">
+    <section class="marquee" aria-labelledby="done">
+      <div class="bulbs top" aria-hidden="true"></div>
+
+      <svg class="check" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+        <circle cx="40" cy="40" r="30"/>
+        <path d="M27 41l9 9 17-19"/>
+      </svg>
+
+      <p class="eyebrow rise d1">Payment received</p>
+      <h1 id="done">Booking done!</h1>
+
+      <div class="rule rise d2" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.6 6.9L22 9.6l-5.6 4.8L18 22l-6-3.8L6 22l1.6-7.6L2 9.6l7.4-.7z"/></svg>
+      </div>
+
+      <p class="lede rise d3">Check your mail for the tickets</p>
+      <p class="sub rise d4">We’ve sent them to the email you used at checkout. Keep them handy — you’ll show them at the door.</p>
+
+      <div class="stub rise d4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <p><strong>Don’t see it?</strong> Give it a minute, then check your spam or promotions folder.</p>
+      </div>
+
+      <div class="actions rise d5">
+        <a class="btn" href="events.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          Back to Events
+        </a>
+        <a class="link" href="contact.html"><span>Need help? Contact us</span></a>
+      </div>
+
+      <div class="bulbs bot" aria-hidden="true"></div>
+    </section>
+  </div>
+</main>
+
+<footer>© 2026 <span>Aniradichita</span> Theatre and Films Association</footer>
+</body>
+</html>
