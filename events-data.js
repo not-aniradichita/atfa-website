@@ -49,6 +49,27 @@
      videos            [{ provider: 'youtube' | 'videopress', id, title }]
      sourceUrl         original archive page — shown as "Original post"
      ticketing         null, or the block described below
+     fullTitle         optional longer name used for page title, sharing and
+                        alt text (e.g. title "SAANJH", fullTitle
+                        "SAANJH – Ek Shaam, Anek Ehsaas")
+     statusLabel       optional text for the status pill on upcoming events
+                        (default "Upcoming")
+     ctaLabel          optional label for the main button on the feature card
+                        (default "Full details")
+     theme             optional; "festive" gives a warm marigold/Diwali look
+     modalIntro        optional intro line shown at the top of the detail
+                        modal instead of `description`
+     aboutHeading      optional heading for `longDescription` (default
+                        "About this event")
+     sections          optional extra blocks in the detail modal:
+                        [{ heading, paragraphs?: [...], items?: [...] }]
+     registration      null, or a block shaped exactly like `ticketing`
+                        below, for events where people sign up to perform or
+                        attend. While `checkoutUrl` is empty the button shows
+                        a disabled "pendingLabel" — paste the https sign-up
+                        link into `checkoutUrl` and it goes live. (Date,
+                        time and venue stay as null until confirmed; the page
+                        then says "Details coming soon".)
      featured          true = shown as the large feature in Live &
                         Upcoming
 
@@ -98,6 +119,104 @@
    ========================================================================== */
 
 window.ATFA_EVENTS = [
+  {
+    "id": "saanjh-2026",
+    "slug": "saanjh",
+    "title": "SAANJH",
+    "fullTitle": "SAANJH – Ek Shaam, Anek Ehsaas",
+    "tagline": "Ek Shaam, Anek Ehsaas.",
+    "status": "upcoming",
+    "statusLabel": "Upcoming · Coming Soon",
+    "featured": true,
+    "theme": "festive",
+    "ctaLabel": "Know More",
+    "date": null,
+    "endDate": null,
+    "time": null,
+    "datePublished": null,
+    "type": "Open Mic & Live Performing Arts",
+    "series": null,
+    "session": null,
+    "topic": null,
+    "description": "Love to sing, dance, act, or tell stories? Come share your talent on one stage. A special pre-Diwali evening filled with art, music, dance, theatre, and stories.",
+    "modalIntro": "A special evening to celebrate art, talent, and togetherness before Diwali.",
+    "aboutHeading": "What is SAANJH?",
+    "longDescription": [
+      "SAANJH is an open stage for people who love to perform.",
+      "Sing a song. Dance to a beat. Act out a story. Share a poem. Let people see what you can do.",
+      "Whether you are starting out or have performed many times, SAANJH is a place to share your talent and meet others who love the arts."
+    ],
+    "sections": [
+      {
+        "heading": "Who Can Take Part?",
+        "items": [
+          "Singers",
+          "Dancers",
+          "Actors",
+          "Musicians",
+          "Poets and storytellers",
+          "Anyone with a talent they want to share"
+        ]
+      },
+      {
+        "heading": "What Can You Perform?",
+        "items": [
+          "Sing a song",
+          "Dance to a beat",
+          "Act out a story",
+          "Play music",
+          "Share a poem or tell a story"
+        ]
+      },
+      {
+        "heading": "Why Join?",
+        "items": [
+          "Get a chance to perform on stage.",
+          "Share your talent with others.",
+          "Meet people who love the arts.",
+          "Help more people discover your work."
+        ]
+      }
+    ],
+    "venue": null,
+    "location": null,
+    "speakers": [],
+    "collaborators": [],
+    "organizer": "Aniradichita Theatre and Films Association",
+    "entry": null,
+    "images": [
+      {
+        "src": "assets/saanjh-event-poster.jpeg",
+        "alt": "SAANJH poster: Ek Shaam, Anek Ehsaas. A pre-Diwali celebration of arts and culture, Coming Soon. A classical dancer in a red and gold costume, musicians with a guitar and tabla, a singer and an actor holding a mask, surrounded by diyas and marigold garlands. Aniradichita Theatre and Films.",
+        "width": 1024,
+        "height": 1536
+      }
+    ],
+    "videos": [],
+    "sourceUrl": null,
+    "ticketing": null,
+    "registration": {
+      "enabled": true,
+      "provider": "external",
+      "heading": "Want to Perform?",
+      "options": [
+        {
+          "id": "perform",
+          "label": "Perform at SAANJH",
+          "buttonLabel": "Register to Perform",
+          "checkoutUrl": "",
+          "pendingLabel": "Registration Coming Soon",
+          "note": "Registration is not open yet."
+        }
+      ],
+      "info": [
+        {
+          "label": "Registration",
+          "value": "Not confirmed yet. We will share the details soon."
+        }
+      ]
+    }
+  },
   {
     "id": "sunday-decodes-2026",
     "slug": "sunday-decodes",

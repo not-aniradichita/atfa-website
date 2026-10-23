@@ -71,7 +71,7 @@
   function sortKey(e) { return e.date || e.datePublished || ''; }
   function sourceOrder(e) { return parseInt(String(e.id).replace(/\D/g, ''), 10) || 0; }
   function byNewest(a, b) { return sortKey(b).localeCompare(sortKey(a)) || sourceOrder(b) - sourceOrder(a); }
-  function bySoonest(a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || sortKey(a).localeCompare(sortKey(b)); }
+  function bySoonest(a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (sortKey(a) || '9999').localeCompare(sortKey(b) || '9999'); }
 
   function dateLabel(e) {
     if (e.date) return fmtRange(e.date, e.endDate);
@@ -80,13 +80,13 @@
   }
   function dateTimeTag(e, cls) {
     var label = dateLabel(e);
-    if (!label) return '';
+    if (!label) return e.status === 'upcoming' ? '<span class="' + (cls || 'aev-date') + '">Date coming soon</span>' : '';
     var attr = e.date ? ' datetime="' + esc(e.date) + '"' : ' title="The event date is not stated in the archive"';
     return '<time class="' + (cls || 'aev-date') + '"' + attr + '>' + esc(label) + '</time>';
   }
 
   var STATUS = {
-    upcoming: { cls: 'is-upcoming', label: function () { return 'Upcoming'; } },
+    upcoming: { cls: 'is-upcoming', label: function (e) { return e.statusLabel || 'Upcoming'; } },
     live: { cls: 'is-live', label: function (e) { return e.endDate && e.endDate !== e.date ? 'Ongoing' : 'Happening today'; } },
     past: { cls: 'is-past', label: function () { return 'Past event'; } }
   };
@@ -96,8 +96,8 @@
   }
 
   /* ── ticketing UI (eligibility/URL logic lives in ticketing.js) ───────── */
-  function ticketState(e) {
-    return ticketing ? ticketing.resolve(e, new Date()) : { state: 'hidden', options: [], info: [] };
+  function ticketState(e, key) {
+    return ticketing ? ticketing.resolve(e, new Date(), key) : { state: 'hidden', options: [], info: [] };
   }
 
   function ticketOptionButton(opt) {
@@ -117,9 +117,9 @@
   /* Renders the whole "Book Your Tickets" panel: one row per ticket type,
      each with its own label, optional note, and its OWN button/link — never
      a single generic button once there is more than one ticket type. */
-  function ticketOptionsSection(e, res, headingTag) {
+  function ticketOptionsSection(e, res, headingTag, defaultHeading, idPrefix) {
     if (!res || res.state === 'hidden' || !res.options.length) return '';
-    var id = 'tix-' + esc(e.slug);
+    var id = (idPrefix || 'tix') + '-' + esc(e.slug);
     var rows = res.options.map(function (opt) {
       return '<li class="aev-ticket-row' + (opt.id ? ' aev-ticket-row--' + esc(opt.id) : '') + '">' +
         '<div class="aev-ticket-row-info">' +
@@ -132,16 +132,16 @@
       '</li>';
     }).join('');
     return '<div class="aev-tickets" aria-labelledby="' + id + '">' +
-      '<' + headingTag + ' id="' + id + '" class="aev-tickets-h">' + esc(res.heading || 'Book Your Tickets') + '</' + headingTag + '>' +
+      '<' + headingTag + ' id="' + id + '" class="aev-tickets-h">' + esc(res.heading || defaultHeading || 'Book Your Tickets') + '</' + headingTag + '>' +
       '<ul class="aev-ticket-options">' + rows + '</ul>' +
       (res.info.length ? '<dl class="aev-dl aev-tickets-info">' + res.info.map(function (r) {
-        return '<div class="aev-dl-row"><dt>' + esc(r.label) + '</dt><dd>' + (r.value ? esc(r.value) : '<span class="aev-tba">To be announced</span>') + '</dd></div>';
+        return '<div class="aev-dl-row"><dt>' + esc(r.label) + '</dt><dd>' + (r.value ? esc(r.value) : '<span class="aev-tba">Details coming soon</span>') + '</dd></div>';
       }).join('') + '</dl>' : '') +
     '</div>';
   }
 
   /* ── detail rows (shared by feature card + modal) ─────────────────────── */
-  var TBA = '<span class="aev-tba">To be announced</span>';
+  var TBA = '<span class="aev-tba">Details coming soon</span>';
   function speakersHtml(list) {
     return '<ul class="aev-people">' + list.map(function (s) {
       return '<li><b>' + esc(s.name) + '</b>' + (s.role ? '<span>' + esc(s.role) + '</span>' : '') + '</li>';
@@ -159,6 +159,8 @@
         (e.dateNote ? '<span class="aev-fine">' + esc(e.dateNote) + '</span>' : ''));
     } else if (e.datePublished) {
       add('Date', '<span class="aev-dim">Not stated in the archive (entry published ' + esc(fmtDate(e.datePublished)) + ')</span>');
+    } else {
+      add('Date', '', true);
     }
     add('Time', e.time ? esc(e.time) : '', true);
     add('Venue', e.venue ? esc(e.venue) : '', true);
@@ -232,7 +234,11 @@
       ? '<a class="aev-follow" href="' + INSTAGRAM + '" target="_blank" rel="noopener noreferrer">Clues are coming — follow our posts &amp; reels on Instagram <span class="sr-only">(opens in a new tab)</span></a>'
       : '';
 
-    return '<article class="aev-feature" aria-labelledby="ft-' + esc(e.slug) + '">' +
+    if (!e.date && status !== 'past') {
+      dateBlock = '<p class="aev-soon">Date, time and place: coming soon.</p>';
+    }
+
+    return '<article class="aev-feature' + (e.theme ? ' aev-theme-' + esc(e.theme) : '') + '" aria-labelledby="ft-' + esc(e.slug) + '">' +
       '<div class="aev-poster">' + poster + '</div>' +
       '<div class="aev-feature-body">' +
         '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
@@ -242,7 +248,7 @@
         (e.date && status === 'upcoming' ? countdownHtml(e) : '') +
         '<p class="aev-feature-desc">' + esc(e.description) + '</p>' +
         ticketOptionsSection(e, res, 'h3') +
-        '<div class="aev-cta-row">' + shareButton(e) + '<button type="button" class="btn-g" data-open-event="' + esc(e.slug) + '">Full details</button></div>' +
+        '<div class="aev-cta-row">' + shareButton(e) + '<button type="button" class="' + (e.ctaLabel ? 'btn-r' : 'btn-g') + '" data-open-event="' + esc(e.slug) + '">' + esc(e.ctaLabel || 'Full details') + '</button></div>' +
         '<p class="aev-share-status" role="status" aria-live="polite"></p>' +
         clues +
       '</div></article>';
@@ -371,8 +377,17 @@
   }
   function renderAbout(e) {
     var paras = e.longDescription && e.longDescription.length ? e.longDescription : [e.description];
-    return '<section class="aev-section" aria-labelledby="about-h"><h3 id="about-h">About this event</h3>' +
+    return '<section class="aev-section" aria-labelledby="about-h"><h3 id="about-h">' + esc(e.aboutHeading || 'About this event') + '</h3>' +
       paras.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</section>';
+  }
+  function renderExtraSections(e) {
+    return (e.sections || []).map(function (s, i) {
+      var id = 'xs-' + i;
+      return '<section class="aev-section" aria-labelledby="' + id + '"><h3 id="' + id + '">' + esc(s.heading) + '</h3>' +
+        (s.paragraphs || []).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
+        (s.items && s.items.length ? '<ul class="aev-list">' + s.items.map(function (it) { return '<li>' + esc(it) + '</li>'; }).join('') + '</ul>' : '') +
+        '</section>';
+    }).join('');
   }
   function sourceLinks(e) {
     var urls = [e.sourceUrl].concat(e.sourceUrls || []).filter(Boolean);
@@ -386,23 +401,27 @@
   function eventModalHtml(e, status) {
     var c = cover(e);
     var res = ticketState(e);
+    var reg = ticketState(e, 'registration');
     var rel = related(e, new Date());
-    return '<figure class="aev-modal-cover">' +
+    var portrait = c && c.width && c.height && c.height > c.width;
+    return '<div class="aev-modal-wrap' + (e.theme ? ' aev-theme-' + esc(e.theme) : '') + '">' +
+      '<figure class="aev-modal-cover' + (portrait ? ' aev-modal-cover--portrait' : '') + '">' +
         (c ? '<img src="' + esc(imgUrl(c.src, 1000)) + '" srcset="' + esc(imgSrcset(c.src)) + '" sizes="(min-width:900px) 46vw, 92vw" alt="' + esc(c.alt || e.title) + '" fetchpriority="high" decoding="async" data-fallback>' : '') +
       '</figure>' +
       '<div class="aev-modal-body">' +
         '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
         '<h2 id="evModalTitle">' + esc(e.title) + '</h2>' +
         (e.tagline ? '<p class="aev-tagline">' + esc(e.tagline) + '</p>' : '') +
-        '<p class="aev-feature-desc">' + esc(e.description) + '</p>' +
+        '<p class="aev-feature-desc">' + esc(e.modalIntro || e.description) + '</p>' +
         (status !== 'past' ? ticketOptionsSection(e, res, 'h3') : '') +
+        (status !== 'past' ? ticketOptionsSection(e, reg, 'h3', 'Register', 'reg') : '') +
         '<div class="aev-cta-row">' + shareButton(e) + '</div><p class="aev-share-status" role="status" aria-live="polite"></p>' +
-        renderAbout(e) + renderVideos(e) + renderGallery(e) +
+        renderAbout(e) + renderExtraSections(e) + renderVideos(e) + renderGallery(e) +
         '<section class="aev-section" aria-labelledby="dt-h"><h3 id="dt-h">Event details</h3>' + dl(detailRows(e, status)) + '</section>' +
         sourceLinks(e) +
         (rel.length ? '<section class="aev-section" aria-labelledby="rel-h"><h3 id="rel-h">More events</h3><div class="aev-grid aev-grid--modal">' +
           rel.map(function (r) { return renderCard(r.e, r.s); }).join('') + '</div></section>' : '') +
-      '</div>';
+      '</div></div>';
   }
 
   function openEventModal(slug, opener) {
@@ -415,6 +434,7 @@
     if (typeof dlg.showModal === 'function' && !dlg.open) dlg.showModal();
     else dlg.setAttribute('open', '');
     history.replaceState(null, '', '#e-' + slug);
+    setPageMeta(e);
     startCountdowns();
     var closeBtn = $('.aev-modal-close', dlg);
     if (closeBtn) closeBtn.focus();
@@ -425,8 +445,18 @@
     if (typeof dlg.close === 'function' && dlg.open) dlg.close();
     else dlg.removeAttribute('open');
     if (location.hash.indexOf('#e-') === 0) history.replaceState(null, '', location.pathname + location.search);
+    setPageMeta(null);
     if (modalOpener && document.contains(modalOpener)) modalOpener.focus();
     modalOpener = null;
+  }
+  /* Title + description follow the open event (a shared #e-<slug> link
+     gets its own title), and go back to the page defaults on close. */
+  var baseTitle = document.title;
+  var descMeta = document.querySelector('meta[name="description"]');
+  var baseDesc = descMeta ? descMeta.getAttribute('content') : '';
+  function setPageMeta(e) {
+    document.title = e ? (e.fullTitle || e.title) + ' | ' + ORG_NAME : baseTitle;
+    if (descMeta) descMeta.setAttribute('content', e ? e.description : baseDesc);
   }
   function openFromHash() {
     var m = /^#e-(.+)$/.exec(location.hash);
@@ -498,7 +528,7 @@
     var e = EVENTS.filter(function (x) { return x.slug === slug; })[0];
     if (!e) return;
     var url = location.origin + location.pathname + '#e-' + slug;
-    var text = e.title + (e.date ? ' — ' + fmtRange(e.date, e.endDate) : '') + ' | ' + ORG_NAME;
+    var text = (e.fullTitle || e.title) + (e.date ? ' — ' + fmtRange(e.date, e.endDate) : '') + ' | ' + ORG_NAME;
     var scope = btn.closest('.aev-feature-body, .aev-modal-body') || document;
     var status = $('.aev-share-status', scope);
     function say(msg) { if (status) status.textContent = msg; }

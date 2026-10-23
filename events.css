@@ -237,7 +237,33 @@
   .aev-lb-prev{left:16px;}
   .aev-lb-next{right:16px;}
   .aev-modal-close{left:calc(100% - 40px);width:32px;height:32px;}
+  .aev-modal-cover--portrait img{max-height:56vh;}
 }
+
+/* ── upcoming event without a date yet ── */
+.aev-soon{color:#ffd98a;font-weight:700;font-size:.95rem;margin:0 0 18px;padding-left:12px;border-left:3px solid var(--gold);}
+
+/* ── simple bullet lists in the detail modal ── */
+.aev-list{list-style:none;display:grid;gap:8px;margin:0 0 6px;}
+.aev-list li{position:relative;padding-left:22px;color:#e6e6e6;font-size:.95rem;}
+.aev-list li::before{content:"";position:absolute;left:3px;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(242,169,59,.7);}
+
+/* ── portrait posters (e.g. SAANJH) are shown whole, never cropped ── */
+.aev-modal-cover--portrait{max-height:none;padding:22px 0 6px;}
+.aev-modal-cover--portrait img{width:auto;max-width:100%;max-height:62vh;}
+
+/* ── festive (Diwali / marigold) look, opt-in with theme:"festive" in the data ── */
+.aev-theme-festive.aev-feature{
+  border-color:rgba(255,190,70,.45);
+  background:radial-gradient(70% 90% at 100% 0%,rgba(255,176,60,.26),transparent 60%),radial-gradient(50% 60% at 0% 100%,rgba(230,57,70,.16),transparent 60%),linear-gradient(160deg,#2b1c0d,#161210 62%);
+  box-shadow:0 34px 80px -40px rgba(255,176,60,.5);
+}
+.aev-theme-festive .aev-poster{box-shadow:0 0 0 1px rgba(255,200,90,.55),0 0 0 6px rgba(0,0,0,.3),0 0 46px rgba(255,170,50,.45);}
+.aev-theme-festive .aev-feature-title,.aev-theme-festive .aev-modal-body h2{color:#ffd98a;letter-spacing:.05em;text-shadow:0 0 22px rgba(255,170,50,.4);}
+.aev-theme-festive .aev-feature-title::after{content:"";display:block;width:112px;height:8px;margin-top:12px;background:radial-gradient(circle,#ffb526 0 3px,transparent 3.6px) 0 50%/16px 8px repeat-x;}
+.aev-theme-festive .aev-tagline{color:#ffe9c2;}
+.aev-theme-festive .aev-section h3,.aev-theme-festive .aev-tickets-h{color:#ffd98a;}
+.aev-theme-festive .aev-ticket-row{border-color:rgba(255,190,70,.35);background:rgba(255,176,60,.06);}
 
 /* ── reduced motion ── */
 @media (prefers-reduced-motion:reduce){

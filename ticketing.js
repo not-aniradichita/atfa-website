@@ -89,11 +89,13 @@
   /**
    * @param {object} event  an entry from ATFA_EVENTS
    * @param {Date}   [now]
+   * @param {string} [key]  which config block to read: 'ticketing' (default) or
+   *                       'registration' (same shape, used for sign-ups)
    * @returns {{state:'hidden'|'coming-soon'|'open', heading:string|null,
    *            options:Array<object>, info:Array<{label,value}>}}
    */
-  function resolve(event, now) {
-    var t = event && event.ticketing;
+  function resolve(event, now, key) {
+    var t = event && event[key || 'ticketing'];
     if (!t || !t.enabled) {
       return { state: 'hidden', heading: null, options: [], info: [] };
     }
