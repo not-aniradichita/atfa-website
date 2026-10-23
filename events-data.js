@@ -49,6 +49,18 @@
      videos            [{ provider: 'youtube' | 'videopress', id, title }]
      sourceUrl         original archive page — shown as "Original post"
      ticketing         null, or the block described below
+     pageUrl           optional path of a dedicated full page for this event
+                        (e.g. "/events/saanjh" -> events/saanjh.html). When set,
+                        the listing links to that page instead of opening the
+                        popup, and Share uses that address.
+     card              optional richer copy for the listing card:
+                        { intro, hook, acts, body, audienceHeading, audience, soon }
+     landing           optional copy for the dedicated page (see
+                        events/saanjh.html + events.js renderLanding):
+                        { metaDescription, heroLines[], audienceHeading,
+                          audienceCards[{icon,title,text}], audienceNote,
+                          benefitsHeading, benefits[], ctaHeading, ctaText,
+                          ctaSoon, ctaTextOpen }
      fullTitle         optional longer name used for page title, sharing and
                         alt text (e.g. title "SAANJH", fullTitle
                         "SAANJH – Ek Shaam, Anek Ehsaas")
@@ -138,45 +150,13 @@ window.ATFA_EVENTS = [
     "series": null,
     "session": null,
     "topic": null,
-    "description": "Love to sing, dance, act, or tell stories? Come share your talent on one stage. A special pre-Diwali evening filled with art, music, dance, theatre, and stories.",
-    "modalIntro": "A special evening to celebrate art, talent, and togetherness before Diwali.",
+    "description": "A special pre-Diwali evening filled with music, dance, theatre, and stories. Love to perform? This stage is for you!",
     "aboutHeading": "What is SAANJH?",
     "longDescription": [
       "SAANJH is an open stage for people who love to perform.",
-      "Sing a song. Dance to a beat. Act out a story. Share a poem. Let people see what you can do.",
-      "Whether you are starting out or have performed many times, SAANJH is a place to share your talent and meet others who love the arts."
-    ],
-    "sections": [
-      {
-        "heading": "Who Can Take Part?",
-        "items": [
-          "Singers",
-          "Dancers",
-          "Actors",
-          "Musicians",
-          "Poets and storytellers",
-          "Anyone with a talent they want to share"
-        ]
-      },
-      {
-        "heading": "What Can You Perform?",
-        "items": [
-          "Sing a song",
-          "Dance to a beat",
-          "Act out a story",
-          "Play music",
-          "Share a poem or tell a story"
-        ]
-      },
-      {
-        "heading": "Why Join?",
-        "items": [
-          "Get a chance to perform on stage.",
-          "Share your talent with others.",
-          "Meet people who love the arts.",
-          "Help more people discover your work."
-        ]
-      }
+      "Sing a song. Dance to a beat. Act out a story. Play an instrument. Share a poem. Let people see what you can do.",
+      "You do not need to be famous to take part. If you love performing, this stage is for you.",
+      "Whether you are starting out or have performed many times, SAANJH is a place to share your talent, meet other artists, and reach new people."
     ],
     "venue": null,
     "location": null,
@@ -198,7 +178,7 @@ window.ATFA_EVENTS = [
     "registration": {
       "enabled": true,
       "provider": "external",
-      "heading": "Want to Perform?",
+      "heading": "Want to Perform at SAANJH?",
       "options": [
         {
           "id": "perform",
@@ -215,6 +195,68 @@ window.ATFA_EVENTS = [
           "value": "Not confirmed yet. We will share the details soon."
         }
       ]
+    },
+    "pageUrl": "/events/saanjh",
+    "card": {
+      "intro": "A special pre-Diwali evening filled with music, dance, theatre, and stories.",
+      "hook": "Love to perform? This stage is for you!",
+      "acts": "Sing a song. Dance. Act. Play an instrument. Share a poem or tell a story.",
+      "body": "SAANJH is an open stage for artists who want their first chance to perform, as well as artists who want more people to discover their talent.",
+      "audienceHeading": "Who can join?",
+      "audience": "Singers, dancers, actors, musicians, poets, storytellers, and other performing artists.",
+      "soon": "Event date, time and venue: Coming soon."
+    },
+    "landing": {
+      "metaDescription": "SAANJH – Ek Shaam, Anek Ehsaas: an open stage for singers, dancers, actors, musicians, poets and storytellers. A pre-Diwali celebration of arts and culture by Aniradichita Theatre and Films. Coming soon.",
+      "heroLines": [
+        "A special pre-Diwali evening to celebrate art, talent, and togetherness.",
+        "Love to sing, dance, act, or tell stories? Come share your talent on one stage."
+      ],
+      "audienceHeading": "Who can take part?",
+      "audienceCards": [
+        {
+          "icon": "🎤",
+          "title": "Singers",
+          "text": "Share your voice."
+        },
+        {
+          "icon": "💃",
+          "title": "Dancers",
+          "text": "Show your moves."
+        },
+        {
+          "icon": "🎭",
+          "title": "Actors",
+          "text": "Bring stories to life."
+        },
+        {
+          "icon": "🎸",
+          "title": "Musicians",
+          "text": "Play your music."
+        },
+        {
+          "icon": "✍️",
+          "title": "Poets and storytellers",
+          "text": "Share your words."
+        },
+        {
+          "icon": "✨",
+          "title": "Other performers",
+          "text": "Show us what makes you special."
+        }
+      ],
+      "audienceNote": "Just starting out? You are welcome. Already performing? Come meet a bigger audience.",
+      "benefitsHeading": "Why join SAANJH?",
+      "benefits": [
+        "Get a chance to perform on stage.",
+        "Share what you love doing.",
+        "Meet people who love the arts.",
+        "Help more people discover your talent."
+      ],
+      "ctaHeading": "Want to Perform at SAANJH?",
+      "ctaText": "Have a song, dance, story, poem, or act to share? We would love to hear from you. Registration is not open yet. Check back soon for details on how to take part.",
+      "ctaSoon": "We will share the registration details soon.",
+      "ctaTextOpen": "Have a song, dance, story, poem, or act to share? We would love to hear from you. Register using the button below."
     }
   },
   {

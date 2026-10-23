@@ -16,6 +16,7 @@
   var ticketing = (window.ATFA && window.ATFA.ticketing) || null;
 
   var ORG_NAME = 'Aniradichita Theatre & Films Association';
+  var SITE_URL = 'https://aniradichita.com';
   var INSTAGRAM = 'https://www.instagram.com/aniradichita_theatre_films/';
   var PAGE_SIZE = 12;
 
@@ -100,8 +101,8 @@
     return ticketing ? ticketing.resolve(e, new Date(), key) : { state: 'hidden', options: [], info: [] };
   }
 
-  function ticketOptionButton(opt) {
-    var cls = 'aev-ticket-btn' + (opt.id ? ' aev-ticket-btn--' + esc(opt.id) : '');
+  function ticketOptionButton(opt, extraCls) {
+    var cls = 'aev-ticket-btn' + (opt.id ? ' aev-ticket-btn--' + esc(opt.id) : '') + (extraCls ? ' ' + extraCls : '');
     if (opt.state === 'open') {
       return '<a class="' + cls + '" href="' + esc(opt.href) + '" target="_blank" rel="noopener noreferrer" data-ticket-option="' + esc(opt.id) + '"' +
         (opt.provider ? ' data-provider="' + esc(opt.provider) + '"' : '') + '>' +
@@ -194,9 +195,13 @@
       '<div class="aev-card-media">' + cardImage(e) + badge + '</div>' +
       '<div class="aev-card-body">' +
         '<div class="aev-card-meta"><span class="aev-type">' + esc(e.type) + '</span>' + dateTimeTag(e) + '</div>' +
-        '<h3 class="aev-card-title"><button type="button" class="aev-card-link" data-open-event="' + esc(e.slug) + '">' + esc(e.title) + '</button></h3>' +
+        '<h3 class="aev-card-title">' + (e.pageUrl
+          ? '<a class="aev-card-link" href="' + esc(e.pageUrl) + '">' + esc(e.title) + '</a>'
+          : '<button type="button" class="aev-card-link" data-open-event="' + esc(e.slug) + '">' + esc(e.title) + '</button>') + '</h3>' +
         '<p class="aev-card-desc">' + esc(e.description) + '</p>' +
-        '<button type="button" class="aev-card-more" data-open-event="' + esc(e.slug) + '">View Details <i aria-hidden="true">→</i></button>' +
+        (e.pageUrl
+          ? '<a class="aev-card-more" href="' + esc(e.pageUrl) + '">' + esc(e.ctaLabel || 'View Details') + ' <i aria-hidden="true">→</i></a>'
+          : '<button type="button" class="aev-card-more" data-open-event="' + esc(e.slug) + '">View Details <i aria-hidden="true">→</i></button>') +
       '</div></article>';
   }
 
@@ -234,21 +239,34 @@
       ? '<a class="aev-follow" href="' + INSTAGRAM + '" target="_blank" rel="noopener noreferrer">Clues are coming — follow our posts &amp; reels on Instagram <span class="sr-only">(opens in a new tab)</span></a>'
       : '';
 
+    var cd = e.card;
+    var soonHtml = '';
     if (!e.date && status !== 'past') {
-      dateBlock = '<p class="aev-soon">Date, time and place: coming soon.</p>';
+      soonHtml = '<p class="aev-soon">' + esc((cd && cd.soon) || 'Date, time and place: coming soon.') + '</p>';
     }
+    var subTitle = e.fullTitle && e.fullTitle.indexOf(e.title) === 0 ? e.fullTitle.slice(e.title.length) : '';
+    var bodyHtml = cd
+      ? '<p class="aev-card-intro">' + esc(cd.intro) + '</p>' +
+        '<p class="aev-card-hook">' + esc(cd.hook) + '</p>' +
+        '<p class="aev-card-acts">' + esc(cd.acts) + '</p>' +
+        '<p class="aev-feature-desc">' + esc(cd.body) + '</p>' +
+        '<div class="aev-audience"><h3>' + esc(cd.audienceHeading) + '</h3><p>' + esc(cd.audience) + '</p></div>'
+      : '<p class="aev-feature-desc">' + esc(e.description) + '</p>';
 
     return '<article class="aev-feature' + (e.theme ? ' aev-theme-' + esc(e.theme) : '') + '" aria-labelledby="ft-' + esc(e.slug) + '">' +
       '<div class="aev-poster">' + poster + '</div>' +
       '<div class="aev-feature-body">' +
         '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
-        '<h2 class="aev-feature-title" id="ft-' + esc(e.slug) + '">' + esc(e.title) + '</h2>' +
+        '<h2 class="aev-feature-title" id="ft-' + esc(e.slug) + '">' + esc(e.title) + (subTitle ? '<span class="sr-only">' + esc(subTitle) + '</span>' : '') + '</h2>' +
         (e.tagline ? '<p class="aev-tagline">' + esc(e.tagline) + '</p>' : '') +
         dateBlock +
         (e.date && status === 'upcoming' ? countdownHtml(e) : '') +
-        '<p class="aev-feature-desc">' + esc(e.description) + '</p>' +
+        bodyHtml +
+        soonHtml +
         ticketOptionsSection(e, res, 'h3') +
-        '<div class="aev-cta-row">' + shareButton(e) + '<button type="button" class="' + (e.ctaLabel ? 'btn-r' : 'btn-g') + '" data-open-event="' + esc(e.slug) + '">' + esc(e.ctaLabel || 'Full details') + '</button></div>' +
+        '<div class="aev-cta-row">' + shareButton(e) + (e.pageUrl
+          ? '<a class="btn-r" href="' + esc(e.pageUrl) + '">' + esc(e.ctaLabel || 'Know More') + '</a>'
+          : '<button type="button" class="' + (e.ctaLabel ? 'btn-r' : 'btn-g') + '" data-open-event="' + esc(e.slug) + '">' + esc(e.ctaLabel || 'Full details') + '</button>') + '</div>' +
         '<p class="aev-share-status" role="status" aria-live="polite"></p>' +
         clues +
       '</div></article>';
@@ -428,6 +446,7 @@
     var e = EVENTS.filter(function (x) { return x.slug === slug; })[0];
     var dlg = $('#eventModal');
     if (!e || !dlg) return;
+    if (e.pageUrl) { location.replace(e.pageUrl); return; }
     modalOpener = opener || document.activeElement;
     var status = resolveStatus(e, new Date());
     $('#eventModalContent', dlg).innerHTML = eventModalHtml(e, status);
@@ -479,7 +498,7 @@
       organizer: { '@type': 'Organization', name: e.organizer || ORG_NAME }
     };
     if (e.endDate) data.endDate = e.endDate;
-    if (c) data.image = [/^https?:/.test(c.src) ? imgUrl(c.src, 1200) : new URL(c.src, location.href).href];
+    if (c) data.image = [/^https?:/.test(c.src) ? imgUrl(c.src, 1200) : new URL(c.src, SITE_URL + '/').href];
     if (e.venue && /^online/i.test(e.venue)) {
       data.eventAttendanceMode = 'https://schema.org/OnlineEventAttendanceMode';
       data.location = { '@type': 'VirtualLocation', url: location.href };
@@ -527,9 +546,9 @@
     var slug = btn.getAttribute('data-share');
     var e = EVENTS.filter(function (x) { return x.slug === slug; })[0];
     if (!e) return;
-    var url = location.origin + location.pathname + '#e-' + slug;
+    var url = e.pageUrl ? SITE_URL + e.pageUrl : location.origin + location.pathname + '#e-' + slug;
     var text = (e.fullTitle || e.title) + (e.date ? ' — ' + fmtRange(e.date, e.endDate) : '') + ' | ' + ORG_NAME;
-    var scope = btn.closest('.aev-feature-body, .aev-modal-body') || document;
+    var scope = btn.closest('.aev-feature-body, .aev-modal-body, .aev-lp-hero-body, .aev-lp-share') || document;
     var status = $('.aev-share-status', scope);
     function say(msg) { if (status) status.textContent = msg; }
     if (navigator.share) { navigator.share({ title: e.title, text: text, url: url }).catch(function () {}); return; }
@@ -614,11 +633,106 @@
     img.replaceWith(box);
   }, true);
 
+
+  /* ── dedicated event page (events/<slug>.html), rendered from the same data ── */
+  function renderLanding() {
+    var mount = $('#eventMount');
+    if (!mount) return;
+    var slug = document.body.getAttribute('data-event-slug');
+    var e = EVENTS.filter(function (x) { return x.slug === slug; })[0];
+    if (!e) {
+      mount.innerHTML = '<div class="aev-lp-wrap"><div class="aev-empty" role="alert"><h1>We could not find that event</h1><p><a href="/events.html">See all events</a></p></div></div>';
+      return;
+    }
+    var L = e.landing || {};
+    var status = resolveStatus(e, new Date());
+    var reg = ticketState(e, 'registration');
+    var opt = reg.options && reg.options[0];
+    var regOpen = !!opt && opt.state === 'open';
+    var c = cover(e);
+    var posterSrc = c ? (c.src.indexOf('http') === 0 || c.src.charAt(0) === '/' ? c.src : '/' + c.src) : ''; /* this page lives in /events/, so local images need a root-absolute path */
+    var tba = '<span class="aev-tba">To be announced</span>';
+    var dateText = e.date ? esc(fmtRange(e.date, e.endDate)) + ' <span class="aev-dim">(' + esc(weekdayName(e.date)) + ')</span>' : tba;
+
+    var hero = '<section class="aev-lp-hero" aria-labelledby="lp-title"><div class="aev-lp-wrap aev-lp-hero-grid">' +
+      '<div class="aev-poster aev-lp-poster">' + (c
+        ? '<img src="' + esc(posterSrc) + '" alt="' + esc(c.alt || e.title) + '"' + (c.width ? ' width="' + c.width + '" height="' + c.height + '"' : '') + ' fetchpriority="high" decoding="async" data-fallback>'
+        : '<div class="aev-card-fallback" aria-hidden="true">🎭</div>') + '</div>' +
+      '<div class="aev-lp-hero-body">' +
+        '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
+        '<h1 class="aev-feature-title aev-lp-title" id="lp-title">' + esc(e.title) + '</h1>' +
+        (e.tagline ? '<p class="aev-tagline aev-lp-tagline">' + esc(e.tagline) + '</p>' : '') +
+        (L.heroLines || []).map(function (t) { return '<p class="aev-lp-lead">' + esc(t) + '</p>'; }).join('') +
+        (!e.date ? '<p class="aev-soon">' + esc((e.card && e.card.soon) || 'Date, time and venue: coming soon.') + '</p>' : '') +
+        '<div class="aev-cta-row">' +
+          (opt ? '<a class="btn-r" href="#register">' + (regOpen ? esc(opt.buttonLabel) : 'Want to perform?') + '</a>' : '') +
+          shareButton(e) +
+        '</div><p class="aev-share-status" role="status" aria-live="polite"></p>' +
+      '</div></div></section>';
+
+    var about = '<section class="aev-lp-section" aria-labelledby="lp-about"><div class="aev-lp-wrap aev-lp-narrow">' +
+      '<h2 id="lp-about">' + esc(e.aboutHeading || 'About this event') + '</h2>' +
+      (e.longDescription || [e.description]).map(function (p, i) { return '<p' + (i === 0 ? ' class="aev-lp-big"' : '') + '>' + esc(p) + '</p>'; }).join('') +
+      '</div></section>';
+
+    var who = (L.audienceCards && L.audienceCards.length)
+      ? '<section class="aev-lp-section aev-lp-alt" aria-labelledby="lp-who"><div class="aev-lp-wrap">' +
+        '<h2 id="lp-who">' + esc(L.audienceHeading || 'Who can take part?') + '</h2>' +
+        '<ul class="aev-lp-cards">' + L.audienceCards.map(function (a) {
+          return '<li class="aev-lp-card"><span class="aev-lp-icon" aria-hidden="true">' + esc(a.icon || '') + '</span><h3>' + esc(a.title) + '</h3><p>' + esc(a.text) + '</p></li>';
+        }).join('') + '</ul>' +
+        (L.audienceNote ? '<p class="aev-lp-note">' + esc(L.audienceNote) + '</p>' : '') +
+        '</div></section>' : '';
+
+    var why = (L.benefits && L.benefits.length)
+      ? '<section class="aev-lp-section" aria-labelledby="lp-why"><div class="aev-lp-wrap">' +
+        '<h2 id="lp-why">' + esc(L.benefitsHeading || 'Why join?') + '</h2>' +
+        '<ul class="aev-lp-benefits">' + L.benefits.map(function (b) { return '<li>' + esc(b) + '</li>'; }).join('') + '</ul>' +
+        '</div></section>' : '';
+
+    var cta = opt
+      ? '<section class="aev-lp-section aev-lp-cta" id="register" aria-labelledby="lp-cta"><div class="aev-lp-wrap aev-lp-cta-box">' +
+        '<h2 id="lp-cta">' + esc(L.ctaHeading || reg.heading || 'Want to take part?') + '</h2>' +
+        '<p>' + esc(regOpen ? (L.ctaTextOpen || L.ctaText || '') : (L.ctaText || '')) + '</p>' +
+        ticketOptionButton(opt, 'aev-lp-cta-btn') +
+        (!regOpen && L.ctaSoon ? '<p class="aev-lp-cta-note">' + esc(L.ctaSoon) + '</p>' : '') +
+        '</div></section>' : '';
+
+    var rows = [
+      ['Event name', esc(e.fullTitle || e.title)],
+      ['Organizer', esc(e.organizer || ORG_NAME)],
+      ['Event type', esc(e.type)],
+      ['Date', dateText],
+      ['Time', e.time ? esc(e.time) : tba],
+      ['Venue', e.venue ? esc(e.venue + (e.location ? ', ' + e.location : '')) : tba],
+      ['Registration', regOpen ? 'Open' : 'Coming soon']
+    ];
+    var details = '<section class="aev-lp-section aev-lp-alt" aria-labelledby="lp-details"><div class="aev-lp-wrap">' +
+      '<h2 id="lp-details">Event details</h2>' +
+      '<dl class="aev-lp-details">' + rows.map(function (r) { return '<div class="aev-lp-detail"><dt>' + esc(r[0]) + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
+      '</div></section>';
+
+    var share = '<section class="aev-lp-section aev-lp-share" aria-labelledby="lp-share"><div class="aev-lp-wrap aev-lp-narrow">' +
+      '<h2 id="lp-share">Share the event</h2><p>Know someone who loves to perform? Send them this page.</p>' +
+      '<div class="aev-cta-row">' + shareButton(e) + '<a class="btn-g" href="/events.html">← All events</a></div>' +
+      '<p class="aev-share-status" role="status" aria-live="polite"></p></div></section>';
+
+    mount.innerHTML =
+      '<div class="aev-lp-crumbs"><div class="aev-lp-wrap"><div role="navigation" aria-label="Breadcrumb"><ol>' +
+        '<li><a href="/index.html">Home</a></li><li><a href="/events.html">Events</a></li><li aria-current="page">' + esc(e.title) + '</li></ol></div></div></div>' +
+      hero + about + who + why + cta + details + share;
+    injectJsonLd(e);
+  }
+
   /* Small public surface so the status/ticketing rules can be checked. */
   window.ATFA = window.ATFA || {};
   window.ATFA.events = { resolveStatus: resolveStatus };
 
-  if (document.body.getAttribute('data-page') === 'events') {
+  /* a cached copy of events.html from before data-events-view existed is still the listing */
+  var view = document.body.getAttribute('data-events-view') || (document.body.getAttribute('data-page') === 'events' ? 'list' : null);
+  if (view === 'detail') {
+    renderLanding();
+  } else if (view === 'list') {
     renderLive();
     renderPast();
     bindIndexEvents();
