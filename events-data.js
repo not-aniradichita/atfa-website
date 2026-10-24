@@ -60,12 +60,13 @@
                         heroLines[], joinHeading, joinCards[], audienceHeading,
                         audienceCards[{icon,title,text}], audienceNote,
                         benefitsHeading, benefits[], bePart{heading,text,cards[]} }
-     performerRegistration   optional performer sign-up form:
-                        { enabled, open, route, closedMessage, ageGroups[],
-                          artForms[], endpoint{ type, url, rpc, anonKey } }
-                        `open` is the registration switch (separate from the
-                        event date). Empty endpoint.url = form shows "submissions
-                        are not available yet".
+     performerRegistration   optional performer sign-up, done on a Google Form:
+                        { enabled, open, route, closedMessage, formUrl, formHosts[],
+                          buttonLabel }. The page at `route` shows the button; it
+                        opens `formUrl` (must be https on one of `formHosts`).
+                        `open: false` hides the button and shows `closedMessage`.
+                        Where respondents land after sending is set INSIDE the Google
+                        Form (Settings -> Presentation -> confirmation message).
      audienceTicketing optional audience ticket page, shaped like `ticketing`
                         (single-link shorthand): { enabled, provider, route,
                           checkoutUrl, hosts[], label, buttonLabel, pendingLabel }
@@ -283,30 +284,12 @@ window.ATFA_EVENTS = [
       "open": true,
       "route": "/events/saanjh/register/performer",
       "closedMessage": "Performer registration is not open right now. Please check back soon.",
-      "ageGroups": [
-        "Under 13",
-        "13 to 17",
-        "18 to 25",
-        "26 to 40",
-        "41 to 60",
-        "Over 60"
+      "formUrl": "https://forms.gle/C8wLbrTmGM5Uf16c9",
+      "formHosts": [
+        "forms.gle",
+        "docs.google.com"
       ],
-      "artForms": [
-        "Singing",
-        "Dancing",
-        "Theatre / Acting",
-        "Instrumental Music",
-        "Poetry / Spoken Word",
-        "Storytelling",
-        "Stand-up Comedy",
-        "Other"
-      ],
-      "endpoint": {
-        "type": "supabase-rpc",
-        "url": "https://qgxgvyoosvbwmnnxggqz.supabase.co",
-        "rpc": "submit_saanjh_performer_application",
-        "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFneGd2eW9vc3Zid21ubnhnZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5OTQyMDMsImV4cCI6MjA5NDU3MDIwM30.BhMlgHFMaBTldzmGSP-DiJdR-2s4v-7TSR2eU4-fDaA"
-      }
+      "buttonLabel": "Register as a Performer"
     },
     "audienceTicketing": {
       "enabled": true,

@@ -10,14 +10,12 @@ The booking table (`studio_bookings`) and RPCs (`get_studio_availability`,
 `create_studio_booking`) plus the notify trigger live in the Supabase project
 `thespians-tribe` (ref qgxgvyoosvbwmnnxggqz). Secrets are NOT stored in this repo.
 
-## SAANJH performer registration
+## SAANJH performer registration (Google Form now; database part unused)
 
-- `migrations/20261024_saanjh_performer_applications.sql` — creates `public.saanjh_performer_applications` and the
-  `submit_saanjh_performer_application(...)` function (already applied to the live project).
-- The page `events/saanjh/register/performer` calls that function with the public anon key (config:
-  `performerRegistration.endpoint` in `events-data.js`). The anon key can only **submit**; the table has RLS on, no
-  policies and no public grants, so applications cannot be read or changed from the website.
-- View applications in Supabase -> Table editor -> `saanjh_performer_applications` (they contain names, phone numbers and
-  emails: treat them as private). No email/WhatsApp alert is wired yet.
-- The function re-checks every field, ignores bot submissions (hidden `p_website` field) and refuses a second
-  application with the same email + performance title.
+Performers now apply on a Google Form (linked from `events/saanjh/register/performer`; address in
+`performerRegistration.formUrl` in `events-data.js`). The earlier on-site form is gone.
+
+The table `public.saanjh_performer_applications` and the function `submit_saanjh_performer_application`
+(`migrations/20261024_saanjh_performer_applications.sql`) are still in the Supabase project but nothing on the
+website calls them any more. They hold no data (test rows were removed). Drop them whenever convenient:
+`drop function public.submit_saanjh_performer_application(text,text,text,text,text,text,text,text,text,text,text,integer,text,text,text,boolean,text); drop table public.saanjh_performer_applications;`
