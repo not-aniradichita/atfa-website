@@ -35,6 +35,18 @@
     }
   }
 
+  /* Optional allow-list: when an event lists `hosts` (e.g. ["razorpay.com","rzp.io"]) a link
+     only counts if its domain is one of them or a sub-domain — catches typos in pasted links. */
+  function hostAllowed(value, hosts) {
+    if (!hosts || !hosts.length) return true;
+    try {
+      var h = new URL(String(value).trim()).hostname.toLowerCase();
+      return hosts.some(function (d) { d = String(d).toLowerCase(); return h === d || h.slice(-(d.length + 1)) === "." + d; });
+    } catch (err) {
+      return false;
+    }
+  }
+
   /* Accepts either the array shape (one or more ticket types) or the older
      single-ticket shorthand ({ checkoutUrl, buttonLabel, ... } with no
      `options`), so a simple event doesn't need to write an array of one. */
@@ -48,6 +60,7 @@
           checkoutUrl: o.checkoutUrl,
           provider: o.provider || t.provider,
           opensAt: o.opensAt || t.opensAt,
+          hosts: o.hosts || t.hosts,
           pendingLabel: o.pendingLabel || t.pendingLabel || 'Releasing Soon',
           note: o.note || null
         };
@@ -61,6 +74,7 @@
         checkoutUrl: t.checkoutUrl,
         provider: t.provider,
         opensAt: t.opensAt,
+        hosts: t.hosts,
         pendingLabel: t.pendingLabel || 'Tickets Releasing Soon',
         note: null
       }
@@ -71,7 +85,7 @@
     var opensAt = opt.opensAt ? new Date(opt.opensAt) : null;
     if (opensAt && isNaN(opensAt.getTime())) opensAt = null;
     var released = !opensAt || now >= opensAt;
-    var live = released && isHttpsUrl(opt.checkoutUrl);
+    var live = released && isHttpsUrl(opt.checkoutUrl) && hostAllowed(opt.checkoutUrl, opt.hosts);
     return {
       id: opt.id,
       label: opt.label,

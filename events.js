@@ -241,7 +241,7 @@
 
     var cd = e.card;
     var soonHtml = '';
-    if (!e.date && status !== 'past') {
+    if (status !== 'past' && (cd && cd.soon ? (!e.date || !e.time || !e.venue) : !e.date)) {
       soonHtml = '<p class="aev-soon">' + esc((cd && cd.soon) || 'Date, time and place: coming soon.') + '</p>';
     }
     var subTitle = e.fullTitle && e.fullTitle.indexOf(e.title) === 0 ? e.fullTitle.slice(e.title.length) : '';
@@ -491,13 +491,14 @@
     var data = {
       '@context': 'https://schema.org',
       '@type': 'Event',
-      name: e.title,
+      name: e.fullTitle || e.title,
       description: e.description,
       startDate: e.date,
       eventStatus: 'https://schema.org/EventScheduled',
       organizer: { '@type': 'Organization', name: e.organizer || ORG_NAME }
     };
     if (e.endDate) data.endDate = e.endDate;
+    if (e.pageUrl) data.url = SITE_URL + e.pageUrl;
     if (c) data.image = [/^https?:/.test(c.src) ? imgUrl(c.src, 1200) : new URL(c.src, SITE_URL + '/').href];
     if (e.venue && /^online/i.test(e.venue)) {
       data.eventAttendanceMode = 'https://schema.org/OnlineEventAttendanceMode';
@@ -505,9 +506,9 @@
     } else if (e.venue) {
       data.location = { '@type': 'Place', name: e.venue, address: e.location || e.venue };
     }
-    var res = ticketState(e);
-    if (res.options && res.options.length) {
-      data.offers = res.options.filter(function (o) { return o.state === 'open'; }).map(function (o) {
+    var offerOpts = ticketState(e).options.concat(ticketState(e, 'audienceTicketing').options || []);
+    if (offerOpts.length) {
+      data.offers = offerOpts.filter(function (o) { return o.state === 'open'; }).map(function (o) {
         return { '@type': 'Offer', name: o.label, url: o.href, availability: 'https://schema.org/InStock' };
       });
       if (!data.offers.length) delete data.offers;
@@ -634,41 +635,93 @@
   }, true);
 
 
-  /* ── dedicated event page (events/<slug>.html), rendered from the same data ── */
+  /* ── dedicated event pages (events/<slug>.html and its register pages), rendered from the same data ── */
+  var TBA_HTML = '<span class="aev-tba">To be announced</span>';
+  function fullDate(date) { return weekdayName(date) + ', ' + fmtDate(date); }
+  function dateHtml(e) {
+    if (!e.date) return TBA_HTML;
+    return esc(fullDate(e.date)) + (e.endDate && e.endDate !== e.date ? ' – ' + esc(fmtDate(e.endDate)) : '');
+  }
+  function findEvent(slug) { return EVENTS.filter(function (x) { return x.slug === slug; })[0]; }
+  function posterSrcOf(c) {
+    return c ? (c.src.indexOf('http') === 0 || c.src.charAt(0) === '/' ? c.src : '/' + c.src) : ''; /* these pages live in sub-folders, so local images need a root-absolute path */
+  }
+  function crumbsHtml(items) {
+    return '<div class="aev-lp-crumbs"><div class="aev-lp-wrap"><div role="navigation" aria-label="Breadcrumb"><ol>' +
+      items.map(function (it, i) {
+        return i === items.length - 1
+          ? '<li aria-current="page">' + esc(it[0]) + '</li>'
+          : '<li><a href="' + esc(it[1]) + '">' + esc(it[0]) + '</a></li>';
+      }).join('') + '</ol></div></div></div>';
+  }
+  /* Date / time / venue lines. Date is real once confirmed; unknowns say "To be announced". */
+  function factsHtml(e) {
+    function row(icon, label, value) {
+      return '<li><span class="aev-lp-fact-icon" aria-hidden="true">' + icon + '</span><span><span class="aev-lp-fact-label">' + label + '</span> ' + value + '</span></li>';
+    }
+    return '<ul class="aev-lp-facts">' +
+      row('📅', 'Date:', dateHtml(e)) +
+      row('🕒', 'Time:', e.time ? esc(e.time) : TBA_HTML) +
+      row('📍', 'Venue:', e.venue ? esc(e.venue + (e.location ? ', ' + e.location : '')) : TBA_HTML) +
+      '</ul>';
+  }
+  function performerOpen(e) { return !!(e.performerRegistration && e.performerRegistration.enabled && e.performerRegistration.open !== false); }
+  function routeFor(e, to) {
+    var cfg = to === 'performer' ? e.performerRegistration : e.audienceTicketing;
+    return cfg && cfg.enabled ? cfg.route : null;
+  }
+  function audienceRes(e) { return ticketState(e, 'audienceTicketing'); }
+
   function renderLanding() {
     var mount = $('#eventMount');
     if (!mount) return;
-    var slug = document.body.getAttribute('data-event-slug');
-    var e = EVENTS.filter(function (x) { return x.slug === slug; })[0];
+    var e = findEvent(document.body.getAttribute('data-event-slug'));
     if (!e) {
       mount.innerHTML = '<div class="aev-lp-wrap"><div class="aev-empty" role="alert"><h1>We could not find that event</h1><p><a href="/events.html">See all events</a></p></div></div>';
       return;
     }
     var L = e.landing || {};
     var status = resolveStatus(e, new Date());
-    var reg = ticketState(e, 'registration');
-    var opt = reg.options && reg.options[0];
-    var regOpen = !!opt && opt.state === 'open';
     var c = cover(e);
-    var posterSrc = c ? (c.src.indexOf('http') === 0 || c.src.charAt(0) === '/' ? c.src : '/' + c.src) : ''; /* this page lives in /events/, so local images need a root-absolute path */
-    var tba = '<span class="aev-tba">To be announced</span>';
-    var dateText = e.date ? esc(fmtRange(e.date, e.endDate)) + ' <span class="aev-dim">(' + esc(weekdayName(e.date)) + ')</span>' : tba;
+    var aud = audienceRes(e);
+    var audOpen = aud.state === 'open';
+    var perfOpen = performerOpen(e);
+    var perfRoute = routeFor(e, 'performer');
+    var audRoute = routeFor(e, 'audience');
+
+    function joinButton(to, label, cls) {
+      var route = routeFor(e, to);
+      if (!route) return '';
+      return '<a class="' + cls + '" href="' + esc(route) + '">' + esc(label) + '</a>';
+    }
+    function stateNote(to) {
+      if (to === 'performer') return perfOpen ? '' : '<p class="aev-lp-join-note">' + esc(e.performerRegistration.closedMessage || 'Registration is not open right now.') + '</p>';
+      return audOpen ? '' : '<p class="aev-lp-join-note">Ticket booking will open soon.</p>';
+    }
 
     var hero = '<section class="aev-lp-hero" aria-labelledby="lp-title"><div class="aev-lp-wrap aev-lp-hero-grid">' +
       '<div class="aev-poster aev-lp-poster">' + (c
-        ? '<img src="' + esc(posterSrc) + '" alt="' + esc(c.alt || e.title) + '"' + (c.width ? ' width="' + c.width + '" height="' + c.height + '"' : '') + ' fetchpriority="high" decoding="async" data-fallback>'
+        ? '<img src="' + esc(posterSrcOf(c)) + '" alt="' + esc(c.alt || e.title) + '"' + (c.width ? ' width="' + c.width + '" height="' + c.height + '"' : '') + ' fetchpriority="high" decoding="async" data-fallback>'
         : '<div class="aev-card-fallback" aria-hidden="true">🎭</div>') + '</div>' +
       '<div class="aev-lp-hero-body">' +
         '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
         '<h1 class="aev-feature-title aev-lp-title" id="lp-title">' + esc(e.title) + '</h1>' +
         (e.tagline ? '<p class="aev-tagline aev-lp-tagline">' + esc(e.tagline) + '</p>' : '') +
         (L.heroLines || []).map(function (t) { return '<p class="aev-lp-lead">' + esc(t) + '</p>'; }).join('') +
-        (!e.date ? '<p class="aev-soon">' + esc((e.card && e.card.soon) || 'Date, time and venue: coming soon.') + '</p>' : '') +
-        '<div class="aev-cta-row">' +
-          (opt ? '<a class="btn-r" href="#register">' + (regOpen ? esc(opt.buttonLabel) : 'Want to perform?') + '</a>' : '') +
-          shareButton(e) +
-        '</div><p class="aev-share-status" role="status" aria-live="polite"></p>' +
+        factsHtml(e) +
+        (e.date && status === 'upcoming' ? countdownHtml(e) : '') +
+        '<div class="aev-cta-row"><a class="btn-r" href="#join">How to join ↓</a>' + shareButton(e) + '</div>' +
+        '<p class="aev-share-status" role="status" aria-live="polite"></p>' +
       '</div></div></section>';
+
+    var join = (L.joinCards && L.joinCards.length)
+      ? '<section class="aev-lp-section aev-lp-join" id="join" aria-labelledby="lp-join"><div class="aev-lp-wrap">' +
+        '<h2 id="lp-join">' + esc(L.joinHeading || 'How would you like to join?') + '</h2>' +
+        '<ul class="aev-lp-join-grid">' + L.joinCards.map(function (j) {
+          var cls = j.to === 'performer' ? 'aev-lp-join-card aev-lp-join-card--perform' : 'aev-lp-join-card aev-lp-join-card--watch';
+          return '<li class="' + cls + '"><span class="aev-lp-icon" aria-hidden="true">' + esc(j.icon || '') + '</span><h3>' + esc(j.title) + '</h3><p>' + esc(j.text) + '</p>' +
+            joinButton(j.to, j.button, j.to === 'performer' ? 'btn-r aev-lp-btn' : 'aev-lp-btn aev-lp-btn--gold') + stateNote(j.to) + '</li>';
+        }).join('') + '</ul></div></section>' : '';
 
     var about = '<section class="aev-lp-section" aria-labelledby="lp-about"><div class="aev-lp-wrap aev-lp-narrow">' +
       '<h2 id="lp-about">' + esc(e.aboutHeading || 'About this event') + '</h2>' +
@@ -690,22 +743,26 @@
         '<ul class="aev-lp-benefits">' + L.benefits.map(function (b) { return '<li>' + esc(b) + '</li>'; }).join('') + '</ul>' +
         '</div></section>' : '';
 
-    var cta = opt
-      ? '<section class="aev-lp-section aev-lp-cta" id="register" aria-labelledby="lp-cta"><div class="aev-lp-wrap aev-lp-cta-box">' +
-        '<h2 id="lp-cta">' + esc(L.ctaHeading || reg.heading || 'Want to take part?') + '</h2>' +
-        '<p>' + esc(regOpen ? (L.ctaTextOpen || L.ctaText || '') : (L.ctaText || '')) + '</p>' +
-        ticketOptionButton(opt, 'aev-lp-cta-btn') +
-        (!regOpen && L.ctaSoon ? '<p class="aev-lp-cta-note">' + esc(L.ctaSoon) + '</p>' : '') +
-        '</div></section>' : '';
+    var bp = L.bePart;
+    var bePart = bp
+      ? '<section class="aev-lp-section aev-lp-cta" id="register" aria-labelledby="lp-bepart"><div class="aev-lp-wrap">' +
+        '<div class="aev-lp-bepart"><h2 id="lp-bepart">' + esc(bp.heading) + '</h2><p class="aev-lp-bepart-text">' + esc(bp.text) + '</p>' +
+        '<ul class="aev-lp-choice-grid">' + bp.cards.map(function (b) {
+          var perform = b.to === 'performer';
+          return '<li class="aev-lp-choice ' + (perform ? 'aev-lp-choice--perform' : 'aev-lp-choice--watch') + '">' +
+            '<span class="aev-lp-icon" aria-hidden="true">' + esc(b.icon || '') + '</span><h3>' + esc(b.heading) + '</h3><p>' + esc(b.text) + '</p>' +
+            joinButton(b.to, b.button, perform ? 'btn-r aev-lp-btn' : 'aev-lp-btn aev-lp-btn--gold') + stateNote(b.to) + '</li>';
+        }).join('') + '</ul></div></div></section>' : '';
 
+    var regText = (perfOpen ? 'Performers: open' : 'Performers: not open yet') + ' · Audience tickets: ' + (audOpen ? 'open' : 'coming soon');
     var rows = [
       ['Event name', esc(e.fullTitle || e.title)],
       ['Organizer', esc(e.organizer || ORG_NAME)],
       ['Event type', esc(e.type)],
-      ['Date', dateText],
-      ['Time', e.time ? esc(e.time) : tba],
-      ['Venue', e.venue ? esc(e.venue + (e.location ? ', ' + e.location : '')) : tba],
-      ['Registration', regOpen ? 'Open' : 'Coming soon']
+      ['Date', dateHtml(e)],
+      ['Time', e.time ? esc(e.time) : TBA_HTML],
+      ['Venue', e.venue ? esc(e.venue + (e.location ? ', ' + e.location : '')) : TBA_HTML],
+      ['Registration', esc(regText)]
     ];
     var details = '<section class="aev-lp-section aev-lp-alt" aria-labelledby="lp-details"><div class="aev-lp-wrap">' +
       '<h2 id="lp-details">Event details</h2>' +
@@ -713,25 +770,67 @@
       '</div></section>';
 
     var share = '<section class="aev-lp-section aev-lp-share" aria-labelledby="lp-share"><div class="aev-lp-wrap aev-lp-narrow">' +
-      '<h2 id="lp-share">Share the event</h2><p>Know someone who loves to perform? Send them this page.</p>' +
+      '<h2 id="lp-share">Share the event</h2><p>Know someone who loves to perform, or loves a good show? Send them this page.</p>' +
       '<div class="aev-cta-row">' + shareButton(e) + '<a class="btn-g" href="/events.html">← All events</a></div>' +
       '<p class="aev-share-status" role="status" aria-live="polite"></p></div></section>';
 
-    mount.innerHTML =
-      '<div class="aev-lp-crumbs"><div class="aev-lp-wrap"><div role="navigation" aria-label="Breadcrumb"><ol>' +
-        '<li><a href="/index.html">Home</a></li><li><a href="/events.html">Events</a></li><li aria-current="page">' + esc(e.title) + '</li></ol></div></div></div>' +
-      hero + about + who + why + cta + details + share;
+    mount.innerHTML = crumbsHtml([['Home', '/index.html'], ['Events', '/events.html'], [e.title]]) +
+      hero + join + about + who + why + bePart + details + share;
     injectJsonLd(e);
+    startCountdowns();
+  }
+
+  /* Audience page: events/saanjh/register/audience. The button only ever opens the
+     configured payment link; there is no checkout or payment form on this site. */
+  function renderAudience() {
+    var mount = $('#eventMount');
+    var e = findEvent(document.body.getAttribute('data-event-slug'));
+    if (!mount || !e || !e.audienceTicketing) {
+      if (mount) mount.innerHTML = '<div class="aev-lp-wrap"><div class="aev-empty" role="alert"><h1>We could not find that page</h1><p><a href="/events.html">See all events</a></p></div></div>';
+      return;
+    }
+    var aud = audienceRes(e);
+    var opt = aud.options[0];
+    var open = !!opt && opt.state === 'open';
+    var c = cover(e);
+    var rows = [
+      ['Event', esc(e.fullTitle || e.title)],
+      ['Date', dateHtml(e)],
+      ['Time', e.time ? esc(e.time) : TBA_HTML],
+      ['Venue', e.venue ? esc(e.venue + (e.location ? ', ' + e.location : '')) : TBA_HTML],
+      ['Organizer', esc(e.organizer || ORG_NAME)]
+    ];
+    mount.innerHTML = crumbsHtml([['Home', '/index.html'], ['Events', '/events.html'], [e.title, e.pageUrl || '/events.html'], ['Audience Tickets']]) +
+      '<section class="aev-lp-hero aev-lp-hero--form" aria-labelledby="lp-title"><div class="aev-lp-wrap aev-lp-hero-grid aev-lp-hero-grid--form">' +
+        '<div class="aev-poster aev-lp-poster aev-lp-poster--small">' + (c ? '<img src="' + esc(posterSrcOf(c)) + '" alt="' + esc(c.alt || e.title) + '" decoding="async" data-fallback>' : '') + '</div>' +
+        '<div class="aev-lp-hero-body">' +
+          '<div class="aev-status-row">' + statusPill(e, resolveStatus(e, new Date())) + '<span class="aev-type">Audience</span></div>' +
+          '<h1 class="aev-lp-page-title" id="lp-title">Audience Tickets — SAANJH</h1>' +
+          '<p class="aev-lp-lead">Join us for SAANJH — an evening of music, dance, theatre, and stories. Bring your love for the arts and enjoy the show!</p>' +
+          '<dl class="aev-lp-details aev-lp-details--tight">' + rows.map(function (r) { return '<div class="aev-lp-detail"><dt>' + esc(r[0]) + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
+          '<div class="aev-lp-book">' +
+            (opt ? ticketOptionButton(opt, 'aev-lp-cta-btn') : '') +
+            (open ? '<p class="aev-lp-cta-note">You will go to Razorpay’s secure page to pay. We do not take card details on this website.</p>'
+                  : '<p class="aev-lp-cta-note">Ticket booking will open soon. Please check back for updates.</p>') +
+          '</div>' +
+          (e.performerRegistration && e.performerRegistration.enabled ? '<p class="aev-lp-switch">Want to perform instead? <a href="' + esc(e.performerRegistration.route) + '">Register as a performer</a></p>' : '') +
+        '</div></div></section>';
   }
 
   /* Small public surface so the status/ticketing rules can be checked. */
   window.ATFA = window.ATFA || {};
-  window.ATFA.events = { resolveStatus: resolveStatus };
+  window.ATFA.events = {
+    resolveStatus: resolveStatus, esc: esc, findEvent: findEvent, crumbsHtml: crumbsHtml, factsHtml: factsHtml,
+    dateHtml: dateHtml, fullDate: fullDate, posterSrcOf: posterSrcOf, cover: cover, statusPill: statusPill,
+    performerOpen: performerOpen, setPageMeta: setPageMeta, TBA_HTML: TBA_HTML
+  };
 
   /* a cached copy of events.html from before data-events-view existed is still the listing */
   var view = document.body.getAttribute('data-events-view') || (document.body.getAttribute('data-page') === 'events' ? 'list' : null);
   if (view === 'detail') {
     renderLanding();
+  } else if (view === 'register-audience') {
+    renderAudience();
   } else if (view === 'list') {
     renderLive();
     renderPast();

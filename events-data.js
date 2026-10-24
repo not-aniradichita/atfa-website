@@ -55,12 +55,22 @@
                         popup, and Share uses that address.
      card              optional richer copy for the listing card:
                         { intro, hook, acts, body, audienceHeading, audience, soon }
-     landing           optional copy for the dedicated page (see
-                        events/saanjh.html + events.js renderLanding):
-                        { metaDescription, heroLines[], audienceHeading,
-                          audienceCards[{icon,title,text}], audienceNote,
-                          benefitsHeading, benefits[], ctaHeading, ctaText,
-                          ctaSoon, ctaTextOpen }
+     landing           optional copy for the dedicated page (events/saanjh.html;
+                        see renderLanding in events.js): { metaDescription,
+                        heroLines[], joinHeading, joinCards[], audienceHeading,
+                        audienceCards[{icon,title,text}], audienceNote,
+                        benefitsHeading, benefits[], bePart{heading,text,cards[]} }
+     performerRegistration   optional performer sign-up form:
+                        { enabled, open, route, closedMessage, ageGroups[],
+                          artForms[], endpoint{ type, url, rpc, anonKey } }
+                        `open` is the registration switch (separate from the
+                        event date). Empty endpoint.url = form shows "submissions
+                        are not available yet".
+     audienceTicketing optional audience ticket page, shaped like `ticketing`
+                        (single-link shorthand): { enabled, provider, route,
+                          checkoutUrl, hosts[], label, buttonLabel, pendingLabel }
+                        Empty checkoutUrl = disabled "Ticket Booking Coming Soon".
+                        `hosts` (optional) only accepts links on those domains.
      fullTitle         optional longer name used for page title, sharing and
                         alt text (e.g. title "SAANJH", fullTitle
                         "SAANJH – Ek Shaam, Anek Ehsaas")
@@ -138,11 +148,10 @@ window.ATFA_EVENTS = [
     "fullTitle": "SAANJH – Ek Shaam, Anek Ehsaas",
     "tagline": "Ek Shaam, Anek Ehsaas.",
     "status": "upcoming",
-    "statusLabel": "Upcoming · Coming Soon",
     "featured": true,
     "theme": "festive",
     "ctaLabel": "Know More",
-    "date": null,
+    "date": "2026-10-31",
     "endDate": null,
     "time": null,
     "datePublished": null,
@@ -175,27 +184,6 @@ window.ATFA_EVENTS = [
     "videos": [],
     "sourceUrl": null,
     "ticketing": null,
-    "registration": {
-      "enabled": true,
-      "provider": "external",
-      "heading": "Want to Perform at SAANJH?",
-      "options": [
-        {
-          "id": "perform",
-          "label": "Perform at SAANJH",
-          "buttonLabel": "Register to Perform",
-          "checkoutUrl": "",
-          "pendingLabel": "Registration Coming Soon",
-          "note": "Registration is not open yet."
-        }
-      ],
-      "info": [
-        {
-          "label": "Registration",
-          "value": "Not confirmed yet. We will share the details soon."
-        }
-      ]
-    },
     "pageUrl": "/events/saanjh",
     "card": {
       "intro": "A special pre-Diwali evening filled with music, dance, theatre, and stories.",
@@ -204,13 +192,12 @@ window.ATFA_EVENTS = [
       "body": "SAANJH is an open stage for artists who want their first chance to perform, as well as artists who want more people to discover their talent.",
       "audienceHeading": "Who can join?",
       "audience": "Singers, dancers, actors, musicians, poets, storytellers, and other performing artists.",
-      "soon": "Event date, time and venue: Coming soon."
+      "soon": "Time and venue: To be announced."
     },
     "landing": {
-      "metaDescription": "SAANJH – Ek Shaam, Anek Ehsaas: an open stage for singers, dancers, actors, musicians, poets and storytellers. A pre-Diwali celebration of arts and culture by Aniradichita Theatre and Films. Coming soon.",
+      "metaDescription": "SAANJH – Ek Shaam, Anek Ehsaas: a pre-Diwali evening of music, dance, theatre and stories on Saturday, 31 October 2026. An open stage for performers, and an evening to enjoy for audiences. By Aniradichita Theatre and Films.",
       "heroLines": [
-        "A special pre-Diwali evening to celebrate art, talent, and togetherness.",
-        "Love to sing, dance, act, or tell stories? Come share your talent on one stage."
+        "A special pre-Diwali evening filled with music, dance, theatre, and stories."
       ],
       "audienceHeading": "Who can take part?",
       "audienceCards": [
@@ -253,10 +240,86 @@ window.ATFA_EVENTS = [
         "Meet people who love the arts.",
         "Help more people discover your talent."
       ],
-      "ctaHeading": "Want to Perform at SAANJH?",
-      "ctaText": "Have a song, dance, story, poem, or act to share? We would love to hear from you. Registration is not open yet. Check back soon for details on how to take part.",
-      "ctaSoon": "We will share the registration details soon.",
-      "ctaTextOpen": "Have a song, dance, story, poem, or act to share? We would love to hear from you. Register using the button below."
+      "joinHeading": "How would you like to join?",
+      "joinCards": [
+        {
+          "to": "performer",
+          "icon": "🎤",
+          "title": "Perform on Stage",
+          "text": "Have a talent to share? We welcome singers, dancers, actors, musicians, poets, storytellers, and other performers.",
+          "button": "Register as a Performer"
+        },
+        {
+          "to": "audience",
+          "icon": "🎟️",
+          "title": "Come Watch the Show",
+          "text": "Enjoy an evening filled with live performances and creativity.",
+          "button": "Book Audience Tickets"
+        }
+      ],
+      "bePart": {
+        "heading": "Be Part of SAANJH",
+        "text": "Would you like to perform on stage, or come and enjoy the show? Choose the option that is right for you.",
+        "cards": [
+          {
+            "to": "performer",
+            "icon": "🎤",
+            "heading": "Want to Perform?",
+            "text": "Do you love singing, dancing, acting, playing music, or telling stories? Tell us about yourself and what you would like to perform.",
+            "button": "Register as a Performer"
+          },
+          {
+            "to": "audience",
+            "icon": "🎟️",
+            "heading": "Coming to Watch?",
+            "text": "Come enjoy an evening of music, dance, theatre, and stories. Get your audience ticket when booking opens.",
+            "button": "Book Audience Tickets"
+          }
+        ]
+      }
+    },
+    "performerRegistration": {
+      "enabled": true,
+      "open": true,
+      "route": "/events/saanjh/register/performer",
+      "closedMessage": "Performer registration is not open right now. Please check back soon.",
+      "ageGroups": [
+        "Under 13",
+        "13 to 17",
+        "18 to 25",
+        "26 to 40",
+        "41 to 60",
+        "Over 60"
+      ],
+      "artForms": [
+        "Singing",
+        "Dancing",
+        "Theatre / Acting",
+        "Instrumental Music",
+        "Poetry / Spoken Word",
+        "Storytelling",
+        "Stand-up Comedy",
+        "Other"
+      ],
+      "endpoint": {
+        "type": "supabase-rpc",
+        "url": "https://qgxgvyoosvbwmnnxggqz.supabase.co",
+        "rpc": "submit_saanjh_performer_application",
+        "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFneGd2eW9vc3Zid21ubnhnZ3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5OTQyMDMsImV4cCI6MjA5NDU3MDIwM30.BhMlgHFMaBTldzmGSP-DiJdR-2s4v-7TSR2eU4-fDaA"
+      }
+    },
+    "audienceTicketing": {
+      "enabled": true,
+      "provider": "razorpay",
+      "route": "/events/saanjh/register/audience",
+      "checkoutUrl": "",
+      "hosts": [
+        "razorpay.com",
+        "rzp.io"
+      ],
+      "label": "Audience Tickets",
+      "buttonLabel": "Book Audience Tickets",
+      "pendingLabel": "Ticket Booking Coming Soon"
     }
   },
   {
