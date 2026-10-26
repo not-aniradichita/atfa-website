@@ -13,6 +13,9 @@
   'use strict';
 
   var EVENTS = window.ATFA_EVENTS || [];
+  /* Events marked `hidden: true` in events-data.js stay fully working (their own page, links and
+     data) but are left out of every public list on the Events page. Remove the flag to show them. */
+  var LISTED = EVENTS.filter(function (e) { return !e.hidden; });
   var ticketing = (window.ATFA && window.ATFA.ticketing) || null;
 
   var ORG_NAME = 'Aniradichita Theatre & Films Association';
@@ -283,7 +286,7 @@
 
   function renderLive() {
     var now = new Date();
-    var items = EVENTS.map(function (e) { return { e: e, s: resolveStatus(e, now) }; });
+    var items = LISTED.map(function (e) { return { e: e, s: resolveStatus(e, now) }; });
     var live = items.filter(function (i) { return i.s !== 'past'; }).sort(function (a, b) { return bySoonest(a.e, b.e); });
     var mount = $('#liveMount');
     if (!mount) return live;
@@ -339,7 +342,7 @@
   }
   function renderPast() {
     var now = new Date();
-    pastState.list = EVENTS.filter(function (e) { return resolveStatus(e, now) === 'past'; }).sort(byNewest);
+    pastState.list = LISTED.filter(function (e) { return resolveStatus(e, now) === 'past'; }).sort(byNewest);
     renderPastControls();
     renderPastGrid(false);
     var pastCount = $('#pastCount');
@@ -367,7 +370,7 @@
   /* ── detail modal ────────────────────────────────────────────────────── */
   var modalOpener = null;
   function related(current, now) {
-    var scored = EVENTS.filter(function (e) { return e.slug !== current.slug; }).map(function (e) {
+    var scored = LISTED.filter(function (e) { return e.slug !== current.slug; }).map(function (e) {
       var score = (current.series && e.series === current.series ? 3 : 0) + (e.type === current.type ? 2 : 0);
       return { e: e, score: score, s: resolveStatus(e, now) };
     });
@@ -486,7 +489,7 @@
      a single-page listing, not per-event URLs, so page-level JSON-LD is the
      honest scope here) ─────────────────────────────────────────────────── */
   function injectJsonLd(e) {
-    if (!e.date || $('#jsonld-' + e.slug)) return;
+    if (!e.date || e.hidden || $('#jsonld-' + e.slug)) return; /* hidden events do not advertise a date to search engines */
     var c = cover(e);
     var data = {
       '@context': 'https://schema.org',

@@ -93,6 +93,9 @@
                         link into `checkoutUrl` and it goes live. (Date,
                         time and venue stay as null until confirmed; the page
                         then says "Details coming soon".)
+     hidden            true = temporarily left out of the Events page lists (cards, featured,
+                        related). The event's own page and all its data keep working.
+                        Delete the line or set false to show the event again.
      featured          true = shown as the large feature in Live &
                         Upcoming
 
@@ -150,6 +153,7 @@ window.ATFA_EVENTS = [
     "tagline": "Ek Shaam, Anek Ehsaas.",
     "status": "upcoming",
     "featured": true,
+    "hidden": true,
     "theme": "festive",
     "ctaLabel": "Know More",
     "date": "2026-10-31",
