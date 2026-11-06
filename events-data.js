@@ -93,6 +93,17 @@
                         link into `checkoutUrl` and it goes live. (Date,
                         time and venue stay as null until confirmed; the page
                         then says "Details coming soon".)
+     workshops         optional list of sessions inside one event:
+                        [{ id, title, icon, startDate, endDate|null }]. The listing
+                        card shows each session's own dates.
+     workshopPage      optional copy for a workshop landing page
+                        (events/acting-filmmaking-workshop.html, event-workshop.js):
+                        { metaDescription, eyebrow, heroLead, introHeading, intro[],
+                          introCallout, chooseHeading, chooseText, cards[], whyHeading,
+                          why[], registration{ open, url, hosts, heading, text, label,
+                          openLabel }, closingHeading, closingText }
+                        Registration stays off until registration.open is true AND
+                        registration.url is an https link.
      hidden            true = temporarily left out of the Events page lists (cards, featured,
                         related). The event's own page and all its data keep working.
                         Delete the line or set false to show the event again.
@@ -145,6 +156,144 @@
    ========================================================================== */
 
 window.ATFA_EVENTS = [
+  {
+    "id": "acting-filmmaking-workshop-2026",
+    "slug": "acting-filmmaking-workshop",
+    "title": "Acting & Filmmaking Workshop",
+    "tagline": "One weekend. Two workshops. Learn by doing.",
+    "status": "upcoming",
+    "featured": true,
+    "theme": "stage",
+    "ctaLabel": "Know More",
+    "pageUrl": "/events/acting-filmmaking-workshop",
+    "date": "2026-11-20",
+    "endDate": "2026-11-22",
+    "time": null,
+    "datePublished": null,
+    "type": "Workshop",
+    "series": null,
+    "session": null,
+    "topic": null,
+    "description": "Two hands-on workshops in one weekend: Acting on 20–21 November 2026 and Filmmaking on 22 November 2026. Learn by doing, with experts from the field. Limited seats. Registrations opening soon.",
+    "longDescription": [
+      "Aniradichita Theatre & Films brings you an acting workshop and a filmmaking workshop, one after the other.",
+      "These are hands-on workshops where you learn by doing."
+    ],
+    "venue": null,
+    "location": null,
+    "speakers": [],
+    "collaborators": [],
+    "organizer": "Aniradichita Theatre & Films Association",
+    "entry": null,
+    "images": [
+      {
+        "src": "assets/acting-filmmaking-workshop-poster.jpg",
+        "alt": "Aniradichita Theatre and Films Association poster on a dark stage with red velvet curtains, a spotlight and film reels: “For all the actors and filmmakers, something exciting is on the way. Are you ready?”",
+        "width": 1054,
+        "height": 1492
+      }
+    ],
+    "videos": [],
+    "sourceUrl": null,
+    "ticketing": null,
+    "workshops": [
+      {
+        "id": "acting",
+        "title": "Acting Workshop",
+        "icon": "🎭",
+        "startDate": "2026-11-20",
+        "endDate": "2026-11-21"
+      },
+      {
+        "id": "filmmaking",
+        "title": "Filmmaking Workshop",
+        "icon": "🎬",
+        "startDate": "2026-11-22",
+        "endDate": null
+      }
+    ],
+    "card": {
+      "intro": "Two hands-on workshops in one weekend: acting and filmmaking.",
+      "hook": "Learn by doing, with experts from the field.",
+      "acts": "",
+      "body": "This is not a seminar or a lecture-based training. Limited seats available.",
+      "audienceHeading": "Registration",
+      "audience": "Registrations opening soon!",
+      "soon": "Time and venue: To be announced."
+    },
+    "workshopPage": {
+      "metaDescription": "Acting & Filmmaking Workshop by Aniradichita Theatre & Films: a hands-on Acting Workshop on 20–21 November 2026 (Friday and Saturday) and a Filmmaking Workshop on 22 November 2026 (Sunday). Limited seats. Registrations coming soon.",
+      "eyebrow": "Aniradichita Theatre & Films Association presents",
+      "heroLead": "For all the actors & filmmakers, something exciting is on the way. Are you ready?",
+      "introHeading": "Ready to grow in acting and filmmaking?",
+      "intro": [
+        "Do you think of acting or filmmaking as just a hobby, but want to grow professionally in the field?",
+        "If your answer is yes, you are at the right place!",
+        "What you need is real practice and guidance in the right direction. Aniradichita Theatre & Films brings you an opportunity to learn and work with experts from the field, in two workshops: one on acting and one on filmmaking.",
+        "This is not a seminar or a lecture-based training. It is a hands-on workshop where you will learn by doing.",
+        "Who knows what awaits you at the other side of the weekend? A whole new world of possibilities and opportunities is waiting for you! ✨"
+      ],
+      "introCallout": "Limited seats available. Registrations opening soon!",
+      "chooseHeading": "Choose your workshop",
+      "chooseText": "Two workshops, one weekend. Tap a workshop to see what to expect.",
+      "cards": [
+        {
+          "id": "acting",
+          "tagline": "Step into the spotlight.",
+          "text": "A hands-on acting workshop with practice and guidance from experts in the field. You learn by doing.",
+          "expect": [
+            "Real practice, not a lecture",
+            "Guidance from experts in the field",
+            "Learn by doing"
+          ]
+        },
+        {
+          "id": "filmmaking",
+          "tagline": "Step behind the camera.",
+          "text": "A hands-on filmmaking workshop with practice and guidance from experts in the field. You learn by doing.",
+          "expect": [
+            "Real practice, not a lecture",
+            "Guidance from experts in the field",
+            "Learn by doing"
+          ]
+        }
+      ],
+      "whyHeading": "Why join this workshop?",
+      "why": [
+        {
+          "icon": "🙌",
+          "title": "Hands-on learning",
+          "text": "This is not a seminar. You learn by doing, not by listening to lectures."
+        },
+        {
+          "icon": "🎓",
+          "title": "Expert guidance",
+          "text": "Learn and work with experts from the field, with guidance in the right direction."
+        },
+        {
+          "icon": "🎬",
+          "title": "Real practice",
+          "text": "Growing in acting and filmmaking takes real practice. Here you get to practise."
+        },
+        {
+          "icon": "✨",
+          "title": "New possibilities",
+          "text": "A whole new world of possibilities and opportunities is waiting for you."
+        }
+      ],
+      "registration": {
+        "open": false,
+        "url": "",
+        "hosts": [],
+        "heading": "Registrations Opening Soon",
+        "text": "Seats are limited. Registrations are not open yet, so there is nothing to fill in or pay right now. Please check back soon.",
+        "label": "Registrations Coming Soon",
+        "openLabel": "Register Now"
+      },
+      "closingHeading": "Your stage is waiting.",
+      "closingText": "Come explore acting and filmmaking with Aniradichita Theatre & Films."
+    }
+  },
   {
     "id": "saanjh-2026",
     "slug": "saanjh",

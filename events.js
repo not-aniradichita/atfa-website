@@ -77,6 +77,33 @@
   function byNewest(a, b) { return sortKey(b).localeCompare(sortKey(a)) || sourceOrder(b) - sourceOrder(a); }
   function bySoonest(a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (sortKey(a) || '9999').localeCompare(sortKey(b) || '9999'); }
 
+  /* Labels for one session of a multi-session event: weekday(s), full dates, big day numbers. */
+  function wsDates(w) {
+    var a = ymd(w.startDate);
+    if (!w.endDate || w.endDate === w.startDate) {
+      return { days: weekdayName(w.startDate), dates: fmtDate(w.startDate), big: String(a.d), month: MONTHS[a.m - 1], year: a.y };
+    }
+    var b = ymd(w.endDate);
+    var consecutive = (istStart(w.endDate) - istStart(w.startDate)) === 86400000;
+    var sep = consecutive ? ' & ' : ' – ';
+    var sameMonth = a.m === b.m && a.y === b.y;
+    return {
+      days: weekdayName(w.startDate) + sep + weekdayName(w.endDate),
+      dates: sameMonth ? a.d + sep + b.d + ' ' + MONTHS[a.m - 1] + ' ' + a.y : fmtDate(w.startDate) + sep + fmtDate(w.endDate),
+      big: sameMonth ? a.d + (consecutive ? ' & ' : '–') + b.d : a.d + '–' + b.d,
+      month: sameMonth ? MONTHS[a.m - 1] : MONTHS[a.m - 1] + ' – ' + MONTHS[b.m - 1],
+      year: a.y
+    };
+  }
+  function workshopDatesHtml(e) {
+    return '<ul class="aev-ws-dates" aria-label="Workshop dates">' + e.workshops.map(function (w) {
+      var d = wsDates(w);
+      return '<li class="aev-ws-dates-item aev-ws-dates-item--' + esc(w.id) + '"><span class="aev-ws-dates-ic" aria-hidden="true">' + esc(w.icon || '') + '</span>' +
+        '<span class="aev-ws-dates-txt"><b>' + esc(w.title) + '</b>' +
+        '<time datetime="' + esc(w.startDate) + (w.endDate ? '/' + esc(w.endDate) : '') + '">' + esc(d.days + ', ' + d.dates) + '</time></span></li>';
+    }).join('') + '</ul>';
+  }
+
   function dateLabel(e) {
     if (e.date) return fmtRange(e.date, e.endDate);
     if (e.datePublished) return 'Archived ' + e.datePublished.slice(0, 4);
@@ -209,12 +236,12 @@
   }
 
   /* ── featured (Sunday Decodes) ───────────────────────────────────────── */
-  function countdownHtml(e) {
+  function countdownHtml(e, note) {
     return '<div class="aev-countdown" role="timer" aria-label="Time until event day" data-countdown="' + esc(istStart(e.date).toISOString()) + '">' +
       ['d:Days', 'h:Hours', 'm:Minutes'].map(function (u) {
         var k = u.split(':');
         return '<div class="aev-cd-unit"><span class="aev-cd-num" data-cd="' + k[0] + '">--</span><span class="aev-cd-lbl">' + k[1] + '</span></div>';
-      }).join('') + '<p class="aev-cd-note">until event day</p></div>';
+      }).join('') + '<p class="aev-cd-note">' + esc(note || 'until event day') + '</p></div>';
   }
   function shareButton(e) {
     return '<button type="button" class="btn-g aev-share-btn" data-share="' + esc(e.slug) + '">↗ Share</button>';
@@ -229,7 +256,9 @@
       : '<div class="aev-card-fallback" aria-hidden="true">🎭</div>';
 
     var dateBlock = '';
-    if (e.date) {
+    if (e.workshops && e.workshops.length) {
+      dateBlock = workshopDatesHtml(e);
+    } else if (e.date) {
       var p = ymd(e.date);
       dateBlock = '<div class="aev-datebox">' +
         '<div class="aev-datebox-cal" aria-hidden="true"><span>' + MONTHS[p.m - 1].slice(0, 3) + '</span><b>' + p.d + '</b><span>' + p.y + '</span></div>' +
@@ -250,20 +279,20 @@
     var subTitle = e.fullTitle && e.fullTitle.indexOf(e.title) === 0 ? e.fullTitle.slice(e.title.length) : '';
     var bodyHtml = cd
       ? '<p class="aev-card-intro">' + esc(cd.intro) + '</p>' +
-        '<p class="aev-card-hook">' + esc(cd.hook) + '</p>' +
-        '<p class="aev-card-acts">' + esc(cd.acts) + '</p>' +
+        (cd.hook ? '<p class="aev-card-hook">' + esc(cd.hook) + '</p>' : '') +
+        (cd.acts ? '<p class="aev-card-acts">' + esc(cd.acts) + '</p>' : '') +
         '<p class="aev-feature-desc">' + esc(cd.body) + '</p>' +
         '<div class="aev-audience"><h3>' + esc(cd.audienceHeading) + '</h3><p>' + esc(cd.audience) + '</p></div>'
       : '<p class="aev-feature-desc">' + esc(e.description) + '</p>';
 
     return '<article class="aev-feature' + (e.theme ? ' aev-theme-' + esc(e.theme) : '') + '" aria-labelledby="ft-' + esc(e.slug) + '">' +
-      '<div class="aev-poster">' + poster + '</div>' +
+      '<div class="aev-poster"' + (c && c.width && c.height ? ' style="aspect-ratio:' + c.width + '/' + c.height + '"' : '') + '>' + poster + '</div>' +
       '<div class="aev-feature-body">' +
         '<div class="aev-status-row">' + statusPill(e, status) + '<span class="aev-type">' + esc(e.type) + '</span></div>' +
         '<h2 class="aev-feature-title" id="ft-' + esc(e.slug) + '">' + esc(e.title) + (subTitle ? '<span class="sr-only">' + esc(subTitle) + '</span>' : '') + '</h2>' +
         (e.tagline ? '<p class="aev-tagline">' + esc(e.tagline) + '</p>' : '') +
         dateBlock +
-        (e.date && status === 'upcoming' ? countdownHtml(e) : '') +
+        (e.date && status === 'upcoming' ? countdownHtml(e, e.workshops ? 'until the first workshop' : null) : '') +
         bodyHtml +
         soonHtml +
         ticketOptionsSection(e, res, 'h3') +
@@ -502,6 +531,13 @@
     };
     if (e.endDate) data.endDate = e.endDate;
     if (e.pageUrl) data.url = SITE_URL + e.pageUrl;
+    if (e.workshops && e.workshops.length) {
+      data.subEvent = e.workshops.map(function (w) {
+        var sub = { '@type': 'Event', name: w.title, startDate: w.startDate };
+        if (w.endDate) sub.endDate = w.endDate;
+        return sub;
+      });
+    }
     if (c) data.image = [/^https?:/.test(c.src) ? imgUrl(c.src, 1200) : new URL(c.src, SITE_URL + '/').href];
     if (e.venue && /^online/i.test(e.venue)) {
       data.eventAttendanceMode = 'https://schema.org/OnlineEventAttendanceMode';
@@ -825,7 +861,9 @@
   window.ATFA.events = {
     resolveStatus: resolveStatus, esc: esc, findEvent: findEvent, crumbsHtml: crumbsHtml, factsHtml: factsHtml,
     dateHtml: dateHtml, fullDate: fullDate, posterSrcOf: posterSrcOf, cover: cover, statusPill: statusPill,
-    performerOpen: performerOpen, setPageMeta: setPageMeta, TBA_HTML: TBA_HTML
+    performerOpen: performerOpen, setPageMeta: setPageMeta, TBA_HTML: TBA_HTML,
+    wsDates: wsDates, shareButton: shareButton, countdownHtml: countdownHtml, startCountdowns: startCountdowns,
+    injectJsonLd: injectJsonLd, isHttps: function (u) { return ticketing ? ticketing.isHttpsUrl(u) : false; }
   };
 
   /* a cached copy of events.html from before data-events-view existed is still the listing */
