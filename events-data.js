@@ -100,10 +100,12 @@
                         (events/acting-filmmaking-workshop.html, event-workshop.js):
                         { metaDescription, eyebrow, heroLead, introHeading, intro[],
                           introCallout, chooseHeading, chooseText, cards[], whyHeading,
-                          why[], registration{ open, url, hosts, heading, text, label,
-                          openLabel }, closingHeading, closingText }
-                        Registration stays off until registration.open is true AND
-                        registration.url is an https link.
+                          why[], closingHeading, closingText }
+     registration      optional sign-up cards, shaped like `ticketing` (see below):
+                        { enabled, provider, hosts[], heading, note, options[] } where each
+                        option is { id, workshops[], label, buttonLabel, checkoutUrl,
+                        featured?, badge?, text? }. Every button opens its own checkoutUrl in
+                        a new tab. Change a link here and only that card changes.
      hidden            true = temporarily left out of the Events page lists (cards, featured,
                         related). The event's own page and all its data keep working.
                         Delete the line or set false to show the event again.
@@ -174,7 +176,7 @@ window.ATFA_EVENTS = [
     "series": null,
     "session": null,
     "topic": null,
-    "description": "Two hands-on workshops in one weekend: Acting on 20–21 November 2026 and Filmmaking on 22 November 2026. Learn by doing, with experts from the field. Limited seats. Registrations opening soon.",
+    "description": "Two hands-on workshops in one weekend: Acting on 20–21 November 2026 and Filmmaking on 22 November 2026. Learn by doing, with experts from the field. Limited seats. Registrations are open.",
     "longDescription": [
       "Aniradichita Theatre & Films brings you an acting workshop and a filmmaking workshop, one after the other.",
       "These are hands-on workshops where you learn by doing."
@@ -218,11 +220,11 @@ window.ATFA_EVENTS = [
       "acts": "",
       "body": "This is not a seminar or a lecture-based training. Limited seats available.",
       "audienceHeading": "Registration",
-      "audience": "Registrations opening soon!",
+      "audience": "Registrations are open!",
       "soon": "Time and venue: To be announced."
     },
     "workshopPage": {
-      "metaDescription": "Acting & Filmmaking Workshop by Aniradichita Theatre & Films: a hands-on Acting Workshop on 20–21 November 2026 (Friday and Saturday) and a Filmmaking Workshop on 22 November 2026 (Sunday). Limited seats. Registrations coming soon.",
+      "metaDescription": "Acting & Filmmaking Workshop by Aniradichita Theatre & Films: a hands-on Acting Workshop on 20–21 November 2026 (Friday and Saturday) and a Filmmaking Workshop on 22 November 2026 (Sunday). Limited seats. Registrations are open.",
       "eyebrow": "Aniradichita Theatre & Films Association presents",
       "heroLead": "For all the actors & filmmakers, something exciting is on the way. Are you ready?",
       "introHeading": "Ready to grow in acting and filmmaking?",
@@ -233,9 +235,9 @@ window.ATFA_EVENTS = [
         "This is not a seminar or a lecture-based training. It is a hands-on workshop where you will learn by doing.",
         "Who knows what awaits you at the other side of the weekend? A whole new world of possibilities and opportunities is waiting for you! ✨"
       ],
-      "introCallout": "Limited seats available. Registrations opening soon!",
-      "chooseHeading": "Choose your workshop",
-      "chooseText": "Two workshops, one weekend. Tap a workshop to see what to expect.",
+      "introCallout": "Limited seats available. Registrations are open!",
+      "chooseHeading": "Two workshops, one weekend",
+      "chooseText": "Tap a workshop to see what to expect.",
       "cards": [
         {
           "id": "acting",
@@ -281,17 +283,54 @@ window.ATFA_EVENTS = [
           "text": "A whole new world of possibilities and opportunities is waiting for you."
         }
       ],
-      "registration": {
-        "open": false,
-        "url": "",
-        "hosts": [],
-        "heading": "Registrations Opening Soon",
-        "text": "Seats are limited. Registrations are not open yet, so there is nothing to fill in or pay right now. Please check back soon.",
-        "label": "Registrations Coming Soon",
-        "openLabel": "Register Now"
-      },
       "closingHeading": "Your stage is waiting.",
       "closingText": "Come explore acting and filmmaking with Aniradichita Theatre & Films."
+    },
+    "registration": {
+      "enabled": true,
+      "provider": "razorpay",
+      "hosts": [
+        "razorpay.com"
+      ],
+      "heading": "Choose Your Workshop",
+      "note": "Choose the workshop that interests you and complete your registration through our secure payment page.",
+      "options": [
+        {
+          "id": "acting",
+          "workshops": [
+            "acting"
+          ],
+          "label": "Acting Workshop",
+          "buttonLabel": "Register for Acting",
+          "checkoutUrl": "https://pages.razorpay.com/ACWP",
+          "pendingLabel": "Registration link unavailable"
+        },
+        {
+          "id": "filmmaking",
+          "workshops": [
+            "filmmaking"
+          ],
+          "label": "Filmmaking Workshop",
+          "buttonLabel": "Register for Filmmaking",
+          "checkoutUrl": "https://pages.razorpay.com/ATFAFMWS",
+          "pendingLabel": "Registration link unavailable"
+        },
+        {
+          "id": "combo",
+          "workshops": [
+            "acting",
+            "filmmaking"
+          ],
+          "featured": true,
+          "label": "Complete Experience — Both Workshops",
+          "badge": "Complete Experience",
+        "title": "Both Workshops",
+          "text": "Take part in the Acting Workshop and the Filmmaking Workshop, all three days.",
+          "buttonLabel": "Register for Both Workshops",
+          "checkoutUrl": "https://pages.razorpay.com/Acting&Filmmaking",
+          "pendingLabel": "Registration link unavailable"
+        }
+      ]
     }
   },
   {

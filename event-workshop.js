@@ -3,12 +3,13 @@
    Used by: events/acting-filmmaking-workshop.html
 
    Renders the "Acting & Filmmaking Workshop" landing page from events-data.js
-   (event.workshops + event.workshopPage). Dates, copy and the registration
-   switch all live there; nothing is hard-coded here.
+   (event.workshops, event.workshopPage and event.registration). Dates, copy and
+   the three registration links all live there; nothing is hard-coded here.
 
-   Registration stays OFF (a disabled "Registrations Coming Soon" button, no
-   form, no link) until workshopPage.registration.open is true AND
-   workshopPage.registration.url is an https link.
+   Each registration card is a plain link that opens its own Razorpay payment
+   page in a new tab. There is no form and no payment handling on this site.
+   ticketing.js checks every link (https, razorpay.com); a link that fails the
+   check shows a disabled "unavailable" button instead of a broken link.
    ========================================================================== */
 (function () {
   'use strict';
@@ -28,8 +29,11 @@
   var P = e.workshopPage;
   var status = H.resolveStatus(e, new Date());
   var c = H.cover(e);
-  var reg = P.registration || {};
-  var regOpen = reg.open === true && H.isHttps(reg.url);
+  var regCfg = e.registration && e.registration.enabled ? e.registration : null;
+  var regRes = regCfg ? H.ticketState(e, 'registration') : { options: [] };
+  var regRaw = {};
+  ((regCfg && regCfg.options) || []).forEach(function (o) { regRaw[o.id] = o; });
+  var anyOpen = regRes.options.some(function (o) { return o.state === 'open'; });
   var byId = {};
   e.workshops.forEach(function (w) { byId[w.id] = w; });
 
@@ -54,9 +58,9 @@
         '<h1 class="aev-ws-title aev-reveal" id="ws-title">Acting <span class="aev-ws-amp">&amp;</span> <em>Filmmaking</em> Workshop</h1>' +
         '<p class="aev-ws-tagline aev-reveal">' + esc(e.tagline || '') + '</p>' +
         '<ul class="aev-ws-chips aev-reveal" aria-label="Workshop dates">' + chips + '</ul>' +
-        '<p class="aev-ws-regpill aev-reveal" role="status"><span aria-hidden="true">🔒</span> Registrations Coming Soon</p>' +
+        (anyOpen ? '<p class="aev-ws-regpill aev-ws-regpill--open aev-reveal" role="status"><span aria-hidden="true">✓</span> Registrations Open</p>' : '') +
         (status === 'upcoming' ? '<div class="aev-reveal">' + H.countdownHtml(e, 'until the first workshop') + '</div>' : '') +
-        '<div class="aev-cta-row aev-reveal"><a class="btn-r" href="#workshops">Choose your workshop ↓</a>' + H.shareButton(e) + '</div>' +
+        '<div class="aev-cta-row aev-reveal"><a class="btn-r" href="' + (anyOpen ? '#register">Register now' : '#workshops">Choose your workshop') + ' ↓</a>' + H.shareButton(e) + '</div>' +
         '<p class="aev-share-status" role="status" aria-live="polite"></p>' +
       '</div>' +
     '</div>' +
@@ -101,14 +105,51 @@
       return '<li class="aev-ws-why-card aev-reveal"><span class="aev-lp-icon" aria-hidden="true">' + esc(x.icon || '') + '</span><h3>' + esc(x.title) + '</h3><p>' + esc(x.text) + '</p></li>';
     }).join('') + '</ul></div></section>';
 
-  /* ── registration: clearly OFF until configured ── */
-  var regBtn = regOpen
-    ? '<a class="btn-r aev-ws-reg-btn" href="' + esc(reg.url) + '" target="_blank" rel="noopener noreferrer">' + esc(reg.openLabel || 'Register Now') + ' <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>'
-    : '<button type="button" class="aev-ws-reg-btn is-off" disabled aria-disabled="true" aria-describedby="ws-reg-note"><span aria-hidden="true">🔒</span> ' + esc(reg.label || 'Registrations Coming Soon') + '</button>';
-  var register = '<section class="aev-lp-section aev-ws-register" id="register" aria-labelledby="ws-reg"><div class="aev-lp-wrap aev-reveal"><div class="aev-ws-reg-box' + (regOpen ? '' : ' is-off') + '">' +
-    '<h2 id="ws-reg">' + esc(reg.heading || 'Registration') + '</h2>' +
-    '<p id="ws-reg-note">' + esc(reg.text || '') + '</p>' + regBtn +
-  '</div></div></section>';
+  /* ── registration: three cards, each a link to its own payment page ── */
+  function spanOf(ids) {
+    var ws = ids.map(function (id) { return byId[id]; }).filter(Boolean);
+    if (!ws.length) return null;
+    if (ws.length === 1) return { d: H.wsDates(ws[0]), start: ws[0].startDate, end: ws[0].endDate };
+    var start = ws.map(function (w) { return w.startDate; }).sort()[0];
+    var end = ws.map(function (w) { return w.endDate || w.startDate; }).sort().slice(-1)[0];
+    return { d: H.wsDates({ startDate: start, endDate: end }), start: start, end: end };
+  }
+  var regCards = regRes.options.map(function (o) {
+    var raw = regRaw[o.id] || {};
+    var ids = raw.workshops || [];
+    var sp = spanOf(ids);
+    var combo = !!raw.featured;
+    var cardCopy = (P.cards || []).filter(function (x) { return x.id === o.id; })[0];   /* same confirmed copy as the workshop cards above */
+    var blurb = raw.text || (cardCopy && cardCopy.text) || '';
+    var icon = combo ? '🎭 🎬' : ((byId[ids[0]] || {}).icon || '');
+    var many = sp && sp.end && sp.end !== sp.start;
+    var btn = o.state === 'open'
+      ? '<a class="aev-ws-reg-btn" href="' + esc(o.href) + '" target="_blank" rel="noopener noreferrer" data-reg-option="' + esc(o.id) + '">' + esc(o.buttonLabel) + ' <span aria-hidden="true">↗</span><span class="sr-only"> (opens the secure payment page in a new tab)</span></a>'
+      : '<button type="button" class="aev-ws-reg-btn is-off" disabled aria-disabled="true">' + esc(o.pendingLabel || 'Registration link unavailable') + '</button>';
+    return '<li class="aev-ws-reg aev-ws-reg--' + esc(o.id) + (combo ? ' aev-ws-reg--combo' : '') + ' aev-reveal">' +
+      (combo ? '<span class="aev-ws-reg-badge">★ ' + esc(raw.badge || 'Complete Experience') + '</span><div class="aev-ws-reg-strip" aria-hidden="true"></div>' : '') +
+      '<div class="aev-ws-reg-top"><span class="aev-ws-reg-ic" aria-hidden="true">' + esc(icon) + '</span><h3>' + esc(raw.title || o.label) + '</h3></div>' +
+      (sp ? '<p class="aev-ws-reg-days">' + esc(sp.d.days) + '</p>' +
+        '<p class="aev-ws-reg-dates"><span class="aev-ws-reg-label">' + (many ? 'Dates' : 'Date') + '</span> <time datetime="' + esc(sp.start) + (sp.end ? '/' + esc(sp.end) : '') + '">' + esc(sp.d.dates) + '</time></p>' : '') +
+      (blurb ? '<p class="aev-ws-reg-text">' + esc(blurb) + '</p>' : '') +
+      (combo ? '<ul class="aev-ws-reg-parts">' + ids.map(function (id) {
+        var w = byId[id]; if (!w) return '';
+        var d = H.wsDates(w);
+        return '<li><span aria-hidden="true">' + esc(w.icon || '') + '</span> ' + esc(w.title) + ' <b>' + esc(d.big + ' ' + d.month.slice(0, 3)) + '</b></li>';
+      }).join('') + '</ul>' : '') +
+      btn + '</li>';
+  }).join('');
+  var register = regCards
+    ? '<section class="aev-lp-section aev-ws-register" id="register" aria-labelledby="ws-reg">' +
+        '<div class="aev-ws-beam aev-ws-beam--reg" aria-hidden="true"></div>' +
+        '<div class="aev-lp-wrap">' +
+          '<h2 id="ws-reg" class="aev-reveal">' + esc(regCfg.heading || 'Choose Your Workshop') + '</h2>' +
+          '<p class="aev-ws-lead aev-reveal">' + esc(regCfg.note || '') + '</p>' +
+          '<ul class="aev-ws-reg-grid">' + regCards + '</ul>' +
+        '</div>' +
+        '<div class="aev-ws-film" aria-hidden="true"></div>' +
+      '</section>'
+    : '';
 
   /* ── closing ── */
   var closeCards = e.workshops.map(function (w) {
@@ -118,8 +159,8 @@
     '<h2 id="ws-close">' + esc(P.closingHeading || '') + '</h2>' +
     '<p>' + esc(P.closingText || '') + '</p>' +
     '<ul class="aev-ws-closing-dates">' + closeCards + '</ul>' +
-    '<p class="aev-ws-regpill aev-ws-regpill--center" role="status"><span aria-hidden="true">🔒</span> Registrations Coming Soon</p>' +
-    '<div class="aev-cta-row">' + H.shareButton(e) + '<a class="btn-g" href="/events.html">← All events</a></div>' +
+    (anyOpen ? '<p class="aev-ws-regpill aev-ws-regpill--open aev-ws-regpill--center" role="status"><span aria-hidden="true">✓</span> Registrations Open</p>' : '') +
+    '<div class="aev-cta-row">' + (anyOpen ? '<a class="btn-r" href="#register">Register now</a>' : '') + H.shareButton(e) + '<a class="btn-g" href="/events.html">← All events</a></div>' +
     '<p class="aev-share-status" role="status" aria-live="polite"></p></div></section>';
 
   mount.innerHTML = H.crumbsHtml([['Home', '/index.html'], ['Events', '/events.html'], [e.title]]) +

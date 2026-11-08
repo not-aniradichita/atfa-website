@@ -86,10 +86,11 @@
     var b = ymd(w.endDate);
     var consecutive = (istStart(w.endDate) - istStart(w.startDate)) === 86400000;
     var sep = consecutive ? ' & ' : ' – ';
+    var dsep = consecutive ? ' & ' : '–';   /* 20 & 21 November, but 20–22 November */
     var sameMonth = a.m === b.m && a.y === b.y;
     return {
       days: weekdayName(w.startDate) + sep + weekdayName(w.endDate),
-      dates: sameMonth ? a.d + sep + b.d + ' ' + MONTHS[a.m - 1] + ' ' + a.y : fmtDate(w.startDate) + sep + fmtDate(w.endDate),
+      dates: sameMonth ? a.d + dsep + b.d + ' ' + MONTHS[a.m - 1] + ' ' + a.y : fmtDate(w.startDate) + sep + fmtDate(w.endDate),
       big: sameMonth ? a.d + (consecutive ? ' & ' : '–') + b.d : a.d + '–' + b.d,
       month: sameMonth ? MONTHS[a.m - 1] : MONTHS[a.m - 1] + ' – ' + MONTHS[b.m - 1],
       year: a.y
@@ -862,7 +863,7 @@
     resolveStatus: resolveStatus, esc: esc, findEvent: findEvent, crumbsHtml: crumbsHtml, factsHtml: factsHtml,
     dateHtml: dateHtml, fullDate: fullDate, posterSrcOf: posterSrcOf, cover: cover, statusPill: statusPill,
     performerOpen: performerOpen, setPageMeta: setPageMeta, TBA_HTML: TBA_HTML,
-    wsDates: wsDates, shareButton: shareButton, countdownHtml: countdownHtml, startCountdowns: startCountdowns,
+    ticketState: ticketState, wsDates: wsDates, shareButton: shareButton, countdownHtml: countdownHtml, startCountdowns: startCountdowns,
     injectJsonLd: injectJsonLd, isHttps: function (u) { return ticketing ? ticketing.isHttpsUrl(u) : false; }
   };
 
