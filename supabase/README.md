@@ -19,3 +19,8 @@ The table `public.saanjh_performer_applications` and the function `submit_saanjh
 (`migrations/20261024_saanjh_performer_applications.sql`) are still in the Supabase project but nothing on the
 website calls them any more. They hold no data (test rows were removed). Drop them whenever convenient:
 `drop function public.submit_saanjh_performer_application(text,text,text,text,text,text,text,text,text,text,text,integer,text,text,text,boolean,text); drop table public.saanjh_performer_applications;`
+
+## Student registration (Acting & Filmmaking Workshop)
+
+Application form, private ID storage, admin dashboard and Gmail notifications: see `STUDENT_WORKSHOP_SETUP.md`
+(function `functions/student-workshop`, migrations `20261110_student_workshop_*.sql`). Gmail secrets still need to be added there.

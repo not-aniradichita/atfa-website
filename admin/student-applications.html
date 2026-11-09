@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Student Applications | Aniradichita Admin</title>
+<meta name="robots" content="noindex,nofollow,noarchive"/>
+<meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: https://qgxgvyoosvbwmnnxggqz.supabase.co; frame-src https://qgxgvyoosvbwmnnxggqz.supabase.co; connect-src https://qgxgvyoosvbwmnnxggqz.supabase.co; form-action 'none'; base-uri 'none'"/>
+<link rel="icon" href="/assets/atfa-logo.png"/>
+<link rel="stylesheet" href="/admin/student-applications.css"/>
+</head>
+<body>
+<header class="ad-top">
+  <div class="ad-brand"><img src="/assets/atfa-logo.png" alt="" width="38" height="38"/><div><b>Student Applications</b><span>Acting &amp; Filmmaking Workshop · admin only</span></div></div>
+  <div class="ad-who" id="adWho" hidden><span id="adEmail"></span><button type="button" class="ad-btn ad-btn--ghost" id="adSignOut">Sign out</button></div>
+</header>
+
+<main class="ad-main">
+  <!-- sign-in -->
+  <section class="ad-login" id="adLogin" aria-labelledby="adLoginH">
+    <h1 id="adLoginH">Admin sign-in</h1>
+    <p class="ad-muted">This area is for authorised Aniradichita team members only. Ask the site owner to add your account if you cannot get in.</p>
+    <form id="adLoginForm" autocomplete="on">
+      <label for="adUser">Email</label>
+      <input id="adUser" name="email" type="email" autocomplete="username" required/>
+      <label for="adPass">Password</label>
+      <input id="adPass" name="password" type="password" autocomplete="current-password" required/>
+      <button type="submit" class="ad-btn" id="adLoginBtn">Sign in</button>
+      <p class="ad-msg" id="adLoginMsg" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- dashboard -->
+  <section id="adApp" hidden>
+    <div class="ad-banner ad-banner--warn" id="adMailWarn" hidden role="status"></div>
+    <div class="ad-banner ad-banner--info" id="adDueWarn" hidden role="status"></div>
+
+    <div class="ad-tools">
+      <div class="ad-filter"><label for="fWorkshop">Workshop</label>
+        <select id="fWorkshop"><option value="">All workshops</option><option value="acting">Acting</option><option value="filmmaking">Filmmaking</option><option value="combo">Acting + Filmmaking Combo</option></select></div>
+      <div class="ad-filter"><label for="fStatus">Status</label>
+        <select id="fStatus"><option value="">All statuses</option><option>Pending Verification</option><option>Approved</option><option>Rejected</option><option>Payment Link Sent</option><option>Payment Completed</option></select></div>
+      <div class="ad-filter ad-filter--grow"><label for="fSearch">Search</label>
+        <input id="fSearch" type="search" placeholder="Name, email, application ID, college" autocomplete="off"/></div>
+      <button type="button" class="ad-btn ad-btn--ghost" id="adRefresh">Refresh</button>
+    </div>
+    <p class="ad-count" id="adCount" role="status"></p>
+    <div class="ad-list" id="adList"></div>
+  </section>
+</main>
+
+<!-- detail -->
+<dialog id="adDetail" class="ad-dialog" aria-labelledby="adDetailTitle">
+  <div class="ad-dialog-head"><h2 id="adDetailTitle">Application</h2><button type="button" class="ad-x" id="adDetailClose" aria-label="Close">✕</button></div>
+  <div class="ad-dialog-body" id="adDetailBody"></div>
+</dialog>
+
+<!-- confirm -->
+<dialog id="adConfirm" class="ad-dialog ad-dialog--small" aria-labelledby="adConfirmTitle">
+  <form method="dialog" id="adConfirmForm">
+    <div class="ad-dialog-head"><h2 id="adConfirmTitle">Please confirm</h2></div>
+    <div class="ad-dialog-body"><div id="adConfirmBody"></div>
+      <div id="adConfirmExtra"></div>
+      <div class="ad-actions"><button type="button" class="ad-btn ad-btn--ghost" id="adConfirmNo">Cancel</button><button type="submit" class="ad-btn" id="adConfirmYes">Confirm</button></div>
+    </div>
+  </form>
+</dialog>
+
+<div class="ad-toast" id="adToast" role="status" aria-live="polite"></div>
+<script src="/admin/student-applications.js"></script>
+</body>
+</html>

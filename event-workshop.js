@@ -8,6 +8,10 @@
 
    Each registration card is a plain link that opens its own Razorpay payment
    page in a new tab. There is no form and no payment handling on this site.
+
+   The separate "Student Registration" section (event.studentRegistration) links to
+   the student application form. It never shows a payment link: the student link
+   is emailed only after an admin verifies the student's ID (see supabase/STUDENT_WORKSHOP_SETUP.md).
    ticketing.js checks every link (https, razorpay.com); a link that fails the
    check shows a disabled "unavailable" button instead of a broken link.
    ========================================================================== */
@@ -36,6 +40,7 @@
   var anyOpen = regRes.options.some(function (o) { return o.state === 'open'; });
   var byId = {};
   e.workshops.forEach(function (w) { byId[w.id] = w; });
+  var stuCfg = e.studentRegistration && e.studentRegistration.enabled ? e.studentRegistration : null;
 
   function wsDatesLine(w) {
     var d = H.wsDates(w);
@@ -60,7 +65,7 @@
         '<ul class="aev-ws-chips aev-reveal" aria-label="Workshop dates">' + chips + '</ul>' +
         (anyOpen ? '<p class="aev-ws-regpill aev-ws-regpill--open aev-reveal" role="status"><span aria-hidden="true">✓</span> Registrations Open</p>' : '') +
         (status === 'upcoming' ? '<div class="aev-reveal">' + H.countdownHtml(e, 'until the first workshop') + '</div>' : '') +
-        '<div class="aev-cta-row aev-reveal"><a class="btn-r" href="' + (anyOpen ? '#register">Register now' : '#workshops">Choose your workshop') + ' ↓</a>' + H.shareButton(e) + '</div>' +
+        '<div class="aev-cta-row aev-reveal"><a class="btn-r" href="' + (anyOpen ? '#register">Register now' : '#workshops">Choose your workshop') + ' ↓</a>' + (stuCfg ? '<a class="btn-g" href="#student-registration">🎓 Student registration</a>' : '') + H.shareButton(e) + '</div>' +
         '<p class="aev-share-status" role="status" aria-live="polite"></p>' +
       '</div>' +
     '</div>' +
@@ -146,10 +151,48 @@
           '<h2 id="ws-reg" class="aev-reveal">' + esc(regCfg.heading || 'Choose Your Workshop') + '</h2>' +
           '<p class="aev-ws-lead aev-reveal">' + esc(regCfg.note || '') + '</p>' +
           '<ul class="aev-ws-reg-grid">' + regCards + '</ul>' +
+          (stuCfg ? '<p class="aev-stu-hint">🎓 Are you a school or college student? <a href="#student-registration">Use Student Registration</a> instead.</p>' : '') +
         '</div>' +
         '<div class="aev-ws-film" aria-hidden="true"></div>' +
       '</section>'
     : '';
+
+  /* ── student registration: its own path; no payment link on this page ── */
+  var student = '';
+  if (stuCfg) {
+    var stuCards = (stuCfg.options || []).map(function (o) {
+      var ids = o.workshops || [];
+      var sp = spanOf(ids);
+      var combo = !!o.featured;
+      var icon = combo ? '🎭 🎬' : ((byId[ids[0]] || {}).icon || '');
+      var many = sp && sp.end && sp.end !== sp.start;
+      var href = (stuCfg.formPath || '#') + '?workshop=' + encodeURIComponent(o.id);
+      return '<li class="aev-ws-reg aev-ws-reg--student aev-ws-reg--' + esc(o.id) + (combo ? ' aev-ws-reg--combo' : '') + ' aev-reveal">' +
+        (combo ? '<span class="aev-ws-reg-badge">★ ' + esc(o.badge || 'Complete Experience') + '</span><div class="aev-ws-reg-strip" aria-hidden="true"></div>' : '') +
+        '<span class="aev-stu-tag"><span aria-hidden="true">🎓</span> Student</span>' +
+        '<div class="aev-ws-reg-top"><span class="aev-ws-reg-ic" aria-hidden="true">' + esc(icon) + '</span><h3>' + esc(o.label) + '</h3></div>' +
+        (sp ? '<p class="aev-ws-reg-days">' + esc(sp.d.days) + '</p>' +
+          '<p class="aev-ws-reg-dates"><span class="aev-ws-reg-label">' + (many ? 'Dates' : 'Date') + '</span> <time datetime="' + esc(sp.start) + (sp.end ? '/' + esc(sp.end) : '') + '">' + esc(sp.d.dates) + '</time></p>' : '') +
+        '<p class="aev-stu-verify"><span aria-hidden="true">🪪</span> School or college ID verification required</p>' +
+        '<a class="aev-ws-reg-btn aev-stu-btn" href="' + esc(href) + '" data-student-option="' + esc(o.id) + '">' + esc(o.buttonLabel || 'Student Registration') + ' <span aria-hidden="true">→</span></a>' +
+      '</li>';
+    }).join('');
+    var stuSteps = (stuCfg.steps || []).map(function (t, i) {
+      return '<li><span class="aev-stu-step-n" aria-hidden="true">' + (i + 1) + '</span><span>' + esc(t) + '</span></li>';
+    }).join('');
+    student = '<section class="aev-lp-section aev-stu" id="student-registration" aria-labelledby="stu-reg">' +
+      '<div class="aev-ws-beam aev-ws-beam--reg" aria-hidden="true"></div>' +
+      '<div class="aev-lp-wrap">' +
+        '<p class="aev-stu-eyebrow aev-reveal"><span aria-hidden="true">🎓</span> For students only · ID verification required</p>' +
+        '<h2 id="stu-reg" class="aev-reveal">' + esc(stuCfg.heading || 'Student Registration') + '</h2>' +
+        '<p class="aev-ws-lead aev-reveal">' + esc(stuCfg.note || '') + '</p>' +
+        (stuSteps ? '<ol class="aev-stu-steps aev-reveal" aria-label="How student registration works">' + stuSteps + '</ol>' : '') +
+        '<ul class="aev-ws-reg-grid">' + stuCards + '</ul>' +
+        '<p class="aev-stu-foot">Not a student? Use the regular registration options above.</p>' +
+      '</div>' +
+      '<div class="aev-ws-film" aria-hidden="true"></div>' +
+    '</section>';
+  }
 
   /* ── closing ── */
   var closeCards = e.workshops.map(function (w) {
@@ -164,7 +207,7 @@
     '<p class="aev-share-status" role="status" aria-live="polite"></p></div></section>';
 
   mount.innerHTML = H.crumbsHtml([['Home', '/index.html'], ['Events', '/events.html'], [e.title]]) +
-    hero + intro + choose + why + register + closing;
+    hero + intro + choose + why + register + student + closing;
 
   H.injectJsonLd(e);
   H.startCountdowns();

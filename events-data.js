@@ -331,6 +331,47 @@ window.ATFA_EVENTS = [
           "pendingLabel": "Registration link unavailable"
         }
       ]
+    },
+    "studentRegistration": {
+      "enabled": true,
+      "heading": "Student Registration",
+      "note": "Are you a school or college student? Apply with your valid student ID. We verify every application, and your student payment link is sent to your email only after you are approved.",
+      "formPath": "/events/acting-filmmaking-workshop-student-registration",
+      "steps": [
+        "Choose your workshop",
+        "Fill in the form and upload your school or college ID",
+        "Our team verifies your ID",
+        "If approved, we email you your student payment link"
+      ],
+      "options": [
+        {
+          "id": "acting",
+          "workshops": [
+            "acting"
+          ],
+          "label": "Acting Workshop",
+          "buttonLabel": "Student Registration for Acting"
+        },
+        {
+          "id": "filmmaking",
+          "workshops": [
+            "filmmaking"
+          ],
+          "label": "Filmmaking Workshop",
+          "buttonLabel": "Student Registration for Filmmaking"
+        },
+        {
+          "id": "combo",
+          "workshops": [
+            "acting",
+            "filmmaking"
+          ],
+          "featured": true,
+          "label": "Acting + Filmmaking Combo",
+          "badge": "Complete Experience",
+          "buttonLabel": "Student Registration for the Combo"
+        }
+      ]
     }
   },
   {
