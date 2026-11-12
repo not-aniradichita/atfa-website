@@ -6,13 +6,14 @@
    (event.workshops, event.workshopPage and event.registration). Dates, copy and
    the three registration links all live there; nothing is hard-coded here.
 
-   Each registration card is a plain link that opens its own Razorpay payment
-   page in a new tab. There is no form and no payment handling on this site.
+   Each registration card is a plain link that opens its own Google Form in a new tab
+   (Acting, Filmmaking, Combo). The form's confirmation page shows the matching Razorpay
+   payment link. This site itself has no form and no payment handling for regular registration.
 
    The separate "Student Registration" section (event.studentRegistration) links to
    the student application form. It never shows a payment link: the student link
    is emailed only after an admin verifies the student's ID (see supabase/STUDENT_WORKSHOP_SETUP.md).
-   ticketing.js checks every link (https, razorpay.com); a link that fails the
+   ticketing.js checks every link (https, docs.google.com); a link that fails the
    check shows a disabled "unavailable" button instead of a broken link.
    ========================================================================== */
 (function () {
@@ -110,7 +111,7 @@
       return '<li class="aev-ws-why-card aev-reveal"><span class="aev-lp-icon" aria-hidden="true">' + esc(x.icon || '') + '</span><h3>' + esc(x.title) + '</h3><p>' + esc(x.text) + '</p></li>';
     }).join('') + '</ul></div></section>';
 
-  /* ── registration: three cards, each a link to its own payment page ── */
+  /* ── registration: three cards, each a link to its own registration form ── */
   function spanOf(ids) {
     var ws = ids.map(function (id) { return byId[id]; }).filter(Boolean);
     if (!ws.length) return null;
@@ -129,7 +130,7 @@
     var icon = combo ? '🎭 🎬' : ((byId[ids[0]] || {}).icon || '');
     var many = sp && sp.end && sp.end !== sp.start;
     var btn = o.state === 'open'
-      ? '<a class="aev-ws-reg-btn" href="' + esc(o.href) + '" target="_blank" rel="noopener noreferrer" data-reg-option="' + esc(o.id) + '">' + esc(o.buttonLabel) + ' <span aria-hidden="true">↗</span><span class="sr-only"> (opens the secure payment page in a new tab)</span></a>'
+      ? '<a class="aev-ws-reg-btn" href="' + esc(o.href) + '" target="_blank" rel="noopener noreferrer" data-reg-option="' + esc(o.id) + '">' + esc(o.buttonLabel) + ' <span aria-hidden="true">↗</span><span class="sr-only"> (opens the registration form in a new tab)</span></a>'
       : '<button type="button" class="aev-ws-reg-btn is-off" disabled aria-disabled="true">' + esc(o.pendingLabel || 'Registration link unavailable') + '</button>';
     return '<li class="aev-ws-reg aev-ws-reg--' + esc(o.id) + (combo ? ' aev-ws-reg--combo' : '') + ' aev-reveal">' +
       (combo ? '<span class="aev-ws-reg-badge">★ ' + esc(raw.badge || 'Complete Experience') + '</span><div class="aev-ws-reg-strip" aria-hidden="true"></div>' : '') +

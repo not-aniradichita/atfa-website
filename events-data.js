@@ -288,12 +288,12 @@ window.ATFA_EVENTS = [
     },
     "registration": {
       "enabled": true,
-      "provider": "razorpay",
+      "provider": "google-forms",
       "hosts": [
-        "razorpay.com"
+        "docs.google.com"
       ],
       "heading": "Choose Your Workshop",
-      "note": "Choose the workshop that interests you and complete your registration through our secure payment page.",
+      "note": "Choose the workshop that interests you and fill in a short registration form. You will then see a payment link. Your participation is confirmed only after successful payment.",
       "options": [
         {
           "id": "acting",
@@ -302,7 +302,7 @@ window.ATFA_EVENTS = [
           ],
           "label": "Acting Workshop",
           "buttonLabel": "Register for Acting",
-          "checkoutUrl": "https://pages.razorpay.com/ACWP",
+          "checkoutUrl": "https://docs.google.com/forms/d/e/1FAIpQLScxX_P4zaETyyxLfPwPTAXFFDqXwhQYlqtv-lX9EHBbuCKEqg/viewform",
           "pendingLabel": "Registration link unavailable"
         },
         {
@@ -312,7 +312,7 @@ window.ATFA_EVENTS = [
           ],
           "label": "Filmmaking Workshop",
           "buttonLabel": "Register for Filmmaking",
-          "checkoutUrl": "https://pages.razorpay.com/ATFAFMWS",
+          "checkoutUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfpnhKAyIfGnulNuM8wgdhYw4w0HKJ59TcAgoGnJE0-FoOkMw/viewform",
           "pendingLabel": "Registration link unavailable"
         },
         {
@@ -327,7 +327,7 @@ window.ATFA_EVENTS = [
         "title": "Both Workshops",
           "text": "Take part in the Acting Workshop and the Filmmaking Workshop, all three days.",
           "buttonLabel": "Register for Both Workshops",
-          "checkoutUrl": "https://pages.razorpay.com/Acting&Filmmaking",
+          "checkoutUrl": "https://docs.google.com/forms/d/e/1FAIpQLScZiUcWy5dkqxOOEaGfzRuAXB17QN-NMOLQKMXFPrgrW3iQ8A/viewform",
           "pendingLabel": "Registration link unavailable"
         }
       ]
