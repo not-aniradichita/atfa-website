@@ -62,3 +62,18 @@ If a student has no Google account, the regular registration options (or the tea
 Each row is one complete application. Change *Application Status* (Pending Verification / Approved / Rejected) and *Payment Status*
 (Payment Pending / Payment Confirmed) from the dropdowns, and write private comments in *Internal team notes*.
 Payment is never marked automatically: check Razorpay, then set Payment Confirmed. Payment never replaces ID verification.
+
+## Legacy applications (previous website form)
+
+Two genuine Acting applications were collected by the previous system before these forms existed. Their details and ID photos are backed up
+privately **outside this repository** and are still in the old Supabase project (nothing deleted). They are moved into the
+**Acting Student Applications** tab by a one-time script that contains their personal details, so it is kept with the private backup and is never committed:
+
+1. Drag the two ID photos from the private backup into the private Drive folder `Student – Acting Workshop | Aniradichita (File responses)`.
+2. `legacyMigrationPreview()` writes nothing. It must report `READY` for both people.
+3. `legacyMigrationRun()` adds them. It refuses if a file is missing, has the wrong size, is shared by link, or the person is already in the sheet (no duplicates).
+4. `legacyMigrationVerify()` re-reads the rows, compares every field with the backup, and checks the ID files are private.
+5. Afterwards delete the script file from the Apps Script project.
+
+Migrated rows keep their original submission time, start as *Pending Verification* / *Payment Pending*, and carry the old reference in *Internal team notes*.
+Their IDs follow the same retention rule as every other ID (30 days after a decision, 22 December 2026 at the latest).

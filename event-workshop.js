@@ -161,8 +161,9 @@
   /* ── student registration: its own path; no payment link on this page ── */
   var student = '';
   if (stuCfg) {
-    /* once every student option has a Google Form (formUrl), the cards open the landing page; until then the on-site form is used */
-    var stuForms = (stuCfg.options || []).length > 0 && (stuCfg.options || []).every(function (o) { return !!o.formUrl; });
+    /* each student card opens its own Google Form (formUrl, https on docs.google.com/forms). The student page has the details; it is not an extra step. */
+    function isGForm(u) { try { var x = new URL(u); return x.protocol === 'https:' && x.hostname === 'docs.google.com' && x.pathname.indexOf('/forms/') === 0; } catch (err) { return false; } }
+    var stuForms = (stuCfg.options || []).length > 0 && (stuCfg.options || []).every(function (o) { return isGForm(o.formUrl); });
     var stuNote = stuForms && stuCfg.formsNote ? stuCfg.formsNote : stuCfg.note;
     var stuStepList = stuForms && stuCfg.formsSteps ? stuCfg.formsSteps : stuCfg.steps;
     var stuCards = (stuCfg.options || []).map(function (o) {
@@ -171,7 +172,7 @@
       var combo = !!o.featured;
       var icon = combo ? '🎭 🎬' : ((byId[ids[0]] || {}).icon || '');
       var many = sp && sp.end && sp.end !== sp.start;
-      var href = stuForms ? (stuCfg.formPath || '#') + '#student-' + encodeURIComponent(o.id) : (stuCfg.formPath || '#') + '?workshop=' + encodeURIComponent(o.id);
+      var href = isGForm(o.formUrl) ? o.formUrl : (stuCfg.formPath || '#');
       return '<li class="aev-ws-reg aev-ws-reg--student aev-ws-reg--' + esc(o.id) + (combo ? ' aev-ws-reg--combo' : '') + ' aev-reveal">' +
         (combo ? '<span class="aev-ws-reg-badge">★ ' + esc(o.badge || 'Complete Experience') + '</span><div class="aev-ws-reg-strip" aria-hidden="true"></div>' : '') +
         '<span class="aev-stu-tag"><span aria-hidden="true">🎓</span> Student</span>' +
@@ -179,7 +180,9 @@
         (sp ? '<p class="aev-ws-reg-days">' + esc(sp.d.days) + '</p>' +
           '<p class="aev-ws-reg-dates"><span class="aev-ws-reg-label">' + (many ? 'Dates' : 'Date') + '</span> <time datetime="' + esc(sp.start) + (sp.end ? '/' + esc(sp.end) : '') + '">' + esc(sp.d.dates) + '</time></p>' : '') +
         '<p class="aev-stu-verify"><span aria-hidden="true">🪪</span> School or college ID verification required</p>' +
-        '<a class="aev-ws-reg-btn aev-stu-btn" href="' + esc(href) + '" data-student-option="' + esc(o.id) + '">' + esc(o.buttonLabel || 'Student Registration') + ' <span aria-hidden="true">→</span></a>' +
+        (isGForm(o.formUrl)
+          ? '<a class="aev-ws-reg-btn aev-stu-btn" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer" data-student-option="' + esc(o.id) + '">' + esc(o.buttonLabel || 'Student Registration') + ' <span aria-hidden="true">↗</span><span class="sr-only"> (opens the student Google Form in a new tab)</span></a>'
+          : '<a class="aev-ws-reg-btn aev-stu-btn" href="' + esc(href) + '" data-student-option="' + esc(o.id) + '">' + esc(o.buttonLabel || 'Student Registration') + ' <span aria-hidden="true">→</span></a>') +
       '</li>';
     }).join('');
     var stuSteps = (stuStepList || []).map(function (t, i) {
@@ -193,7 +196,7 @@
         '<p class="aev-ws-lead aev-reveal">' + esc(stuNote || '') + '</p>' +
         (stuSteps ? '<ol class="aev-stu-steps aev-reveal" aria-label="How student registration works">' + stuSteps + '</ol>' : '') +
         '<ul class="aev-ws-reg-grid">' + stuCards + '</ul>' +
-        '<p class="aev-stu-foot">Not a student? Use the regular registration options above.</p>' +
+        '<p class="aev-stu-foot">' + (stuForms ? 'Google asks you to sign in before you upload your ID. <a href="' + esc(stuCfg.formPath || '#') + '" style="color:#ffd98a">ID format, privacy and what happens next</a>. ' : '') + 'Not a student? Use the regular registration options above.</p>' +
       '</div>' +
       '<div class="aev-ws-film" aria-hidden="true"></div>' +
     '</section>';

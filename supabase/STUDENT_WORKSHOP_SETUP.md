@@ -1,3 +1,8 @@
+> **RETIRED (16 Nov 2026).** Student applications now go through three Google Forms and one Google Sheet (see `google-forms/STUDENT_README.md`).
+> The website no longer contains this form or calls the `student-workshop` function. The Supabase side below is kept **only** for its
+> historical data (2 applications and their ID files, also backed up privately outside this repository). Nothing here has been deleted.
+> The public intake endpoint of the function is still deployed until an owner decides to switch it off. Do not use this system for new applications.
+
 # Student registration: setup and operations
 
 Everything for the Acting & Filmmaking Workshop **student registration** lives in the Supabase project

@@ -353,6 +353,7 @@ window.ATFA_EVENTS = [
       "options": [
         {
           "id": "acting",
+          "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSeEN9bx7LcTnJxLDNDvabx6q9sLEz0w_Dwd3NLbKFWz2qgyUg/viewform",
           "workshops": [
             "acting"
           ],
@@ -361,6 +362,7 @@ window.ATFA_EVENTS = [
         },
         {
           "id": "filmmaking",
+          "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSez0WmxkwsoDKaFBrNuswsjMpPnBmWwwz0gA9PaBTd63-k1pQ/viewform",
           "workshops": [
             "filmmaking"
           ],
@@ -369,6 +371,7 @@ window.ATFA_EVENTS = [
         },
         {
           "id": "combo",
+          "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLScdSvMVL-DSrLa1la2I1xKanBxYAiNT1bvqmp4EWjqmt-XNWw/viewform",
           "workshops": [
             "acting",
             "filmmaking"
