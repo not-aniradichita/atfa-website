@@ -14,6 +14,9 @@ import { approval, rejection, studentAck, teamNotification } from "./templates.t
 import type { AppForEmail } from "./templates.ts";
 import { sendMail } from "./mail.ts";
 
+/** Public intake switch. false = new submissions are rejected (HTTP 410). Admin actions, the retention job, existing records and stored IDs are unaffected. */
+const INTAKE_OPEN = false;
+
 const BUCKET = "student-ids";
 const SIGNED_URL_SECONDS = 60;
 const ORIGINS = new Set([
@@ -409,7 +412,11 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json(req, { ok: false, error: "method_not_allowed" }, 405);
   try {
     const ct = (req.headers.get("content-type") || "").toLowerCase();
-    if (ct.startsWith("multipart/form-data")) return await handleRegister(req);
+    if (ct.startsWith("multipart/form-data")) {
+      // Intake is CLOSED: student applications now go through Google Forms. Nothing is read, stored or emailed from this path.
+      if (!INTAKE_OPEN) return json(req, { ok: false, error: "intake_closed", message: "Student applications through this form are closed. Please use the student registration page on aniradichita.com." }, 410);
+      return await handleRegister(req);
+    }
     if (ct.startsWith("application/json")) return await handleAdmin(req);
     return json(req, { ok: false, error: "unsupported_content_type" }, 415);
   } catch (e) {

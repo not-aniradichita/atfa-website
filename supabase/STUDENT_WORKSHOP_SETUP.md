@@ -1,7 +1,7 @@
 > **RETIRED (16 Nov 2026).** Student applications now go through three Google Forms and one Google Sheet (see `google-forms/STUDENT_README.md`).
 > The website no longer contains this form or calls the `student-workshop` function. The Supabase side below is kept **only** for its
 > historical data (2 applications and their ID files, also backed up privately outside this repository). Nothing here has been deleted.
-> The public intake endpoint of the function is still deployed until an owner decides to switch it off. Do not use this system for new applications.
+> New submissions are **closed** (function v3, 16 Nov 2026): the public intake path answers HTTP 410 and reads or stores nothing. The admin API, the retention job and all stored records and IDs still work. To reopen (not expected), set `INTAKE_OPEN = true` in `functions/student-workshop/index.ts` and redeploy.
 
 # Student registration: setup and operations
 
