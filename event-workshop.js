@@ -161,13 +161,17 @@
   /* ── student registration: its own path; no payment link on this page ── */
   var student = '';
   if (stuCfg) {
+    /* once every student option has a Google Form (formUrl), the cards open the landing page; until then the on-site form is used */
+    var stuForms = (stuCfg.options || []).length > 0 && (stuCfg.options || []).every(function (o) { return !!o.formUrl; });
+    var stuNote = stuForms && stuCfg.formsNote ? stuCfg.formsNote : stuCfg.note;
+    var stuStepList = stuForms && stuCfg.formsSteps ? stuCfg.formsSteps : stuCfg.steps;
     var stuCards = (stuCfg.options || []).map(function (o) {
       var ids = o.workshops || [];
       var sp = spanOf(ids);
       var combo = !!o.featured;
       var icon = combo ? '🎭 🎬' : ((byId[ids[0]] || {}).icon || '');
       var many = sp && sp.end && sp.end !== sp.start;
-      var href = (stuCfg.formPath || '#') + '?workshop=' + encodeURIComponent(o.id);
+      var href = stuForms ? (stuCfg.formPath || '#') + '#student-' + encodeURIComponent(o.id) : (stuCfg.formPath || '#') + '?workshop=' + encodeURIComponent(o.id);
       return '<li class="aev-ws-reg aev-ws-reg--student aev-ws-reg--' + esc(o.id) + (combo ? ' aev-ws-reg--combo' : '') + ' aev-reveal">' +
         (combo ? '<span class="aev-ws-reg-badge">★ ' + esc(o.badge || 'Complete Experience') + '</span><div class="aev-ws-reg-strip" aria-hidden="true"></div>' : '') +
         '<span class="aev-stu-tag"><span aria-hidden="true">🎓</span> Student</span>' +
@@ -178,7 +182,7 @@
         '<a class="aev-ws-reg-btn aev-stu-btn" href="' + esc(href) + '" data-student-option="' + esc(o.id) + '">' + esc(o.buttonLabel || 'Student Registration') + ' <span aria-hidden="true">→</span></a>' +
       '</li>';
     }).join('');
-    var stuSteps = (stuCfg.steps || []).map(function (t, i) {
+    var stuSteps = (stuStepList || []).map(function (t, i) {
       return '<li><span class="aev-stu-step-n" aria-hidden="true">' + (i + 1) + '</span><span>' + esc(t) + '</span></li>';
     }).join('');
     student = '<section class="aev-lp-section aev-stu" id="student-registration" aria-labelledby="stu-reg">' +
@@ -186,7 +190,7 @@
       '<div class="aev-lp-wrap">' +
         '<p class="aev-stu-eyebrow aev-reveal"><span aria-hidden="true">🎓</span> For students only · ID verification required</p>' +
         '<h2 id="stu-reg" class="aev-reveal">' + esc(stuCfg.heading || 'Student Registration') + '</h2>' +
-        '<p class="aev-ws-lead aev-reveal">' + esc(stuCfg.note || '') + '</p>' +
+        '<p class="aev-ws-lead aev-reveal">' + esc(stuNote || '') + '</p>' +
         (stuSteps ? '<ol class="aev-stu-steps aev-reveal" aria-label="How student registration works">' + stuSteps + '</ol>' : '') +
         '<ul class="aev-ws-reg-grid">' + stuCards + '</ul>' +
         '<p class="aev-stu-foot">Not a student? Use the regular registration options above.</p>' +

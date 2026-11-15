@@ -334,6 +334,13 @@ window.ATFA_EVENTS = [
     },
     "studentRegistration": {
       "enabled": true,
+      "formsNote": "Are you a school or college student? Apply with a short Google Form and your valid student ID. Our team reviews every application. After you submit the form you will see your student payment link.",
+      "formsSteps": [
+        "Choose your workshop",
+        "Fill in the Google Form and upload your school or college ID",
+        "After you submit, you see your student payment link",
+        "Our team reviews your ID. Participation is subject to verification and successful payment"
+      ],
       "heading": "Student Registration",
       "note": "Are you a school or college student? Apply with your valid student ID. We verify every application, and your student payment link is sent to your email only after you are approved.",
       "formPath": "/events/acting-filmmaking-workshop-student-registration",
